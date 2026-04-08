@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+  stakeholders:
+    build:
+      context: ./Stakeholders/stakeholders-be/StakeholdersService
+      dockerfile: Dockerfile
+      target: final
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_HOST: database
+      DATABASE_PORT: 5432
+      DATABASE_PASSWORD: postgres
+      DATABASE_USER: postgres
+      DATABASE_SCHEMA: stakeholders_db
+    depends_on:
+      - database
+
+  database:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: stakeholders_db
+    volumes:
+      - type: volume
+        source: database-data
+        target: /var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+volumes:
+  database-data:
