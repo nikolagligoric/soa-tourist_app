@@ -56,5 +56,20 @@ namespace Stakeholders.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}/block")]
+        public IActionResult BlockUser(int id)
+        {
+            try
+            {
+                _userService.BlockUser(id);
+                return Ok(new { message = "User blocked successfully!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

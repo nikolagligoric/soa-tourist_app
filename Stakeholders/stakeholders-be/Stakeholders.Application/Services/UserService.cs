@@ -21,12 +21,12 @@ namespace Stakeholders.Application.Services
         }
         public User RegisterUser(RegistrationDto registrationDto)
         {
-            if(registrationDto.Role != "Guide" && registrationDto.Role != "Tourist")
+            if (registrationDto.Role != "Guide" && registrationDto.Role != "Tourist")
             {
                 throw new ArgumentException("UserRole must be 'Tourist' or 'Guide'!");
             }
 
-            if(_userRepository.GetUserByUsername(registrationDto.UserName) != null)
+            if (_userRepository.GetUserByUsername(registrationDto.UserName) != null)
             {
                 throw new ArgumentException("User exists!");
             }
@@ -37,7 +37,8 @@ namespace Stakeholders.Application.Services
             {
                 role = UserRole.Guide;
             }
-            else { 
+            else
+            {
                 role = UserRole.Tourist;
             }
 
@@ -90,6 +91,25 @@ namespace Stakeholders.Application.Services
                 Role = u.Role.ToString(),
                 IsBlocked = u.IsBlocked
             }).ToList();
+        }
+
+        public void BlockUser(int id)
+        {
+            var user = _userRepository.GetUserById(id);
+            if (user == null)
+            {
+                throw new ArgumentException("User doesn't exists!");
+            }
+            if(user.Role == UserRole.Admin)
+            {
+                throw new ArgumentException("You can't block an admin!");
+            }
+            if(user.IsBlocked)
+            {
+                throw new ArgumentException("User is already blocked!");
+            }
+            user.IsBlocked = true;
+            _userRepository.UpdateUser(user);
         }
     }
 }
