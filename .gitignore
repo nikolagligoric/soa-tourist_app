@@ -549,3 +549,13 @@ $RECYCLE.BIN/
 
 # TourPoints images
 src/Explorer.API/wwwroot/TourPointsImages/
+
+#blog
+# Local config 
+**/appsettings.Development.json
+
+# Blog images (upload)
+**/wwwroot/images/
+
+# Environment files
+*.env

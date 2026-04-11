@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Stakeholders.API": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:52997;http://localhost:52998"
+    }
+  }
+}

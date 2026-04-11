@@ -31,6 +31,21 @@ services:
         target: /var/lib/postgresql/data
     ports:
       - "5433:5432"
+ 
+  blog-database:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: blog_db
+    volumes:
+      - type: volume
+        source: blog-database-data
+        target: /var/lib/postgresql/data
+    ports:
+      - "5434:5432"
 
 volumes:
   database-data:
+  blog-database-data:  
