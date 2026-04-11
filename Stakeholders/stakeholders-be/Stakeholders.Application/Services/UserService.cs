@@ -111,5 +111,22 @@ namespace Stakeholders.Application.Services
             user.IsBlocked = true;
             _userRepository.UpdateUser(user);
         }
+        public ProfileDto ViewMyProfile(string username)
+        {
+            var user = _userRepository.GetUserByUsername(username);
+            if (user == null)
+            {
+                throw new ArgumentException("User doesn't exists!");
+            }
+             var profileDto = new ProfileDto
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                ProfileImageUrl = user.ProfileImageUrl,
+                Bio = user.Bio,
+                Motto = user.Motto
+            };
+            return profileDto;
+        }
     }
 }

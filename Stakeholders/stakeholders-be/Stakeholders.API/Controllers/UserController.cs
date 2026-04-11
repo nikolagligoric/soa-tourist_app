@@ -71,5 +71,24 @@ namespace Stakeholders.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "Tourist,Guide")]
+        [HttpGet("profile")]
+        public IActionResult ViewMyProfile()
+        {
+            try
+            {
+                var username = User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
+                if (username == null)
+                {
+                    return BadRequest("Invalid token!");
+                }
+                var userProfile = _userService.ViewMyProfile(username);
+                return Ok(userProfile);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
