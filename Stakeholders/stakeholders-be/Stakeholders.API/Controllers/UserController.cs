@@ -56,5 +56,60 @@ namespace Stakeholders.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}/block")]
+        public IActionResult BlockUser(int id)
+        {
+            try
+            {
+                _userService.BlockUser(id);
+                return Ok(new { message = "User blocked successfully!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [Authorize(Roles = "Tourist,Guide")]
+        [HttpGet("profile")]
+        public IActionResult ViewMyProfile()
+        {
+            try
+            {
+                var username = User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
+                if (username == null)
+                {
+                    return BadRequest("Invalid token!");
+                }
+                var userProfile = _userService.ViewMyProfile(username);
+                return Ok(userProfile);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [Authorize(Roles = "Tourist,Guide")]
+        [HttpPut("profile")]
+        public IActionResult UpdateMyProfile([FromBody] UpdateProfileDto updateProfileDto)
+        {
+            try
+            {
+                var username = User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
+                if (username == null)
+                {
+                    return BadRequest("Invalid token!");
+                }
+
+                _userService.UpdateMyProfile(username,updateProfileDto);
+                return Ok(new { message = "Profile updated successfully!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
     }
 }

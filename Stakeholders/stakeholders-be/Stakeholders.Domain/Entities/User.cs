@@ -17,6 +17,9 @@ namespace Stakeholders.Domain.Entities
         public string Email { get; set; }
         public UserRole Role { get; set; }
         public bool IsBlocked { get; set; } = false;
+        public string? ProfileImageUrl { get; set; }
+        public string? Bio { get; set; }
+        public string? Motto { get; set; }
 
     }
 }

@@ -13,5 +13,7 @@ namespace Stakeholders.Application.Interfaces
         void AddUser(User user);
 
         List<User> GetAllUsers();
+        User? GetUserById(int id);
+        void UpdateUser(User user);
     }
 }
