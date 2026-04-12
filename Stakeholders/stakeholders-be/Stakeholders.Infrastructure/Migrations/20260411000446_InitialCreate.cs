@@ -23,7 +23,10 @@ namespace Stakeholders.Infrastructure.Migrations
                     Password = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     Role = table.Column<int>(type: "integer", nullable: false),
-                    IsBlocked = table.Column<bool>(type: "boolean", nullable: false)
+                    IsBlocked = table.Column<bool>(type: "boolean", nullable: false),
+                    ProfileImageUrl = table.Column<string>(type: "text", nullable: true),
+                    Bio = table.Column<string>(type: "text", nullable: true),
+                    Motto = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -33,5 +33,16 @@ namespace Stakeholders.Infrastructure.Repositories
         {
             return _dbContext.Users.ToList();
         }
+
+        public User? GetUserById(int id)
+        {
+            return _dbContext.Users.FirstOrDefault(u => u.Id == id);
+        }
+        
+        public void UpdateUser(User user)
+        {
+            _dbContext.Users.Update(user);
+            _dbContext.SaveChanges();
+        }
     }
 }
