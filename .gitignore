@@ -559,3 +559,10 @@ src/Explorer.API/wwwroot/TourPointsImages/
 
 # Environment files
 *.env
+
+# Docker
+Dockerfile.original
+docker-compose.override.yml
+
+# Optional - ako VS generiše debug stvari
+.vscode/

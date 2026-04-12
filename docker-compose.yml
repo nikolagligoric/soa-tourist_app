@@ -32,20 +32,30 @@ services:
     ports:
       - "5433:5432"
  
+  blog:
+    build:
+      context: ./Blog/blog-be
+      dockerfile: Blog.API/Dockerfile
+    restart: on-failure
+    ports:
+      - "8081:8080"
+    environment:
+        ASPNETCORE_URLS: http://+:8080
+    depends_on:
+      - blog-database
+
   blog-database:
     image: postgres:13
     restart: always
     environment:
-      POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: blog_db
     volumes:
-      - type: volume
-        source: blog-database-data
-        target: /var/lib/postgresql/data
+      - blog-database-data:/var/lib/postgresql/data
     ports:
       - "5434:5432"
 
 volumes:
   database-data:
-  blog-database-data:  
+  blog-database-data:
