@@ -100,11 +100,11 @@ namespace Stakeholders.Application.Services
             {
                 throw new ArgumentException("User doesn't exists!");
             }
-            if(user.Role == UserRole.Admin)
+            if (user.Role == UserRole.Admin)
             {
                 throw new ArgumentException("You can't block an admin!");
             }
-            if(user.IsBlocked)
+            if (user.IsBlocked)
             {
                 throw new ArgumentException("User is already blocked!");
             }
@@ -118,7 +118,7 @@ namespace Stakeholders.Application.Services
             {
                 throw new ArgumentException("User doesn't exists!");
             }
-             var profileDto = new ProfileDto
+            var profileDto = new ProfileDto
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -127,6 +127,21 @@ namespace Stakeholders.Application.Services
                 Motto = user.Motto
             };
             return profileDto;
+        }
+
+        public void UpdateMyProfile(string username, UpdateProfileDto updateProfileDto)
+        {
+            var user = _userRepository.GetUserByUsername(username);
+            if (user == null)
+            {
+                throw new ArgumentException("User doesn't exists!");
+            }
+            user.FirstName = updateProfileDto.FirstName;
+            user.LastName = updateProfileDto.LastName;
+            user.ProfileImageUrl = updateProfileDto.ProfileImageUrl;
+            user.Bio = updateProfileDto.Bio;
+            user.Motto = updateProfileDto.Motto;
+            _userRepository.UpdateUser(user);
         }
     }
 }
