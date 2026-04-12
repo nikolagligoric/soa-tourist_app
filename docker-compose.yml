@@ -10,6 +10,7 @@ services:
     ports:
       - "8080:8080"
     environment:
+      ConnectionStrings__DefaultConnection: "Host=database;Port=5432;Database=stakeholders_db;Username=postgres;Password=postgres"
       DATABASE_HOST: database
       DATABASE_PORT: 5432
       DATABASE_PASSWORD: postgres

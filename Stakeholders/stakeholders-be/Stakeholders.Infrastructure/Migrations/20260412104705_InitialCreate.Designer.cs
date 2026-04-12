@@ -11,7 +11,7 @@ using Stakeholders.Infrastructure.Persistence;
 namespace Stakeholders.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260411000446_InitialCreate")]
+    [Migration("20260412104705_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
