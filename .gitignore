@@ -566,3 +566,7 @@ docker-compose.override.yml
 
 # Optional - ako VS generiše debug stvari
 .vscode/
+
+# Database init scripts (local only)
+Blog/blog-be/blog_init.sql
+Stakeholders/stakeholders-be/stakeholders_init.sql
