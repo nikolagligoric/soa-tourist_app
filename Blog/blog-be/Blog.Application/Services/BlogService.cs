@@ -64,5 +64,44 @@ namespace Blog.Application.Services
 
             return _blogRepository.Add(blog);
         }
+
+        //comments
+        public async Task<Comment> AddCommentAsync(int blogId, CreateCommentDTO createCommentDto, string authorUsername)
+        {
+            if (string.IsNullOrWhiteSpace(authorUsername))
+                throw new ArgumentException("Author username is required.");
+
+            if (createCommentDto == null)
+                throw new ArgumentException("Comment data is required.");
+
+            if (string.IsNullOrWhiteSpace(createCommentDto.Text))
+                throw new ArgumentException("Comment text is required.");
+
+            var blog = await _blogRepository.GetByIdAsync(blogId);
+
+            if (blog == null)
+                throw new ArgumentException("Blog not found.");
+
+            var comment = new Comment
+            {
+                BlogId = blogId,
+                AuthorUsername = authorUsername,
+                Text = createCommentDto.Text,
+                CreatedAt = DateTime.UtcNow,
+                LastModifiedAt = DateTime.UtcNow
+            };
+
+            return await _blogRepository.AddCommentAsync(comment);
+        }
+
+        public async Task<List<Comment>> GetCommentsByBlogIdAsync(int blogId)
+        {
+            var blog = await _blogRepository.GetByIdAsync(blogId);
+
+            if (blog == null)
+                throw new ArgumentException("Blog not found.");
+
+            return await _blogRepository.GetCommentsByBlogIdAsync(blogId);
+        }
     }
 }
