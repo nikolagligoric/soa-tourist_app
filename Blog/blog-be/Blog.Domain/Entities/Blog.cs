@@ -17,5 +17,6 @@ namespace Blog.Domain.Entities
         public string AuthorUsername { get; set; }
         // Slike (opciono)
         public List<BlogImage> Images { get; set; } = new List<BlogImage>();
+        public List<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

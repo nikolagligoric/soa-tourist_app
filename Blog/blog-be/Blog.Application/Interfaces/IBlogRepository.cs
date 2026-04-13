@@ -10,5 +10,8 @@ namespace Blog.Application.Interfaces
     public interface IBlogRepository
     {
         Blog.Domain.Entities.Blog Add(Blog.Domain.Entities.Blog blog);
+        Task<Blog.Domain.Entities.Blog?> GetByIdAsync(int blogId);
+        Task<Comment> AddCommentAsync(Comment comment);
+        Task<List<Comment>> GetCommentsByBlogIdAsync(int blogId);
     }
 }

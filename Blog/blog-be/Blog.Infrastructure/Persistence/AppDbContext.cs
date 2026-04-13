@@ -16,5 +16,6 @@ namespace Blog.Infrastructure.Persistence
 
         public DbSet<Blog.Domain.Entities.Blog> Blogs { get; set; }
         public DbSet<BlogImage> BlogImages { get; set; }
+        public DbSet<Comment> Comments { get; set; }
     }
 }
