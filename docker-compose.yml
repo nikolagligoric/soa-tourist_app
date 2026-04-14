@@ -3,13 +3,14 @@ version: '3.9'
 services:
   stakeholders:
     build:
-      context: ./Stakeholders/stakeholders-be/StakeholdersService
-      dockerfile: Dockerfile
+      context: ./Stakeholders/stakeholders-be
+      dockerfile: Stakeholders.API/Dockerfile
       target: final
     restart: on-failure
     ports:
       - "8080:8080"
     environment:
+      ConnectionStrings__DefaultConnection: "Host=database;Port=5432;Database=stakeholders_db;Username=postgres;Password=postgres"
       DATABASE_HOST: database
       DATABASE_PORT: 5432
       DATABASE_PASSWORD: postgres
@@ -31,6 +32,46 @@ services:
         target: /var/lib/postgresql/data
     ports:
       - "5433:5432"
+ 
+  blog:
+    build:
+      context: ./Blog/blog-be
+      dockerfile: Blog.API/Dockerfile
+    restart: on-failure
+    ports:
+      - "8081:8080"
+    environment:
+        ASPNETCORE_URLS: http://+:8080
+        ConnectionStrings__DefaultConnection: "Host=blog-database;Port=5432;Database=blog_db;Username=postgres;Password=postgres"
+    depends_on:
+      - blog-database
+
+  blog-database:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: blog_db
+    volumes:
+      - blog-database-data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - database
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
 
 volumes:
   database-data:
+  blog-database-data:
+  pgadmin-data:

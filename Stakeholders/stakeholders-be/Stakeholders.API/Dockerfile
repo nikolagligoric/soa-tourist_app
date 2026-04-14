@@ -6,11 +6,11 @@ WORKDIR /src
 
 COPY . .
 
-RUN dotnet restore StakeholdersService.csproj
-RUN dotnet build StakeholdersService.csproj -c Release
+RUN dotnet restore Stakeholders.API/Stakeholders.API.csproj
+RUN dotnet build Stakeholders.API/Stakeholders.API.csproj -c Release
 
 FROM build AS publish
-RUN dotnet publish StakeholdersService.csproj -c Release -o /app/publish
+RUN dotnet publish Stakeholders.API/Stakeholders.API.csproj -c Release -o /app/publish
 
 ENV ASPNETCORE_URLS=http://+:80
 
@@ -18,4 +18,4 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-CMD ["dotnet", "StakeholdersService.dll"]
+CMD ["dotnet", "Stakeholders.API.dll"]
