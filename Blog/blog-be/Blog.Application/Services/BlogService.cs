@@ -103,5 +103,65 @@ namespace Blog.Application.Services
 
             return await _blogRepository.GetCommentsByBlogIdAsync(blogId);
         }
+
+        // Likes
+        public int LikeBlog(int blogId, string userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new ArgumentException("UserId is required.");
+
+            var blog = _blogRepository.GetByIdAsync(blogId).GetAwaiter().GetResult();
+            if (blog == null)
+                throw new ArgumentException("Blog not found.");
+
+            var already = _blogRepository.UserHasLiked(blogId, userId);
+            if (already)
+                throw new InvalidOperationException("User has already liked this blog.");
+
+            var like = new Like
+            {
+                BlogId = blogId,
+                UserId = userId,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _blogRepository.AddLike(like);
+            return _blogRepository.GetLikesCount(blogId);
+        }
+
+        public int UnlikeBlog(int blogId, string userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new ArgumentException("UserId is required.");
+
+            var blog = _blogRepository.GetByIdAsync(blogId).GetAwaiter().GetResult();
+            if (blog == null)
+                throw new ArgumentException("Blog not found.");
+
+            var like = _blogRepository.GetLikeByBlogAndUser(blogId, userId);
+            if (like == null)
+                throw new InvalidOperationException("Like not found for this user on the blog.");
+
+            _blogRepository.RemoveLike(like);
+            return _blogRepository.GetLikesCount(blogId);
+        }
+
+        public int GetLikesCount(int blogId)
+        {
+            var blog = _blogRepository.GetByIdAsync(blogId).GetAwaiter().GetResult();
+            if (blog == null)
+                throw new ArgumentException("Blog not found.");
+
+            return _blogRepository.GetLikesCount(blogId);
+        }
+
+        public bool UserHasLiked(int blogId, string userId)
+        {
+            var blog = _blogRepository.GetByIdAsync(blogId).GetAwaiter().GetResult();
+            if (blog == null)
+                throw new ArgumentException("Blog not found.");
+
+            return _blogRepository.UserHasLiked(blogId, userId);
+        }
     }
 }

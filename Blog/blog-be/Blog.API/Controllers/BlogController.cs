@@ -108,5 +108,77 @@ namespace Blog.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        // Likes endpoints
+        [Authorize]
+        [HttpPost("{blogId}/like")]
+        public IActionResult Like(int blogId)
+        {
+            try
+            {
+                var userId = User.FindFirst("username")?.Value;
+                if (string.IsNullOrWhiteSpace(userId))
+                    return Unauthorized("Username claim not found in token.");
+
+                var count = _blogService.LikeBlog(blogId, userId);
+                return Ok(new { likes = count });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("{blogId}/like")]
+        public IActionResult Unlike(int blogId)
+        {
+            try
+            {
+                var userId = User.FindFirst("username")?.Value;
+                if (string.IsNullOrWhiteSpace(userId))
+                    return Unauthorized("Username claim not found in token.");
+
+                var count = _blogService.UnlikeBlog(blogId, userId);
+                return Ok(new { likes = count });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{blogId}/likes")]
+        public IActionResult GetLikesCount(int blogId)
+        {
+            try
+            {
+                var count = _blogService.GetLikesCount(blogId);
+                return Ok(new { likes = count });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("{blogId}/has-liked")]
+        public IActionResult HasLiked(int blogId)
+        {
+            try
+            {
+                var userId = User.FindFirst("username")?.Value;
+                if (string.IsNullOrWhiteSpace(userId))
+                    return Unauthorized("Username claim not found in token.");
+
+                var has = _blogService.UserHasLiked(blogId, userId);
+                return Ok(new { hasLiked = has });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

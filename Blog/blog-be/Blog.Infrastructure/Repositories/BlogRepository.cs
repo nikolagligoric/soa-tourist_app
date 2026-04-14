@@ -30,6 +30,7 @@ namespace Blog.Infrastructure.Repositories
             return await _context.Blogs
                 .Include(b => b.Images)
                 .Include(b => b.Comments)
+                .Include(b => b.Likes)
                 .FirstOrDefaultAsync(b => b.Id == blogId);
         }
 
@@ -46,6 +47,35 @@ namespace Blog.Infrastructure.Repositories
                 .Where(c => c.BlogId == blogId)
                 .OrderByDescending(c => c.CreatedAt)
                 .ToListAsync();
+        }
+
+        // Likes
+        public Like AddLike(Like like)
+        {
+            _context.Likes.Add(like);
+            _context.SaveChanges();
+            return like;
+        }
+
+        public void RemoveLike(Like like)
+        {
+            _context.Likes.Remove(like);
+            _context.SaveChanges();
+        }
+
+        public int GetLikesCount(int blogId)
+        {
+            return _context.Likes.Count(l => l.BlogId == blogId);
+        }
+
+        public bool UserHasLiked(int blogId, string userId)
+        {
+            return _context.Likes.Any(l => l.BlogId == blogId && l.UserId == userId);
+        }
+
+        public Like? GetLikeByBlogAndUser(int blogId, string userId)
+        {
+            return _context.Likes.FirstOrDefault(l => l.BlogId == blogId && l.UserId == userId);
         }
     }
 }

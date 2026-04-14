@@ -18,5 +18,6 @@ namespace Blog.Domain.Entities
         // Slike (opciono)
         public List<BlogImage> Images { get; set; } = new List<BlogImage>();
         public List<Comment> Comments { get; set; } = new List<Comment>();
+        public List<Like> Likes { get; set; } = new List<Like>();
     }
 }
