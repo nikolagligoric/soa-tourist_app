@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Blog.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260411152716_InitialCreate")]
+    [Migration("20260414023524_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -75,6 +75,63 @@ namespace Blog.Infrastructure.Migrations
                     b.ToTable("BlogImages");
                 });
 
+            modelBuilder.Entity("Blog.Domain.Entities.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AuthorUsername")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("BlogId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("LastModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Blog.Domain.Entities.Like", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BlogId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("Likes");
+                });
+
             modelBuilder.Entity("Blog.Domain.Entities.BlogImage", b =>
                 {
                     b.HasOne("Blog.Domain.Entities.Blog", "Blog")
@@ -86,9 +143,35 @@ namespace Blog.Infrastructure.Migrations
                     b.Navigation("Blog");
                 });
 
+            modelBuilder.Entity("Blog.Domain.Entities.Comment", b =>
+                {
+                    b.HasOne("Blog.Domain.Entities.Blog", "Blog")
+                        .WithMany("Comments")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Blog");
+                });
+
+            modelBuilder.Entity("Blog.Domain.Entities.Like", b =>
+                {
+                    b.HasOne("Blog.Domain.Entities.Blog", "Blog")
+                        .WithMany("Likes")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Blog");
+                });
+
             modelBuilder.Entity("Blog.Domain.Entities.Blog", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("Images");
+
+                    b.Navigation("Likes");
                 });
 #pragma warning restore 612, 618
         }
