@@ -95,6 +95,21 @@ services:
     ports:
       - "5435:5432"
 
+  tours:
+    build:
+      context: ./Tours
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://tours-database:5432/tours_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SERVER_PORT: 8083
+    depends_on:
+      - tours-database
+
   pgadmin:
     image: dpage/pgadmin4
     restart: always
