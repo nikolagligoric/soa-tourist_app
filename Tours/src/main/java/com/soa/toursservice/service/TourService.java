@@ -43,7 +43,7 @@ public class TourService {
         return tourRepository.findByAuthorUsername(authorUsername);
     }
 
-    public KeyPoint addKeyPoint(Long tourId, CreateKeyPointRequestDTO request) {
+    public KeyPoint addKeyPoint(Long tourId, String username, CreateKeyPointRequestDTO request){
 
         Optional<Tour> optionalTour = tourRepository.findById(tourId);
 
@@ -52,6 +52,9 @@ public class TourService {
         }
 
         Tour tour = optionalTour.get();
+        if (!tour.getAuthorUsername().equals(username)) {
+            throw new RuntimeException("You can add key points only to your own tours");
+        }
 
         KeyPoint keyPoint = new KeyPoint();
 
@@ -66,7 +69,20 @@ public class TourService {
         return keyPointRepository.save(keyPoint);
     }
 
-    public List<KeyPoint> getKeyPointsForTour(Long tourId) {
+    public List<KeyPoint> getKeyPointsForTour(Long tourId, String username) {
+
+        Optional<Tour> optionalTour = tourRepository.findById(tourId);
+
+        if (optionalTour.isEmpty()) {
+            throw new RuntimeException("Tour not found");
+        }
+
+        Tour tour = optionalTour.get();
+
+        if (!tour.getAuthorUsername().equals(username)) {
+            throw new RuntimeException("You can view key points only for your own tours");
+        }
+
         return keyPointRepository.findByTourId(tourId);
     }
 }
