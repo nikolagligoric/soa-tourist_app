@@ -1,9 +1,16 @@
 ﻿using Blog.Application.DTOs;
 using Blog.Application.Interfaces;
 using Blog.Domain.Entities;
+using System.Net.Http;
+using System.Net.Http.Json;
+
 
 namespace Blog.Application.Services
 {
+    public class FollowCheckResponse
+    {
+        public bool IsFollowing { get; set; }
+    }
     public class BlogService
     {
         private readonly IBlogRepository _blogRepository;
@@ -66,7 +73,7 @@ namespace Blog.Application.Services
         }
 
         //comments
-        public async Task<Comment> AddCommentAsync(int blogId, CreateCommentDTO createCommentDto, string authorUsername)
+        public async Task<Comment> AddCommentAsync(int blogId, CreateCommentDTO createCommentDto, string authorUsername, string token)
         {
             if (string.IsNullOrWhiteSpace(authorUsername))
                 throw new ArgumentException("Author username is required.");
@@ -81,6 +88,30 @@ namespace Blog.Application.Services
 
             if (blog == null)
                 throw new ArgumentException("Blog not found.");
+
+            if (authorUsername != blog.AuthorUsername)
+            {
+                using var client = new HttpClient();
+
+                client.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var response = await client.GetAsync(
+                    $"http://followers:8082/api/followers/check/{blog.AuthorUsername}"
+                );
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new ArgumentException("Could not verify following status.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<FollowCheckResponse>();
+
+                if (result == null || !result.IsFollowing)
+                {
+                    throw new ArgumentException("You must follow this user to comment on their blog.");
+                }
+            }
 
             var comment = new Comment
             {
@@ -162,6 +193,30 @@ namespace Blog.Application.Services
                 throw new ArgumentException("Blog not found.");
 
             return _blogRepository.UserHasLiked(blogId, userId);
+        }
+
+        public async Task<List<Blog.Domain.Entities.Blog>> GetBlogsFromFollowingAsync(string token, string username)
+        {
+            using var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var following = await client.GetFromJsonAsync<List<string>>(
+                "http://followers:8082/api/followers/following"
+            );
+
+            if (following == null || !following.Any())
+            {
+                return new List<Blog.Domain.Entities.Blog>();
+            }
+
+            if (!following.Contains(username))
+            {
+                following.Add(username);
+            }
+
+            return await _blogRepository.GetBlogsByAuthorsAsync(following);
         }
     }
 }

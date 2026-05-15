@@ -13,6 +13,7 @@ namespace Blog.Application.Interfaces
         Task<Blog.Domain.Entities.Blog?> GetByIdAsync(int blogId);
         Task<Comment> AddCommentAsync(Comment comment);
         Task<List<Comment>> GetCommentsByBlogIdAsync(int blogId);
+        Task<List<Blog.Domain.Entities.Blog>> GetBlogsByAuthorsAsync(List<string> authors);
 
         // Likes
         Like AddLike(Like like);

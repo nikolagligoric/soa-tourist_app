@@ -58,13 +58,14 @@ namespace Blog.API.Controllers
             try
             {
                 var authorUsername = User.FindFirst("username")?.Value;
+                var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
                 if (string.IsNullOrWhiteSpace(authorUsername))
                 {
                     return Unauthorized("Username claim not found in token.");
                 }
 
-                var comment = await _blogService.AddCommentAsync(blogId, createCommentDto, authorUsername);
+                var comment = await _blogService.AddCommentAsync(blogId, createCommentDto, authorUsername, token);
 
                 var result = new CommentDto
                 {
@@ -174,6 +175,36 @@ namespace Blog.API.Controllers
 
                 var has = _blogService.UserHasLiked(blogId, userId);
                 return Ok(new { hasLiked = has });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("following")]
+        public async Task<IActionResult> GetBlogsFromFollowing()
+        {
+            try
+            {
+                var username = User.FindFirst("username")?.Value;
+
+                var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+                var blogs = await _blogService.GetBlogsFromFollowingAsync(token, username);
+
+                var result = blogs.Select(blog => new BlogCreatedDto
+                {
+                    Id = blog.Id,
+                    Title = blog.Title,
+                    Description = blog.Description,
+                    CreatedAt = blog.CreatedAt,
+                    AuthorUsername = blog.AuthorUsername,
+                    ImageUrls = blog.Images.Select(i => i.ImageUrl).ToList()
+                }).ToList();
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
