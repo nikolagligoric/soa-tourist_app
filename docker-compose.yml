@@ -57,6 +57,31 @@ services:
       - blog-database-data:/var/lib/postgresql/data
     ports:
       - "5434:5432"
+  
+  followers:
+    build:
+      context: ./Followers/followers-be
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - "8082:8082"
+    environment:
+      NEO4J_URI: neo4j://neo4j-followers:7687
+      NEO4J_USERNAME: neo4j
+      NEO4J_PASSWORD: password
+    depends_on:
+      - neo4j-followers
+
+  neo4j-followers:
+    image: neo4j:5
+    restart: always
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      NEO4J_AUTH: neo4j/password
+    volumes:
+      - neo4j-followers-data:/data
 
   pgadmin:
     image: dpage/pgadmin4
@@ -75,3 +100,4 @@ volumes:
   database-data:
   blog-database-data:
   pgadmin-data:
+  neo4j-followers-data:
