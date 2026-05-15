@@ -1,4 +1,4 @@
-using Blog.Infrastructure.Persistence;
+﻿using Blog.Infrastructure.Persistence;
 using Blog.Application.Interfaces;
 using Blog.Infrastructure.Repositories;
 using Blog.Application.Services;
@@ -74,12 +74,6 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
-}
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSwagger();
@@ -88,4 +82,3 @@ app.UseStaticFiles();
 app.MapControllers();
 
 app.Run();
-
