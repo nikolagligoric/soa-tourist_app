@@ -77,5 +77,16 @@ namespace Blog.Infrastructure.Repositories
         {
             return _context.Likes.FirstOrDefault(l => l.BlogId == blogId && l.UserId == userId);
         }
+
+        public async Task<List<Blog.Domain.Entities.Blog>> GetBlogsByAuthorsAsync(List<string> authors)
+        {
+            return await _context.Blogs
+                .Include(b => b.Images)
+                .Include(b => b.Comments)
+                .Include(b => b.Likes)
+                .Where(b => authors.Contains(b.AuthorUsername))
+                .OrderByDescending(b => b.CreatedAt)
+                .ToListAsync();
+        }
     }
 }

@@ -18,6 +18,7 @@ builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 builder.Services.AddScoped<BlogService>();
 
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 
 var key = Encoding.UTF8.GetBytes("L1uKpZQzI1Yx0+OaS0kXkE7u0n/5Q0U3R5s3FVmXcXU=");
 
