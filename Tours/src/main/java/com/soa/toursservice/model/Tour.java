@@ -1,6 +1,8 @@
 package com.soa.toursservice.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "tours")
@@ -25,6 +27,9 @@ public class Tour {
     private double price;
 
     private String authorUsername;
+
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<KeyPoint> keyPoints = new ArrayList<>();
 
     public Tour() {
     }
@@ -87,5 +92,13 @@ public class Tour {
 
     public void setAuthorUsername(String authorUsername) {
         this.authorUsername = authorUsername;
+    }
+
+    public List<KeyPoint> getKeyPoints() {
+        return keyPoints;
+    }
+
+    public void setKeyPoints(List<KeyPoint> keyPoints) {
+        this.keyPoints = keyPoints;
     }
 }

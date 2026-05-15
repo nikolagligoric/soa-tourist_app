@@ -4,6 +4,8 @@ import com.soa.toursservice.dto.CreateTourRequestDTO;
 import com.soa.toursservice.model.Tour;
 import com.soa.toursservice.service.TourService;
 import org.springframework.web.bind.annotation.*;
+import com.soa.toursservice.dto.CreateKeyPointRequestDTO;
+import com.soa.toursservice.model.KeyPoint;
 
 import java.util.List;
 
@@ -25,5 +27,18 @@ public class TourController {
     @GetMapping("/author/{authorUsername}")
     public List<Tour> getToursByAuthor(@PathVariable String authorUsername) {
         return tourService.getToursByAuthor(authorUsername);
+    }
+    @PostMapping("/{tourId}/keypoints")
+    public KeyPoint addKeyPoint(
+            @PathVariable Long tourId,
+            @RequestBody CreateKeyPointRequestDTO request) {
+
+        return tourService.addKeyPoint(tourId, request);
+    }
+
+    @GetMapping("/{tourId}/keypoints")
+    public List<KeyPoint> getKeyPointsForTour(@PathVariable Long tourId) {
+
+        return tourService.getKeyPointsForTour(tourId);
     }
 }
