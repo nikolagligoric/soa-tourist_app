@@ -83,6 +83,18 @@ services:
     volumes:
       - neo4j-followers-data:/data
 
+  tours-database:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: tours_db
+    volumes:
+      - tours-database-data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+
   pgadmin:
     image: dpage/pgadmin4
     restart: always
@@ -101,3 +113,4 @@ volumes:
   blog-database-data:
   pgadmin-data:
   neo4j-followers-data:
+  tours-database-data:
