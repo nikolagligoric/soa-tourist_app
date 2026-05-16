@@ -30,6 +30,9 @@ public class Tour {
 
     @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<KeyPoint> keyPoints = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TourReview> reviews;
 
     public Tour() {
     }
@@ -100,5 +103,12 @@ public class Tour {
 
     public void setKeyPoints(List<KeyPoint> keyPoints) {
         this.keyPoints = keyPoints;
+    }
+    public List<TourReview> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<TourReview> reviews) {
+        this.reviews = reviews;
     }
 }
