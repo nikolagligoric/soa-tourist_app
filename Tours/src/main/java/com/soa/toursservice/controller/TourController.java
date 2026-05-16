@@ -1,8 +1,11 @@
 package com.soa.toursservice.controller;
 
 import com.soa.toursservice.dto.CreateTourRequestDTO;
+import com.soa.toursservice.dto.CreateTourReviewRequest;
 import com.soa.toursservice.model.Tour;
+import com.soa.toursservice.model.TourReview;
 import com.soa.toursservice.service.TourService;
+import com.soa.toursservice.service.TourReviewService;
 import org.springframework.web.bind.annotation.*;
 import com.soa.toursservice.dto.CreateKeyPointRequestDTO;
 import com.soa.toursservice.model.KeyPoint;
@@ -16,11 +19,15 @@ public class TourController {
 
     private final TourService tourService;
     private final JwtService jwtService;
+    private final TourReviewService tourReviewService;
 
-    public TourController(TourService tourService, JwtService jwtService) {
-        this.tourService = tourService;
-        this.jwtService = jwtService;
-    }
+    public TourController(TourService tourService,
+            JwtService jwtService,
+            TourReviewService tourReviewService) {
+    	this.tourService = tourService;
+    	this.jwtService = jwtService;
+    	this.tourReviewService = tourReviewService;
+}
 
     @PostMapping
     public Tour createTour(@RequestHeader("Authorization") String authorizationHeader,
@@ -77,6 +84,29 @@ public class TourController {
         }
 
         return tourService.getKeyPointsForTour(tourId, username);
+    }
+    
+    @PostMapping("/{tourId}/reviews")
+    public TourReview createReview(
+            @PathVariable Long tourId,
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestBody CreateTourReviewRequest request) {
+
+        String token = extractToken(authorizationHeader);
+
+        String username = jwtService.extractUsername(token);
+        String role = jwtService.extractRole(token);
+
+        if (!role.equals("Tourist")) {
+            throw new RuntimeException("Only tourists can leave reviews");
+        }
+
+        return tourReviewService.createReview(tourId, request, username);
+    }
+    
+    @GetMapping("/{tourId}/reviews")
+    public List<TourReview> getReviewsForTour(@PathVariable Long tourId) {
+        return tourReviewService.getReviewsForTour(tourId);
     }
 
     private String extractToken(String authorizationHeader) {
