@@ -1,12 +1,14 @@
 package com.soa.toursservice.controller;
 
+import com.soa.toursservice.dto.CreateKeyPointRequestDTO;
 import com.soa.toursservice.dto.CreateTourRequestDTO;
+import com.soa.toursservice.model.KeyPoint;
 import com.soa.toursservice.model.Tour;
 import com.soa.toursservice.service.TourService;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
-import com.soa.toursservice.dto.CreateKeyPointRequestDTO;
-import com.soa.toursservice.model.KeyPoint;
-import com.soa.toursservice.security.JwtService;
 
 import java.util.List;
 
@@ -15,23 +17,20 @@ import java.util.List;
 public class TourController {
 
     private final TourService tourService;
-    private final JwtService jwtService;
 
-    public TourController(TourService tourService, JwtService jwtService) {
+    public TourController(TourService tourService) {
         this.tourService = tourService;
-        this.jwtService = jwtService;
     }
 
     @PostMapping
-    public Tour createTour(@RequestHeader("Authorization") String authorizationHeader,
-            @RequestBody CreateTourRequestDTO request) {
+    public Tour createTour(Authentication authentication,
+                           @RequestBody CreateTourRequestDTO request) {
 
-        String token = extractToken(authorizationHeader);
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String username = jwt.getClaim("username");
+        String role = jwt.getClaim("role");
 
-        String username = jwtService.extractUsername(token);
-        String role = jwtService.extractRole(token);
-
-        if (!role.equals("Guide")) {
+        if (!"Guide".equals(role)) {
             throw new RuntimeException("Only guides can create tours");
         }
 
@@ -46,17 +45,15 @@ public class TourController {
     }
 
     @PostMapping("/{tourId}/keypoints")
-    public KeyPoint addKeyPoint(
-            @PathVariable Long tourId,
-            @RequestHeader("Authorization") String authorizationHeader,
-            @RequestBody CreateKeyPointRequestDTO request) {
+    public KeyPoint addKeyPoint(@PathVariable Long tourId,
+                                Authentication authentication,
+                                @RequestBody CreateKeyPointRequestDTO request) {
 
-        String token = extractToken(authorizationHeader);
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String username = jwt.getClaim("username");
+        String role = jwt.getClaim("role");
 
-        String username = jwtService.extractUsername(token);
-        String role = jwtService.extractRole(token);
-
-        if (!role.equals("Guide")) {
+        if (!"Guide".equals(role)) {
             throw new RuntimeException("Only guides can add key points");
         }
 
@@ -65,26 +62,49 @@ public class TourController {
 
     @GetMapping("/{tourId}/keypoints")
     public List<KeyPoint> getKeyPointsForTour(@PathVariable Long tourId,
-            @RequestHeader("Authorization") String authorizationHeader) {
+                                              Authentication authentication) {
 
-        String token = extractToken(authorizationHeader);
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String username = jwt.getClaim("username");
+        String role = jwt.getClaim("role");
 
-        String username = jwtService.extractUsername(token);
-        String role = jwtService.extractRole(token);
-
-        if (!role.equals("Guide")) {
+        if (!"Guide".equals(role)) {
             throw new RuntimeException("Only guides can view key points");
         }
 
         return tourService.getKeyPointsForTour(tourId, username);
     }
 
-    private String extractToken(String authorizationHeader) {
+    @PutMapping("/{tourId}/keypoints/{keyPointId}")
+    public KeyPoint updateKeyPoint(@PathVariable Long tourId,
+                                   @PathVariable Long keyPointId,
+                                   Authentication authentication,
+                                   @RequestBody CreateKeyPointRequestDTO request) {
 
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new RuntimeException("Missing or invalid Authorization header");
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String username = jwt.getClaim("username");
+        String role = jwt.getClaim("role");
+
+        if (!"Guide".equals(role)) {
+            throw new RuntimeException("Only guides can update key points");
         }
 
-        return authorizationHeader.substring(7);
+        return tourService.updateKeyPoint(tourId, keyPointId, username, request);
+    }
+
+    @DeleteMapping("/{tourId}/keypoints/{keyPointId}")
+    public void deleteKeyPoint(@PathVariable Long tourId,
+                               @PathVariable Long keyPointId,
+                               Authentication authentication) {
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String username = jwt.getClaim("username");
+        String role = jwt.getClaim("role");
+
+        if (!"Guide".equals(role)) {
+            throw new RuntimeException("Only guides can delete key points");
+        }
+
+        tourService.deleteKeyPoint(tourId, keyPointId, username);
     }
 }

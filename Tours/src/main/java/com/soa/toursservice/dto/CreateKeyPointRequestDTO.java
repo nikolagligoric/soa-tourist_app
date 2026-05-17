@@ -26,7 +26,7 @@ public class CreateKeyPointRequestDTO {
     public double getLongitude() {
         return longitude;
     }
-
+       
     public String getImageUrl() {
         return imageUrl;
     }

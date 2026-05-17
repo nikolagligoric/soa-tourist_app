@@ -15,6 +15,7 @@ public class KeyPoint {
 
     private double latitude;
     private double longitude;
+    private int sequence;
 
     private String imageUrl;
 
@@ -26,11 +27,12 @@ public class KeyPoint {
     public KeyPoint() {
     }
 
-    public KeyPoint(String name, String description, double latitude, double longitude, String imageUrl, Tour tour) {
+    public KeyPoint(String name, String description, double latitude, double longitude, int sequence, String imageUrl, Tour tour) {
         this.name = name;
         this.description = description;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.sequence = sequence;
         this.imageUrl = imageUrl;
         this.tour = tour;
     }
@@ -50,7 +52,9 @@ public class KeyPoint {
     public double getLatitude() {
         return latitude;
     }
-
+    public int getSequence() {
+    	return sequence;
+    }
     public double getLongitude() {
         return longitude;
     }
@@ -81,6 +85,9 @@ public class KeyPoint {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+    public void setSequence(int sequence) {
+    	this.sequence = sequence;
     }
 
     public void setImageUrl(String imageUrl) {

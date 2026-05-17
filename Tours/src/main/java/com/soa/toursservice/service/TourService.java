@@ -46,6 +46,7 @@ public class TourService {
     public KeyPoint addKeyPoint(Long tourId, String username, CreateKeyPointRequestDTO request){
 
         Optional<Tour> optionalTour = tourRepository.findById(tourId);
+        List<KeyPoint> list = keyPointRepository.findFirstByTourIdOrderBySequenceDesc(tourId);
 
         if (optionalTour.isEmpty()) {
             throw new RuntimeException("Tour not found");
@@ -64,6 +65,12 @@ public class TourService {
         keyPoint.setLongitude(request.getLongitude());
         keyPoint.setImageUrl(request.getImageUrl());
 
+
+        int nextSequence = list.isEmpty()
+                ? 1
+                : list.get(0).getSequence() + 1;
+        
+        keyPoint.setSequence(nextSequence);
         keyPoint.setTour(tour);
 
         return keyPointRepository.save(keyPoint);
@@ -83,6 +90,48 @@ public class TourService {
             throw new RuntimeException("You can view key points only for your own tours");
         }
 
-        return keyPointRepository.findByTourId(tourId);
+        return keyPointRepository.findByTourIdOrderBySequenceAsc(tourId);
+    }
+    
+    public KeyPoint updateKeyPoint(Long tourId, Long keyPointId, String username, CreateKeyPointRequestDTO request) {
+        Tour tour = tourRepository.findById(tourId)
+                .orElseThrow(() -> new RuntimeException("Tour not found"));
+
+        if (!tour.getAuthorUsername().equals(username)) {
+            throw new RuntimeException("You can update key points only for your own tours");
+        }
+
+        KeyPoint keyPoint = keyPointRepository.findById(keyPointId)
+                .orElseThrow(() -> new RuntimeException("KeyPoint not found"));
+
+        if (!keyPoint.getTour().getId().equals(tourId)) {
+            throw new RuntimeException("KeyPoint does not belong to this tour");
+        }
+
+        keyPoint.setName(request.getName());
+        keyPoint.setDescription(request.getDescription());
+        keyPoint.setLatitude(request.getLatitude());
+        keyPoint.setLongitude(request.getLongitude());
+        keyPoint.setImageUrl(request.getImageUrl());
+
+        return keyPointRepository.save(keyPoint);
+    }
+
+    public void deleteKeyPoint(Long tourId, Long keyPointId, String username) {
+        Tour tour = tourRepository.findById(tourId)
+                .orElseThrow(() -> new RuntimeException("Tour not found"));
+
+        if (!tour.getAuthorUsername().equals(username)) {
+            throw new RuntimeException("You can delete key points only for your own tours");
+        }
+
+        KeyPoint keyPoint = keyPointRepository.findById(keyPointId)
+                .orElseThrow(() -> new RuntimeException("KeyPoint not found"));
+
+        if (!keyPoint.getTour().getId().equals(tourId)) {
+            throw new RuntimeException("KeyPoint does not belong to this tour");
+        }
+
+        keyPointRepository.delete(keyPoint);
     }
 }
