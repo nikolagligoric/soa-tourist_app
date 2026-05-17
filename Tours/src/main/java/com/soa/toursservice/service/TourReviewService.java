@@ -48,4 +48,20 @@ public class TourReviewService {
     public List<TourReview> getReviewsForTour(Long tourId) {
         return tourReviewRepository.findByTourId(tourId);
     }
+    
+    public void deleteReview(Long reviewId, String username) {
+
+        TourReview review = tourReviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("Review not found."));
+
+        if (!review.getTouristUsername().equals(username)) {
+            throw new RuntimeException("You can only delete your own reviews.");
+        }
+
+        review.getImageUrls().clear();
+
+        tourReviewRepository.save(review);
+
+        tourReviewRepository.delete(review);
+    }
 }

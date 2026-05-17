@@ -101,6 +101,26 @@ public class TourController {
     public List<TourReview> getReviewsForTour(@PathVariable Long tourId) {
         return tourReviewService.getReviewsForTour(tourId);
     }
+    
+    @DeleteMapping("/{tourId}/reviews/{reviewId}")
+    public String deleteReview(@PathVariable Long tourId,
+                               @PathVariable Long reviewId,
+                               Authentication authentication) {
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String username = jwt.getClaim("username");
+        String role = jwt.getClaim("role");
+
+        if (!"Tourist".equals(role)) {
+            throw new RuntimeException("Only tourists can delete reviews");
+        }
+
+        tourReviewService.deleteReview(reviewId, username);
+
+        return "Review deleted successfully.";
+    }
+    
+    
 
     @PutMapping("/{tourId}/keypoints/{keyPointId}")
     public KeyPoint updateKeyPoint(@PathVariable Long tourId,
