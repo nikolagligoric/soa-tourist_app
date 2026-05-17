@@ -2,8 +2,11 @@ package com.soa.toursservice.controller;
 
 import com.soa.toursservice.dto.CreateKeyPointRequestDTO;
 import com.soa.toursservice.dto.CreateTourRequestDTO;
+import com.soa.toursservice.dto.CreateTourReviewRequest;
 import com.soa.toursservice.model.KeyPoint;
 import com.soa.toursservice.model.Tour;
+import com.soa.toursservice.model.TourReview;
+import com.soa.toursservice.service.TourReviewService;
 import com.soa.toursservice.service.TourService;
 
 import org.springframework.security.core.Authentication;
@@ -17,9 +20,12 @@ import java.util.List;
 public class TourController {
 
     private final TourService tourService;
+    private final TourReviewService tourReviewService;
 
-    public TourController(TourService tourService) {
+    public TourController(TourService tourService,
+                          TourReviewService tourReviewService) {
         this.tourService = tourService;
+        this.tourReviewService = tourReviewService;
     }
 
     @PostMapping
@@ -73,6 +79,27 @@ public class TourController {
         }
 
         return tourService.getKeyPointsForTour(tourId, username);
+    }
+
+    @PostMapping("/{tourId}/reviews")
+    public TourReview createReview(@PathVariable Long tourId,
+                                   Authentication authentication,
+                                   @RequestBody CreateTourReviewRequest request) {
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String username = jwt.getClaim("username");
+        String role = jwt.getClaim("role");
+
+        if (!"Tourist".equals(role)) {
+            throw new RuntimeException("Only tourists can leave reviews");
+        }
+
+        return tourReviewService.createReview(tourId, request, username);
+    }
+
+    @GetMapping("/{tourId}/reviews")
+    public List<TourReview> getReviewsForTour(@PathVariable Long tourId) {
+        return tourReviewService.getReviewsForTour(tourId);
     }
 
     @PutMapping("/{tourId}/keypoints/{keyPointId}")
