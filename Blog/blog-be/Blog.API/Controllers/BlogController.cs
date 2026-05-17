@@ -50,10 +50,60 @@ namespace Blog.API.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var blogs = await _blogService.GetAllBlogsAsync();
+
+                var result = blogs.Select(blog => new BlogCreatedDto
+                {
+                    Id = blog.Id,
+                    Title = blog.Title,
+                    Description = blog.Description,
+                    CreatedAt = blog.CreatedAt,
+                    AuthorUsername = blog.AuthorUsername,
+                    ImageUrls = blog.Images.Select(i => i.ImageUrl).ToList()
+                }).ToList();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{blogId}")]
+        public async Task<IActionResult> GetById(string blogId)
+        {
+            try
+            {
+                var blog = await _blogService.GetBlogByIdAsync(blogId);
+
+                var result = new BlogCreatedDto
+                {
+                    Id = blog.Id,
+                    Title = blog.Title,
+                    Description = blog.Description,
+                    CreatedAt = blog.CreatedAt,
+                    AuthorUsername = blog.AuthorUsername,
+                    ImageUrls = blog.Images.Select(i => i.ImageUrl).ToList()
+                };
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         //comments
         [Authorize]
         [HttpPost("{blogId}/comments")]
-        public async Task<IActionResult> AddComment(int blogId, [FromBody] CreateCommentDTO createCommentDto)
+        public async Task<IActionResult> AddComment(string blogId, [FromBody] CreateCommentDTO createCommentDto)
         {
             try
             {
@@ -70,7 +120,6 @@ namespace Blog.API.Controllers
                 var result = new CommentDto
                 {
                     Id = comment.Id,
-                    BlogId = comment.BlogId,
                     AuthorUsername = comment.AuthorUsername,
                     Text = comment.Text,
                     CreatedAt = comment.CreatedAt,
@@ -86,7 +135,7 @@ namespace Blog.API.Controllers
         }
 
         [HttpGet("{blogId}/comments")]
-        public async Task<IActionResult> GetComments(int blogId)
+        public async Task<IActionResult> GetComments(string blogId)
         {
             try
             {
@@ -95,7 +144,6 @@ namespace Blog.API.Controllers
                 var result = comments.Select(comment => new CommentDto
                 {
                     Id = comment.Id,
-                    BlogId = comment.BlogId,
                     AuthorUsername = comment.AuthorUsername,
                     Text = comment.Text,
                     CreatedAt = comment.CreatedAt,
@@ -113,7 +161,7 @@ namespace Blog.API.Controllers
         // Likes endpoints
         [Authorize]
         [HttpPost("{blogId}/like")]
-        public IActionResult Like(int blogId)
+        public IActionResult Like(string blogId)
         {
             try
             {
@@ -132,7 +180,7 @@ namespace Blog.API.Controllers
 
         [Authorize]
         [HttpDelete("{blogId}/like")]
-        public IActionResult Unlike(int blogId)
+        public IActionResult Unlike(string blogId)
         {
             try
             {
@@ -150,7 +198,7 @@ namespace Blog.API.Controllers
         }
 
         [HttpGet("{blogId}/likes")]
-        public IActionResult GetLikesCount(int blogId)
+        public IActionResult GetLikesCount(string blogId)
         {
             try
             {
@@ -165,7 +213,7 @@ namespace Blog.API.Controllers
 
         [Authorize]
         [HttpGet("{blogId}/has-liked")]
-        public IActionResult HasLiked(int blogId)
+        public IActionResult HasLiked(string blogId)
         {
             try
             {

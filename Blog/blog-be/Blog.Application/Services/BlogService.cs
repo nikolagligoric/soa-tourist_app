@@ -72,8 +72,23 @@ namespace Blog.Application.Services
             return _blogRepository.Add(blog);
         }
 
+        public async Task<List<Blog.Domain.Entities.Blog>> GetAllBlogsAsync()
+        {
+            return await _blogRepository.GetAllAsync();
+        }
+
+        public async Task<Blog.Domain.Entities.Blog> GetBlogByIdAsync(string blogId)
+        {
+            var blog = await _blogRepository.GetByIdAsync(blogId);
+
+            if (blog == null)
+                throw new ArgumentException("Blog not found.");
+
+            return blog;
+        }
+
         //comments
-        public async Task<Comment> AddCommentAsync(int blogId, CreateCommentDTO createCommentDto, string authorUsername, string token)
+        public async Task<Comment> AddCommentAsync(string blogId, CreateCommentDTO createCommentDto, string authorUsername, string token)
         {
             if (string.IsNullOrWhiteSpace(authorUsername))
                 throw new ArgumentException("Author username is required.");
@@ -115,17 +130,16 @@ namespace Blog.Application.Services
 
             var comment = new Comment
             {
-                BlogId = blogId,
                 AuthorUsername = authorUsername,
                 Text = createCommentDto.Text,
                 CreatedAt = DateTime.UtcNow,
                 LastModifiedAt = DateTime.UtcNow
             };
 
-            return await _blogRepository.AddCommentAsync(comment);
+            return await _blogRepository.AddCommentAsync(blogId, comment);
         }
 
-        public async Task<List<Comment>> GetCommentsByBlogIdAsync(int blogId)
+        public async Task<List<Comment>> GetCommentsByBlogIdAsync(string blogId)
         {
             var blog = await _blogRepository.GetByIdAsync(blogId);
 
@@ -136,7 +150,7 @@ namespace Blog.Application.Services
         }
 
         // Likes
-        public int LikeBlog(int blogId, string userId)
+        public int LikeBlog(string blogId, string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
                 throw new ArgumentException("UserId is required.");
@@ -151,16 +165,15 @@ namespace Blog.Application.Services
 
             var like = new Like
             {
-                BlogId = blogId,
                 UserId = userId,
                 CreatedAt = DateTime.UtcNow
             };
 
-            _blogRepository.AddLike(like);
+            _blogRepository.AddLike(blogId, like);
             return _blogRepository.GetLikesCount(blogId);
         }
 
-        public int UnlikeBlog(int blogId, string userId)
+        public int UnlikeBlog(string blogId, string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
                 throw new ArgumentException("UserId is required.");
@@ -173,11 +186,11 @@ namespace Blog.Application.Services
             if (like == null)
                 throw new InvalidOperationException("Like not found for this user on the blog.");
 
-            _blogRepository.RemoveLike(like);
+            _blogRepository.RemoveLike(blogId, like);
             return _blogRepository.GetLikesCount(blogId);
         }
 
-        public int GetLikesCount(int blogId)
+        public int GetLikesCount(string blogId)
         {
             var blog = _blogRepository.GetByIdAsync(blogId).GetAwaiter().GetResult();
             if (blog == null)
@@ -186,7 +199,7 @@ namespace Blog.Application.Services
             return _blogRepository.GetLikesCount(blogId);
         }
 
-        public bool UserHasLiked(int blogId, string userId)
+        public bool UserHasLiked(string blogId, string userId)
         {
             var blog = _blogRepository.GetByIdAsync(blogId).GetAwaiter().GetResult();
             if (blog == null)
