@@ -10,16 +10,17 @@ namespace Blog.Application.Interfaces
     public interface IBlogRepository
     {
         Blog.Domain.Entities.Blog Add(Blog.Domain.Entities.Blog blog);
-        Task<Blog.Domain.Entities.Blog?> GetByIdAsync(int blogId);
-        Task<Comment> AddCommentAsync(Comment comment);
-        Task<List<Comment>> GetCommentsByBlogIdAsync(int blogId);
+        Task<List<Blog.Domain.Entities.Blog>> GetAllAsync();
+        Task<Blog.Domain.Entities.Blog?> GetByIdAsync(string blogId);
+        Task<Comment> AddCommentAsync(string blogId, Comment comment);
+        Task<List<Comment>> GetCommentsByBlogIdAsync(string blogId);
         Task<List<Blog.Domain.Entities.Blog>> GetBlogsByAuthorsAsync(List<string> authors);
 
         // Likes
-        Like AddLike(Like like);
-        void RemoveLike(Like like);
-        int GetLikesCount(int blogId);
-        bool UserHasLiked(int blogId, string userId);
-        Like? GetLikeByBlogAndUser(int blogId, string userId);
+        Like AddLike(string blogId, Like like);
+        void RemoveLike(string blogId, Like like);
+        int GetLikesCount(string blogId);
+        bool UserHasLiked(string blogId, string userId);
+        Like? GetLikeByBlogAndUser(string blogId, string userId);
     }
 }
