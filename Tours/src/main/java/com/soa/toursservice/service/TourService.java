@@ -16,7 +16,8 @@ import java.time.LocalDateTime;
 import com.soa.toursservice.dto.TourPreviewDTO;
 import java.util.ArrayList;
 import java.util.Comparator;
-
+import com.soa.toursservice.dto.TourDetailsDTO;
+import com.soa.toursservice.repository.TourPurchaseTokenRepository;
 import java.util.List;
 
 @Service
@@ -25,11 +26,13 @@ public class TourService {
     private final TourRepository tourRepository;
     private final KeyPointRepository keyPointRepository;
     private final TourDurationRepository tourDurationRepository;
+    private final TourPurchaseTokenRepository tourPurchaseTokenRepository;
     
-    public TourService(TourRepository tourRepository, KeyPointRepository keyPointRepository, TourDurationRepository tourDurationRepository) {
+    public TourService(TourRepository tourRepository, KeyPointRepository keyPointRepository, TourDurationRepository tourDurationRepository, TourPurchaseTokenRepository tourPurchaseTokenRepository) {
         this.tourRepository = tourRepository;
         this.keyPointRepository = keyPointRepository;
         this.tourDurationRepository = tourDurationRepository;
+        this.tourPurchaseTokenRepository = tourPurchaseTokenRepository;
     }
 
     public Tour createTour(CreateTourRequestDTO request) {
@@ -313,5 +316,42 @@ public class TourService {
         }
 
         return result;
+    }
+
+    public TourDetailsDTO getTourDetails(Long tourId, String touristUsername) {
+
+        Tour tour = tourRepository.findById(tourId)
+                .orElseThrow(() -> new RuntimeException("Tour not found"));
+
+        if (tour.getStatus() != TourStatus.PUBLISHED) {
+            throw new RuntimeException("Tour is not published");
+        }
+
+        boolean purchased = tourPurchaseTokenRepository
+                .existsByTouristUsernameAndTourId(touristUsername, tourId);
+
+        if (!purchased) {
+            throw new RuntimeException("You must purchase the tour to see full details");
+        }
+
+        TourDetailsDTO dto = new TourDetailsDTO();
+
+        dto.setId(tour.getId());
+        dto.setName(tour.getName());
+        dto.setDescription(tour.getDescription());
+        dto.setPrice(tour.getPrice());
+        dto.setDistanceInKm(tour.getDistanceInKm());
+
+        dto.setDurations(tour.getDurations());
+        dto.setReviews(tour.getReviews());
+
+        List<KeyPoint> sortedKeyPoints = tour.getKeyPoints()
+                .stream()
+                .sorted(Comparator.comparing(KeyPoint::getSequence))
+                .toList();
+
+        dto.setKeyPoints(sortedKeyPoints);
+
+        return dto;
     }
 }
