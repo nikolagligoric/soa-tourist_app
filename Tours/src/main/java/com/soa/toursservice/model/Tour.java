@@ -3,6 +3,7 @@ package com.soa.toursservice.model;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tours")
@@ -25,6 +26,8 @@ public class Tour {
     private TourStatus status;
 
     private double price;
+    
+    private double distanceInKm;
 
     private String authorUsername;
 
@@ -33,6 +36,12 @@ public class Tour {
     
     @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TourReview> reviews;
+    
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TourDuration> durations = new ArrayList<>();
+    
+    private LocalDateTime publishedAt;
+    private LocalDateTime archivedAt;
 
     public Tour() {
     }
@@ -110,5 +119,37 @@ public class Tour {
 
     public void setReviews(List<TourReview> reviews) {
         this.reviews = reviews;
+    }
+    
+    public double getDistanceInKm() {
+        return distanceInKm;
+    }
+
+    public void setDistanceInKm(double distanceInKm) {
+        this.distanceInKm = distanceInKm;
+    }
+    
+    public List<TourDuration> getDurations() {
+        return durations;
+    }
+
+    public void setDurations(List<TourDuration> durations) {
+        this.durations = durations;
+    }
+    
+    public LocalDateTime getPublishedAt() {
+        return publishedAt;
+    }
+
+    public void setPublishedAt(LocalDateTime publishedAt) {
+        this.publishedAt = publishedAt;
+    }
+
+    public LocalDateTime getArchivedAt() {
+        return archivedAt;
+    }
+
+    public void setArchivedAt(LocalDateTime archivedAt) {
+        this.archivedAt = archivedAt;
     }
 }
