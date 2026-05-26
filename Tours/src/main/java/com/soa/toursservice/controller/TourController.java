@@ -1,6 +1,8 @@
 package com.soa.toursservice.controller;
 
 import com.soa.toursservice.dto.CreateKeyPointRequestDTO;
+import com.soa.toursservice.dto.CreateTourDurationRequestDTO;
+import com.soa.toursservice.model.TourDuration;
 import com.soa.toursservice.dto.CreateTourRequestDTO;
 import com.soa.toursservice.dto.CreateTourReviewRequest;
 import com.soa.toursservice.model.KeyPoint;
@@ -12,7 +14,7 @@ import com.soa.toursservice.service.TourService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
-
+import com.soa.toursservice.dto.TourPreviewDTO;
 import java.util.List;
 
 @RestController
@@ -153,5 +155,77 @@ public class TourController {
         }
 
         tourService.deleteKeyPoint(tourId, keyPointId, username);
+    }
+    @PostMapping("/{tourId}/durations")
+    public TourDuration addDuration(@PathVariable Long tourId,
+                                    Authentication authentication,
+                                    @RequestBody CreateTourDurationRequestDTO request) {
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String username = jwt.getClaim("username");
+        String role = jwt.getClaim("role");
+
+        if (!"Guide".equals(role)) {
+            throw new RuntimeException("Only guides can add durations");
+        }
+
+        return tourService.addTourDuration(tourId, username, request);
+    }
+    @PutMapping("/{tourId}/publish")
+    public Tour publishTour(@PathVariable Long tourId,
+                            Authentication authentication) {
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String username = jwt.getClaim("username");
+        String role = jwt.getClaim("role");
+
+        if (!"Guide".equals(role)) {
+            throw new RuntimeException("Only guides can publish tours");
+        }
+
+        return tourService.publishTour(tourId, username);
+    }
+    
+    @PutMapping("/{tourId}/archive")
+    public Tour archiveTour(@PathVariable Long tourId,
+                            Authentication authentication) {
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String username = jwt.getClaim("username");
+        String role = jwt.getClaim("role");
+
+        if (!"Guide".equals(role)) {
+            throw new RuntimeException("Only guides can archive tours");
+        }
+
+        return tourService.archiveTour(tourId, username);
+    }
+    
+    @PutMapping("/{tourId}/reactivate")
+    public Tour reactivateTour(@PathVariable Long tourId,
+                               Authentication authentication) {
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String username = jwt.getClaim("username");
+        String role = jwt.getClaim("role");
+
+        if (!"Guide".equals(role)) {
+            throw new RuntimeException("Only guides can reactivate tours");
+        }
+
+        return tourService.reactivateTour(tourId, username);
+    }
+    
+    @GetMapping("/published")
+    public List<TourPreviewDTO> getPublishedToursForTourists(Authentication authentication) {
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String role = jwt.getClaim("role");
+
+        if (!"Tourist".equals(role)) {
+            throw new RuntimeException("Only tourists can view published tours");
+        }
+
+        return tourService.getPublishedToursForTourists();
     }
 }
