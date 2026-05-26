@@ -10,7 +10,7 @@ import com.soa.toursservice.model.Tour;
 import com.soa.toursservice.model.TourReview;
 import com.soa.toursservice.service.TourReviewService;
 import com.soa.toursservice.service.TourService;
-
+import com.soa.toursservice.dto.TourDetailsDTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -227,5 +227,21 @@ public class TourController {
         }
 
         return tourService.getPublishedToursForTourists();
+    }
+
+    @GetMapping("/{tourId}")
+    public TourDetailsDTO getTourDetails(@PathVariable Long tourId,
+                                         Authentication authentication) {
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+
+        String username = jwt.getClaim("username");
+        String role = jwt.getClaim("role");
+
+        if (!"Tourist".equals(role)) {
+            throw new RuntimeException("Only tourists can view tour details");
+        }
+
+        return tourService.getTourDetails(tourId, username);
     }
 }
