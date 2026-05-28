@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+option csharp_namespace = "UsersRpc";
+
+import "google/api/annotations.proto";
+
+package users;
+
+service UsersRpcService {
+  rpc Register (RegisterRequest) returns (RegisterResponse) {
+    option (google.api.http) = {
+      post: "/api/users/register"
+      body: "*"
+    };
+  }
+
+  rpc Login (LoginRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/api/users/login"
+      body: "*"
+    };
+  }
+}
+
+message RegisterRequest {
+  string firstName = 1;
+  string lastName = 2;
+  string userName = 3;
+  string password = 4;
+  string email = 5;
+  string role = 6;
+}
+
+message RegisterResponse {
+  int32 id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string userName = 4;
+  string email = 5;
+  string role = 6;
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+}

@@ -7,12 +7,13 @@ using Stakeholders.Application.Services;
 using Stakeholders.Infrastructure.Authentication;
 using Stakeholders.Infrastructure.Persistence;
 using Stakeholders.Infrastructure.Repositories;
+using Stakeholders.API.Grpc;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-
+builder.Services.AddGrpc();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -78,7 +79,7 @@ app.UseSwaggerUI();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.MapGrpcService<UsersGrpcService>();
 app.MapControllers();
 
 app.Run();

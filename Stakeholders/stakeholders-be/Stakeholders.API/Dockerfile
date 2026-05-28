@@ -12,10 +12,10 @@ RUN dotnet build Stakeholders.API/Stakeholders.API.csproj -c Release
 FROM build AS publish
 RUN dotnet publish Stakeholders.API/Stakeholders.API.csproj -c Release -o /app/publish
 
-ENV ASPNETCORE_URLS=http://+:80
-
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+ENV ASPNETCORE_URLS=https://+:8080
 
 CMD ["dotnet", "Stakeholders.API.dll"]
