@@ -570,3 +570,14 @@ docker-compose.override.yml
 # Database init scripts (local only)
 Blog/blog-be/blog_init.sql
 Stakeholders/stakeholders-be/stakeholders_init.sql
+
+# Java / Maven
+target/
+*.class
+
+# IntelliJ
+*.iml
+out/
+
+# MacOS
+.DS_Store

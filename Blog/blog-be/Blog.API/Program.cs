@@ -1,23 +1,28 @@
-using Blog.Infrastructure.Persistence;
-using Blog.Application.Interfaces;
+﻿using Blog.Application.Interfaces;
 using Blog.Infrastructure.Repositories;
 using Blog.Application.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddSingleton<IMongoClient>(
+    new MongoClient(builder.Configuration.GetConnectionString("MongoDb"))
+);
 
+builder.Services.AddSingleton<IMongoDatabase>(sp =>
+{
+    var client = sp.GetRequiredService<IMongoClient>();
+    return client.GetDatabase("blog_db");
+});
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 builder.Services.AddScoped<BlogService>();
 
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 
 var key = Encoding.UTF8.GetBytes("L1uKpZQzI1Yx0+OaS0kXkE7u0n/5Q0U3R5s3FVmXcXU=");
 
@@ -74,12 +79,6 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
-}
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSwagger();
@@ -88,4 +87,3 @@ app.UseStaticFiles();
 app.MapControllers();
 
 app.Run();
-

@@ -1,9 +1,16 @@
 ﻿using Blog.Application.DTOs;
 using Blog.Application.Interfaces;
 using Blog.Domain.Entities;
+using System.Net.Http;
+using System.Net.Http.Json;
+
 
 namespace Blog.Application.Services
 {
+    public class FollowCheckResponse
+    {
+        public bool IsFollowing { get; set; }
+    }
     public class BlogService
     {
         private readonly IBlogRepository _blogRepository;
@@ -65,8 +72,23 @@ namespace Blog.Application.Services
             return _blogRepository.Add(blog);
         }
 
+        public async Task<List<Blog.Domain.Entities.Blog>> GetAllBlogsAsync()
+        {
+            return await _blogRepository.GetAllAsync();
+        }
+
+        public async Task<Blog.Domain.Entities.Blog> GetBlogByIdAsync(string blogId)
+        {
+            var blog = await _blogRepository.GetByIdAsync(blogId);
+
+            if (blog == null)
+                throw new ArgumentException("Blog not found.");
+
+            return blog;
+        }
+
         //comments
-        public async Task<Comment> AddCommentAsync(int blogId, CreateCommentDTO createCommentDto, string authorUsername)
+        public async Task<Comment> AddCommentAsync(string blogId, CreateCommentDTO createCommentDto, string authorUsername, string token)
         {
             if (string.IsNullOrWhiteSpace(authorUsername))
                 throw new ArgumentException("Author username is required.");
@@ -82,19 +104,42 @@ namespace Blog.Application.Services
             if (blog == null)
                 throw new ArgumentException("Blog not found.");
 
+            if (authorUsername != blog.AuthorUsername)
+            {
+                using var client = new HttpClient();
+
+                client.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var response = await client.GetAsync(
+                    $"http://followers:8082/api/followers/check/{blog.AuthorUsername}"
+                );
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new ArgumentException("Could not verify following status.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<FollowCheckResponse>();
+
+                if (result == null || !result.IsFollowing)
+                {
+                    throw new ArgumentException("You must follow this user to comment on their blog.");
+                }
+            }
+
             var comment = new Comment
             {
-                BlogId = blogId,
                 AuthorUsername = authorUsername,
                 Text = createCommentDto.Text,
                 CreatedAt = DateTime.UtcNow,
                 LastModifiedAt = DateTime.UtcNow
             };
 
-            return await _blogRepository.AddCommentAsync(comment);
+            return await _blogRepository.AddCommentAsync(blogId, comment);
         }
 
-        public async Task<List<Comment>> GetCommentsByBlogIdAsync(int blogId)
+        public async Task<List<Comment>> GetCommentsByBlogIdAsync(string blogId)
         {
             var blog = await _blogRepository.GetByIdAsync(blogId);
 
@@ -105,7 +150,7 @@ namespace Blog.Application.Services
         }
 
         // Likes
-        public int LikeBlog(int blogId, string userId)
+        public int LikeBlog(string blogId, string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
                 throw new ArgumentException("UserId is required.");
@@ -120,16 +165,15 @@ namespace Blog.Application.Services
 
             var like = new Like
             {
-                BlogId = blogId,
                 UserId = userId,
                 CreatedAt = DateTime.UtcNow
             };
 
-            _blogRepository.AddLike(like);
+            _blogRepository.AddLike(blogId, like);
             return _blogRepository.GetLikesCount(blogId);
         }
 
-        public int UnlikeBlog(int blogId, string userId)
+        public int UnlikeBlog(string blogId, string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
                 throw new ArgumentException("UserId is required.");
@@ -142,11 +186,11 @@ namespace Blog.Application.Services
             if (like == null)
                 throw new InvalidOperationException("Like not found for this user on the blog.");
 
-            _blogRepository.RemoveLike(like);
+            _blogRepository.RemoveLike(blogId, like);
             return _blogRepository.GetLikesCount(blogId);
         }
 
-        public int GetLikesCount(int blogId)
+        public int GetLikesCount(string blogId)
         {
             var blog = _blogRepository.GetByIdAsync(blogId).GetAwaiter().GetResult();
             if (blog == null)
@@ -155,13 +199,37 @@ namespace Blog.Application.Services
             return _blogRepository.GetLikesCount(blogId);
         }
 
-        public bool UserHasLiked(int blogId, string userId)
+        public bool UserHasLiked(string blogId, string userId)
         {
             var blog = _blogRepository.GetByIdAsync(blogId).GetAwaiter().GetResult();
             if (blog == null)
                 throw new ArgumentException("Blog not found.");
 
             return _blogRepository.UserHasLiked(blogId, userId);
+        }
+
+        public async Task<List<Blog.Domain.Entities.Blog>> GetBlogsFromFollowingAsync(string token, string username)
+        {
+            using var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var following = await client.GetFromJsonAsync<List<string>>(
+                "http://followers:8082/api/followers/following"
+            );
+
+            if (following == null || !following.Any())
+            {
+                return new List<Blog.Domain.Entities.Blog>();
+            }
+
+            if (!following.Contains(username))
+            {
+                following.Add(username);
+            }
+
+            return await _blogRepository.GetBlogsByAuthorsAsync(following);
         }
     }
 }
