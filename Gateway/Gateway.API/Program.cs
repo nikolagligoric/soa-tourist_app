@@ -103,6 +103,13 @@ app.Map("/{**path}", async (HttpContext context, string path) =>
         return;
     }
 
+    if (path.StartsWith("purchase/", StringComparison.OrdinalIgnoreCase))
+    {
+        var newPath = path["purchase/".Length..];
+        await ProxyRequest(context, "http://purchase:8080", newPath);
+        return;
+    }
+
     context.Response.StatusCode = StatusCodes.Status404NotFound;
     await context.Response.WriteAsync("Gateway route not found.");
 });

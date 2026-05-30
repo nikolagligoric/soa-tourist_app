@@ -161,9 +161,40 @@ services:
       ME_CONFIG_BASICAUTH: "true"
     depends_on:
       - blog-mongo
+  
+  purchase-database:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: purchase_db
+    volumes:
+      - purchase-database-data:/var/lib/postgresql/data
+    ports:
+      - "5436:5432"
+
+  purchase:
+    build:
+      context: ./Purchase
+      dockerfile: Purchase.API/Dockerfile
+      target: final
+    restart: on-failure
+    ports:
+      - "8084:8080"
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: "Host=purchase-database;Port=5432;Database=purchase_db;Username=postgres;Password=postgres"
+      Services__Tours: "http://tours:8083"
+      Jwt__Key: "L1uKpZQzI1Yx0+OaS0kXkE7u0n/5Q0U3R5s3FVmXcXU="
+    depends_on:
+      - purchase-database
+      - tours
+
 volumes:
   database-data:
   blog-mongo-data:
   pgadmin-data:
   neo4j-followers-data:
   tours-database-data:
+  purchase-database-data:

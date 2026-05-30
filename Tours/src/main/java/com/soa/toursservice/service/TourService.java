@@ -1,23 +1,20 @@
 package com.soa.toursservice.service;
 
-import com.soa.toursservice.dto.CreateTourRequestDTO;
+import com.soa.toursservice.dto.*;
 import com.soa.toursservice.model.Tour;
 import com.soa.toursservice.model.TourStatus;
 import com.soa.toursservice.repository.KeyPointRepository;
 import com.soa.toursservice.repository.TourDurationRepository;
 import com.soa.toursservice.repository.TourRepository;
 import org.springframework.stereotype.Service;
-import com.soa.toursservice.dto.CreateKeyPointRequestDTO;
-import com.soa.toursservice.dto.CreateTourDurationRequestDTO;
 import com.soa.toursservice.model.KeyPoint;
 import com.soa.toursservice.model.TourDuration;
 import java.util.Optional;
 import java.time.LocalDateTime;
-import com.soa.toursservice.dto.TourPreviewDTO;
 import java.util.ArrayList;
 import java.util.Comparator;
-import com.soa.toursservice.dto.TourDetailsDTO;
-import com.soa.toursservice.repository.TourPurchaseTokenRepository;
+import com.soa.toursservice.client.PurchaseClient;
+
 import java.util.List;
 
 @Service
@@ -26,13 +23,17 @@ public class TourService {
     private final TourRepository tourRepository;
     private final KeyPointRepository keyPointRepository;
     private final TourDurationRepository tourDurationRepository;
-    private final TourPurchaseTokenRepository tourPurchaseTokenRepository;
-    
-    public TourService(TourRepository tourRepository, KeyPointRepository keyPointRepository, TourDurationRepository tourDurationRepository, TourPurchaseTokenRepository tourPurchaseTokenRepository) {
+    private final PurchaseClient purchaseClient;
+
+    public TourService(TourRepository tourRepository,
+                       KeyPointRepository keyPointRepository,
+                       TourDurationRepository tourDurationRepository,
+                       PurchaseClient purchaseClient)
+    {
         this.tourRepository = tourRepository;
         this.keyPointRepository = keyPointRepository;
         this.tourDurationRepository = tourDurationRepository;
-        this.tourPurchaseTokenRepository = tourPurchaseTokenRepository;
+        this.purchaseClient = purchaseClient;
     }
 
     public Tour createTour(CreateTourRequestDTO request) {
@@ -318,7 +319,7 @@ public class TourService {
         return result;
     }
 
-    public TourDetailsDTO getTourDetails(Long tourId, String touristUsername) {
+    public TourDetailsDTO getTourDetails(Long tourId, String touristUsername, String token) {
 
         Tour tour = tourRepository.findById(tourId)
                 .orElseThrow(() -> new RuntimeException("Tour not found"));
@@ -327,8 +328,7 @@ public class TourService {
             throw new RuntimeException("Tour is not published");
         }
 
-        boolean purchased = tourPurchaseTokenRepository
-                .existsByTouristUsernameAndTourId(touristUsername, tourId);
+        boolean purchased = purchaseClient.hasPurchased(tourId, token);
 
         if (!purchased) {
             throw new RuntimeException("You must purchase the tour to see full details");
@@ -353,5 +353,18 @@ public class TourService {
         dto.setKeyPoints(sortedKeyPoints);
 
         return dto;
+    }
+
+    public TourPurchaseInfoDto getTourPurchaseInfo(Long tourId) {
+
+        Tour tour = tourRepository.findById(tourId)
+                .orElseThrow(() -> new RuntimeException("Tour not found"));
+
+        return new TourPurchaseInfoDto(
+                tour.getId(),
+                tour.getName(),
+                tour.getPrice(),
+                tour.getStatus().name()
+        );
     }
 }
