@@ -27,4 +27,6 @@ COPY --from=publish /app/publish .
 
 RUN mkdir -p /app/wwwroot/images && chmod -R 777 /app/wwwroot/images
 
+ENV ASPNETCORE_URLS=https://+:8080
+
 ENTRYPOINT ["dotnet", "Blog.API.dll"]
