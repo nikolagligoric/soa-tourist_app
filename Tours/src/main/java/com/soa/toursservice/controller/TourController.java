@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import com.soa.toursservice.dto.TourPreviewDTO;
 import java.util.List;
+import com.soa.toursservice.dto.TourPurchaseInfoDto;
 
 @RestController
 @RequestMapping("/api/tours")
@@ -242,6 +243,12 @@ public class TourController {
             throw new RuntimeException("Only tourists can view tour details");
         }
 
-        return tourService.getTourDetails(tourId, username);
+        String token = jwt.getTokenValue();
+        return tourService.getTourDetails(tourId, username, token);
+    }
+
+    @GetMapping("/{id}/purchase-info")
+    public TourPurchaseInfoDto getTourPurchaseInfo(@PathVariable Long id) {
+        return tourService.getTourPurchaseInfo(id);
     }
 }
