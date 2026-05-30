@@ -17,6 +17,7 @@ app.UseSwaggerUI();
 app.UseAuthorization();
 
 app.MapGrpcService<UsersGrpcGatewayService>();
+app.MapGrpcService<BlogGrpcGatewayService>();
 
 app.MapControllers();
 async Task ProxyRequest(HttpContext context, string targetBaseUrl, string path)

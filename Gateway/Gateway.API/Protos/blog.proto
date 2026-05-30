@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+option csharp_namespace = "BlogRpc";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+package blog;
+
+service BlogRpcService {
+  rpc AddComment (AddCommentRequest) returns (AddCommentResponse) {
+    option (google.api.http) = {
+      post: "/api/blogs/{blogId}/comments"
+      body: "comment"
+    };
+  }
+
+  rpc Like (LikeRequest) returns (LikeResponse) {
+    option (google.api.http) = {
+      post: "/api/blogs/{blogId}/like"
+      body: ""
+    };
+  }
+
+  rpc Unlike (UnlikeRequest) returns (LikeResponse) {
+    option (google.api.http) = {
+      delete: "/api/blogs/{blogId}/like"
+    };
+  }
+}
+
+message CreateCommentBody {
+  string text = 1;
+}
+
+message AddCommentRequest {
+  string blogId = 1;
+  CreateCommentBody comment = 2;
+}
+
+message CommentDto {
+  string id = 1;
+  string authorUsername = 2;
+  string text = 3;
+  google.protobuf.Timestamp createdAt = 4;
+  google.protobuf.Timestamp lastModifiedAt = 5;
+}
+
+message AddCommentResponse {
+  CommentDto comment = 1;
+}
+
+message LikeRequest {
+  string blogId = 1;
+}
+
+message UnlikeRequest {
+  string blogId = 1;
+}
+
+message LikeResponse {
+  int32 likes = 1;
+}

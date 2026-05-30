@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using MongoDB.Driver;
+using Blog.API.Grpc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ builder.Services.AddScoped<BlogService>();
 
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
+
+builder.Services.AddGrpc();
 
 var key = Encoding.UTF8.GetBytes("L1uKpZQzI1Yx0+OaS0kXkE7u0n/5Q0U3R5s3FVmXcXU=");
 
@@ -85,5 +88,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.UseStaticFiles();
 app.MapControllers();
+
+app.MapGrpcService<BlogGrpcService>();
+
 
 app.Run();
