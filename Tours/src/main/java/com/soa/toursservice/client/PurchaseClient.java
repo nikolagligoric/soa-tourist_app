@@ -1,35 +1,35 @@
 package com.soa.toursservice.client;
 
+import com.soa.toursservice.grpc.purchase.HasPurchasedTourRequest;
+import com.soa.toursservice.grpc.purchase.PurchaseRpcServiceGrpc;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 @Component
 public class PurchaseClient {
 
-    private final RestTemplate restTemplate;
-    private final String purchaseServiceUrl;
+    private final PurchaseRpcServiceGrpc.PurchaseRpcServiceBlockingStub purchaseStub;
 
-    public PurchaseClient(RestTemplate restTemplate,
-                          @Value("${purchase.service.url}") String purchaseServiceUrl) {
-        this.restTemplate = restTemplate;
-        this.purchaseServiceUrl = purchaseServiceUrl;
+    public PurchaseClient(
+            @Value("${purchase.grpc.host:purchase}") String purchaseGrpcHost,
+            @Value("${purchase.grpc.port:8080}") int purchaseGrpcPort
+    ) {
+        ManagedChannel channel = ManagedChannelBuilder
+                .forAddress(purchaseGrpcHost, purchaseGrpcPort)
+                .usePlaintext()
+                .build();
+
+        this.purchaseStub = PurchaseRpcServiceGrpc.newBlockingStub(channel);
     }
 
-    public boolean hasPurchased(Long tourId, String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
+    public boolean hasPurchased(Long tourId, String username) {
+        HasPurchasedTourRequest request = HasPurchasedTourRequest.newBuilder()
+                .setUsername(username)
+                .setTourId(tourId)
+                .build();
 
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<Boolean> response = restTemplate.exchange(
-                purchaseServiceUrl + "/api/cart/has-purchased/" + tourId,
-                HttpMethod.GET,
-                entity,
-                Boolean.class
-        );
-
-        return Boolean.TRUE.equals(response.getBody());
+        return purchaseStub.hasPurchasedTour(request).getHasPurchased();
     }
 }

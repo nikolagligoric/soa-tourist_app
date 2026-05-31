@@ -1,0 +1,18 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "PurchaseRpc";
+
+package purchase;
+
+service PurchaseRpcService {
+  rpc HasPurchasedTour (HasPurchasedTourRequest) returns (HasPurchasedTourResponse);
+}
+
+message HasPurchasedTourRequest {
+  string username = 1;
+  int64 tourId = 2;
+}
+
+message HasPurchasedTourResponse {
+  bool hasPurchased = 1;
+}

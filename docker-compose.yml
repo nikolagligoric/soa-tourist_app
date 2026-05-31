@@ -118,6 +118,8 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       SERVER_PORT: 8083
+      PURCHASE_GRPC_HOST: purchase
+      PURCHASE_GRPC_PORT: 8085
     depends_on:
       - tours-database
 
@@ -182,6 +184,7 @@ services:
     restart: on-failure
     ports:
       - "8084:8080"
+      - "9090:8085"
     environment:
       ASPNETCORE_URLS: http://+:8080
       ConnectionStrings__DefaultConnection: "Host=purchase-database;Port=5432;Database=purchase_db;Username=postgres;Password=postgres"

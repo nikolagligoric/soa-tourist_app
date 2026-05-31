@@ -7,11 +7,28 @@ using Purchase.Infrastructure.Clients;
 using Purchase.Infrastructure.Database;
 using Purchase.Infrastructure.Repositories;
 using System.Text;
+using Purchase.API.Grpc;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(8080, listenOptions =>
+    {
+        listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1;
+    });
+
+    options.ListenAnyIP(8085, listenOptions =>
+    {
+        listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
+    });
+});
+
+
 // Controllers
 builder.Services.AddControllers();
+
+builder.Services.AddGrpc();
 
 // OpenAPI / Swagger
 builder.Services.AddOpenApi();
@@ -63,7 +80,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 // JWT
 app.UseAuthentication();
@@ -71,5 +88,13 @@ app.UseAuthorization();
 
 // Controllers
 app.MapControllers();
+
+app.MapGrpcService<PurchaseGrpcService>();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<PurchaseContext>();
+    dbContext.Database.Migrate();
+}
 
 app.Run();
