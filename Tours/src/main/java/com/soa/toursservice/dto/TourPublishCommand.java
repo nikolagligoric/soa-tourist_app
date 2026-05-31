@@ -1,23 +1,26 @@
 package com.soa.toursservice.dto;
 
-public class CreateTourBlogRequest {
+public class TourPublishCommand {
 
     private Long tourId;
     private String tourName;
     private String tourDescription;
     private String authorUsername;
+    private String type;
 
-    public CreateTourBlogRequest() {
+    public TourPublishCommand() {
     }
 
-    public CreateTourBlogRequest(Long tourId,
-                                 String tourName,
-                                 String tourDescription,
-                                 String authorUsername) {
+    public TourPublishCommand(Long tourId,
+                              String tourName,
+                              String tourDescription,
+                              String authorUsername,
+                              String type) {
         this.tourId = tourId;
         this.tourName = tourName;
         this.tourDescription = tourDescription;
         this.authorUsername = authorUsername;
+        this.type = type;
     }
 
     public Long getTourId() {
@@ -50,5 +53,13 @@ public class CreateTourBlogRequest {
 
     public void setAuthorUsername(String authorUsername) {
         this.authorUsername = authorUsername;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -47,14 +47,18 @@ services:
     ports:
       - "8081:8080"
     environment:
-      ASPNETCORE_URLS: "https://+:8080;http://+:8082"
+      ASPNETCORE_URLS: https://+:8080
       ASPNETCORE_Kestrel__Certificates__Default__Password: password
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/blog.pfx
       ConnectionStrings__MongoDb: "mongodb://mongo:mongo123@blog-mongo:27017/blog_db?authSource=admin"
+      Nats__Url: nats://nats:4222
+      Nats__TourPublishCommandSubject: tour.publish.command
+      Nats__TourPublishReplySubject: tour.publish.reply
     volumes:
       - ${USERPROFILE}/.aspnet/https:/https:ro    
     depends_on:
       - blog-mongo
+      - nats
 
   blog-mongo:
     image: mongo:7
@@ -117,9 +121,18 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       SERVER_PORT: 8083
-      BLOG_SERVICE_URL: http://blog:8082
+      NATS_URL: nats://nats:4222
+      NATS_TOUR_PUBLISH_COMMAND_SUBJECT: tour.publish.command
+      NATS_TOUR_PUBLISH_REPLY_SUBJECT: tour.publish.reply
     depends_on:
       - tours-database
+      - nats
+
+  nats:
+    image: nats
+    restart: on-failure
+    ports:
+      - "4222:4222"
 
   gateway:
     build:

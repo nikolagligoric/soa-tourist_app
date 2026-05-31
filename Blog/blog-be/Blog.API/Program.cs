@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using MongoDB.Driver;
 using Blog.API.Grpc;
+using Blog.API.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 });
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 builder.Services.AddScoped<BlogService>();
+builder.Services.AddHostedService<TourPublishCommandSubscriber>();
 
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
