@@ -54,5 +54,38 @@ namespace Stakeholders.API.Grpc
                 Token = token
             });
         }
+
+        public override Task<ProfileResponse> GetProfile(GetProfileRequest request, ServerCallContext context)
+        {
+            var profile = _userService.ViewMyProfile(request.Username);
+
+            return Task.FromResult(new ProfileResponse
+            {
+                FirstName = profile.FirstName,
+                LastName = profile.LastName,
+                ProfileImageUrl = profile.ProfileImageUrl ?? "",
+                Bio = profile.Bio ?? "",
+                Motto = profile.Motto ?? ""
+            });
+        }
+
+        public override Task<UpdateProfileResponse> UpdateProfile(UpdateProfileRequest request, ServerCallContext context)
+        {
+            var dto = new UpdateProfileDto
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                ProfileImageUrl = request.ProfileImageUrl,
+                Bio = request.Bio,
+                Motto = request.Motto
+            };
+
+            _userService.UpdateMyProfile(request.Username, dto);
+
+            return Task.FromResult(new UpdateProfileResponse
+            {
+                Message = "Profile updated successfully!"
+            });
+        }
     }
 }
