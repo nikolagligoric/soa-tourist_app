@@ -116,6 +116,7 @@ services:
     restart: on-failure
     ports:
       - "8083:8083"
+      - "9091:9091"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://tours-database:5432/tours_db
       SPRING_DATASOURCE_USERNAME: postgres

@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.soa.toursservice.grpc";
+option java_outer_classname = "TourExecutionProto";
+
+package tour_execution;
+
+service TourExecutionRpcService {
+  rpc StartTour (StartTourRequest) returns (StartTourResponse);
+}
+
+message StartTourRequest {
+  int64 tourId = 1;
+  string username = 2;
+  string role = 3;
+  string token = 4;
+}
+
+message StartTourResponse {
+  int64 id = 1;
+  int64 tourId = 2;
+  string touristUsername = 3;
+  string status = 4;
+  double startLatitude = 5;
+  double startLongitude = 6;
+  string startedAt = 7;
+  string lastActivityAt = 8;
+}

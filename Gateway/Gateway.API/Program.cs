@@ -1,4 +1,5 @@
 using Gateway.API.Grpc;
+using TourExecutionRpc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ app.UseAuthorization();
 
 app.MapGrpcService<UsersGrpcGatewayService>();
 app.MapGrpcService<BlogGrpcGatewayService>();
+app.MapGrpcService<TourExecutionGrpcGatewayService>();
 
 app.MapControllers();
 async Task ProxyRequest(HttpContext context, string targetBaseUrl, string path)
@@ -72,6 +74,38 @@ async Task ProxyRequest(HttpContext context, string targetBaseUrl, string path)
 
     await responseMessage.Content.CopyToAsync(context.Response.Body);
 }
+
+app.MapPost("/api/tour-executions/{tourId}/start-rpc", async (
+    long tourId,
+    HttpContext context) =>
+{
+    var authHeader = context.Request.Headers.Authorization.ToString();
+
+    if (string.IsNullOrWhiteSpace(authHeader))
+        return Results.Unauthorized();
+
+    var token = authHeader.StartsWith("Bearer ")
+        ? authHeader.Substring("Bearer ".Length)
+        : authHeader;
+
+    var jwt = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().ReadJwtToken(token);
+
+    var username = jwt.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
+    var role = jwt.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
+
+    using var channel = Grpc.Net.Client.GrpcChannel.ForAddress("http://tours:9091");
+    var client = new TourExecutionRpcService.TourExecutionRpcServiceClient(channel);
+
+    var response = await client.StartTourAsync(new StartTourRequest
+    {
+        TourId = tourId,
+        Username = username ?? "",
+        Role = role ?? "",
+        Token = token
+    });
+
+    return Results.Ok(response);
+});
 
 app.Map("/{**path}", async (HttpContext context, string path) =>
 {
