@@ -38,6 +38,7 @@ namespace Blog.API.Controllers
                     Title = blog.Title,
                     Description = blog.Description,
                     CreatedAt = blog.CreatedAt,
+                    TourId = blog.TourId,
                     AuthorUsername = blog.AuthorUsername,
                     ImageUrls = blog.Images.Select(i => i.ImageUrl).ToList()
                 };
@@ -63,6 +64,7 @@ namespace Blog.API.Controllers
                     Title = blog.Title,
                     Description = blog.Description,
                     CreatedAt = blog.CreatedAt,
+                    TourId = blog.TourId,
                     AuthorUsername = blog.AuthorUsername,
                     ImageUrls = blog.Images.Select(i => i.ImageUrl).ToList()
                 }).ToList();
@@ -88,6 +90,33 @@ namespace Blog.API.Controllers
                     Title = blog.Title,
                     Description = blog.Description,
                     CreatedAt = blog.CreatedAt,
+                    TourId = blog.TourId,
+                    AuthorUsername = blog.AuthorUsername,
+                    ImageUrls = blog.Images.Select(i => i.ImageUrl).ToList()
+                };
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("tour-announcement")]
+        public IActionResult CreateTourAnnouncement([FromBody] CreateTourBlogDTO createTourBlogDto)
+        {
+            try
+            {
+                var blog = _blogService.CreateTourAnnouncementBlog(createTourBlogDto);
+
+                var result = new BlogCreatedDto
+                {
+                    Id = blog.Id,
+                    Title = blog.Title,
+                    Description = blog.Description,
+                    CreatedAt = blog.CreatedAt,
+                    TourId = blog.TourId,
                     AuthorUsername = blog.AuthorUsername,
                     ImageUrls = blog.Images.Select(i => i.ImageUrl).ToList()
                 };
@@ -248,6 +277,7 @@ namespace Blog.API.Controllers
                     Title = blog.Title,
                     Description = blog.Description,
                     CreatedAt = blog.CreatedAt,
+                    TourId = blog.TourId,
                     AuthorUsername = blog.AuthorUsername,
                     ImageUrls = blog.Images.Select(i => i.ImageUrl).ToList()
                 }).ToList();

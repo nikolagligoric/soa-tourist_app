@@ -72,6 +72,33 @@ namespace Blog.Application.Services
             return _blogRepository.Add(blog);
         }
 
+        public Blog.Domain.Entities.Blog CreateTourAnnouncementBlog(CreateTourBlogDTO createTourBlogDto)
+        {
+            if (createTourBlogDto.TourId <= 0)
+                throw new ArgumentException("Tour id is required.");
+
+            if (string.IsNullOrWhiteSpace(createTourBlogDto.TourName))
+                throw new ArgumentException("Tour name is required.");
+
+            if (string.IsNullOrWhiteSpace(createTourBlogDto.TourDescription))
+                throw new ArgumentException("Tour description is required.");
+
+            if (string.IsNullOrWhiteSpace(createTourBlogDto.AuthorUsername))
+                throw new ArgumentException("Author username is required.");
+
+            var blog = new Blog.Domain.Entities.Blog
+            {
+                TourId = createTourBlogDto.TourId,
+                Title = $"New tour published: {createTourBlogDto.TourName}",
+                Description = createTourBlogDto.TourDescription,
+                CreatedAt = DateTime.UtcNow,
+                AuthorUsername = createTourBlogDto.AuthorUsername,
+                Images = new List<BlogImage>()
+            };
+
+            return _blogRepository.Add(blog);
+        }
+
         public async Task<List<Blog.Domain.Entities.Blog>> GetAllBlogsAsync()
         {
             return await _blogRepository.GetAllAsync();

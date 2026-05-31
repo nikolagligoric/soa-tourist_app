@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import com.soa.toursservice.client.PurchaseClient;
+import com.soa.toursservice.client.BlogClient;
 
 import java.util.List;
 
@@ -24,16 +25,19 @@ public class TourService {
     private final KeyPointRepository keyPointRepository;
     private final TourDurationRepository tourDurationRepository;
     private final PurchaseClient purchaseClient;
+    private final BlogClient blogClient;
 
     public TourService(TourRepository tourRepository,
                        KeyPointRepository keyPointRepository,
                        TourDurationRepository tourDurationRepository,
-                       PurchaseClient purchaseClient)
+                       PurchaseClient purchaseClient,
+                       BlogClient blogClient)
     {
         this.tourRepository = tourRepository;
         this.keyPointRepository = keyPointRepository;
         this.tourDurationRepository = tourDurationRepository;
         this.purchaseClient = purchaseClient;
+        this.blogClient = blogClient;
     }
 
     public Tour createTour(CreateTourRequestDTO request) {
@@ -248,7 +252,24 @@ public class TourService {
         tour.setStatus(TourStatus.PUBLISHED);
         tour.setPublishedAt(LocalDateTime.now());
 
-        return tourRepository.save(tour);
+        Tour publishedTour = tourRepository.save(tour);
+
+        try {
+            blogClient.createTourAnnouncementBlog(new CreateTourBlogRequest(
+                    publishedTour.getId(),
+                    publishedTour.getName(),
+                    publishedTour.getDescription(),
+                    publishedTour.getAuthorUsername()
+            ));
+
+            return publishedTour;
+        } catch (Exception ex) {
+            publishedTour.setStatus(TourStatus.DRAFT);
+            publishedTour.setPublishedAt(null);
+            tourRepository.save(publishedTour);
+
+            throw new RuntimeException("Publishing tour failed because blog could not be created. Tour was returned to draft.");
+        }
     }
     
     public Tour archiveTour(Long tourId, String username) {

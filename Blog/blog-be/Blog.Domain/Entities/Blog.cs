@@ -11,6 +11,8 @@ namespace Blog.Domain.Entities
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
+        [BsonIgnoreIfNull]
+        public long? TourId { get; set; }
         // Autor
         //public int AuthorId { get; set; }
         public string AuthorUsername { get; set; }
