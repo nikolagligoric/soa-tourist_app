@@ -77,9 +77,16 @@ public class ShoppingCartController : ControllerBase
             return Forbid("Only tourists can checkout");
         }
 
-        var tokens = await _shoppingCartService.CheckoutAsync(username);
+        try
+        {
+            var tokens = await _shoppingCartService.CheckoutAsync(username);
 
-        return Ok(tokens);
+            return Ok(tokens);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     private string GetUsername()

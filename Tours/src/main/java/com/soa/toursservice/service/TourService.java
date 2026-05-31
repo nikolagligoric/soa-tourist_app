@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import com.soa.toursservice.client.PurchaseClient;
+import com.soa.toursservice.messaging.TourPublishNatsPublisher;
 
 import java.util.List;
 
@@ -24,16 +25,19 @@ public class TourService {
     private final KeyPointRepository keyPointRepository;
     private final TourDurationRepository tourDurationRepository;
     private final PurchaseClient purchaseClient;
+    private final TourPublishNatsPublisher tourPublishNatsPublisher;
 
     public TourService(TourRepository tourRepository,
                        KeyPointRepository keyPointRepository,
                        TourDurationRepository tourDurationRepository,
-                       PurchaseClient purchaseClient)
+                       PurchaseClient purchaseClient,
+                       TourPublishNatsPublisher tourPublishNatsPublisher)
     {
         this.tourRepository = tourRepository;
         this.keyPointRepository = keyPointRepository;
         this.tourDurationRepository = tourDurationRepository;
         this.purchaseClient = purchaseClient;
+        this.tourPublishNatsPublisher = tourPublishNatsPublisher;
     }
 
     public Tour createTour(CreateTourRequestDTO request) {
@@ -46,9 +50,14 @@ public class TourService {
         tour.setTags(request.getTags());
         tour.setAuthorUsername(request.getAuthorUsername());
 
+        if (request.getAvailableSlots() <= 0) {
+            throw new RuntimeException("Available slots must be greater than zero");
+        }
+
         tour.setStatus(TourStatus.DRAFT);
         tour.setPrice(0);
         tour.setDistanceInKm(0);
+        tour.setAvailableSlots(request.getAvailableSlots());
 
         return tourRepository.save(tour);
     }
@@ -245,10 +254,31 @@ public class TourService {
             throw new RuntimeException("Tour must have at least one duration");
         }
 
-        tour.setStatus(TourStatus.PUBLISHED);
-        tour.setPublishedAt(LocalDateTime.now());
+        tour.setStatus(TourStatus.PUBLISHING);
+        tour.setPublishedAt(null);
 
-        return tourRepository.save(tour);
+        try {
+            Tour publishingTour = tourRepository.save(tour);
+
+            tourPublishNatsPublisher.publishCreateBlogCommand(new TourPublishCommand(
+                    publishingTour.getId(),
+                    publishingTour.getName(),
+                    publishingTour.getDescription(),
+                    publishingTour.getAuthorUsername(),
+                    "CreateTourBlog"
+            ));
+
+            return publishingTour;
+        } catch (Exception ex) {
+            tour.setStatus(TourStatus.DRAFT);
+            tour.setPublishedAt(null);
+            tourRepository.save(tour);
+
+            throw new RuntimeException(
+                    "Publishing tour failed because blog creation command could not be sent. Tour was returned to draft. Reason: "
+                            + ex.getMessage()
+            );
+        }
     }
     
     public Tour archiveTour(Long tourId, String username) {

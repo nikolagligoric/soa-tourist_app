@@ -8,15 +8,18 @@ public class ShoppingCartService
     private readonly IShoppingCartRepository _shoppingCartRepository;
     private readonly ITourPurchaseTokenRepository _tourPurchaseTokenRepository;
     private readonly ITourClient _tourClient;
+    private readonly ITourSlotReservationClient _tourSlotReservationClient;
 
     public ShoppingCartService(
         IShoppingCartRepository shoppingCartRepository,
         ITourPurchaseTokenRepository tourPurchaseTokenRepository,
-        ITourClient tourClient)
+        ITourClient tourClient,
+        ITourSlotReservationClient tourSlotReservationClient)
     {
         _shoppingCartRepository = shoppingCartRepository;
         _tourPurchaseTokenRepository = tourPurchaseTokenRepository;
         _tourClient = tourClient;
+        _tourSlotReservationClient = tourSlotReservationClient;
     }
 
     public async Task<ShoppingCart> AddTourToCartAsync(string touristUsername, long tourId)
@@ -119,33 +122,65 @@ public class ShoppingCartService
             throw new Exception("Shopping cart is empty");
         }
 
-        var tokens = new List<TourPurchaseToken>();
+        var reservedTourIds = new List<long>();
 
-        foreach (var item in cart.Items)
+        try
         {
-            bool alreadyPurchased = await _tourPurchaseTokenRepository
-                .ExistsAsync(touristUsername, item.TourId);
-
-            if (!alreadyPurchased)
+            foreach (var item in cart.Items)
             {
-                var purchaseToken = new TourPurchaseToken
+                bool alreadyPurchased = await _tourPurchaseTokenRepository
+                    .ExistsAsync(touristUsername, item.TourId);
+
+                if (!alreadyPurchased)
                 {
-                    TouristUsername = touristUsername,
-                    TourId = item.TourId,
-                    Token = Guid.NewGuid().ToString(),
-                    PurchasedAt = DateTime.UtcNow
-                };
-
-                tokens.Add(await _tourPurchaseTokenRepository.AddAsync(purchaseToken));
+                    await _tourSlotReservationClient.ReserveSlotAsync(item.TourId, touristUsername);
+                    reservedTourIds.Add(item.TourId);
+                }
             }
+
+            var tokens = new List<TourPurchaseToken>();
+
+            foreach (var item in cart.Items)
+            {
+                bool alreadyPurchased = await _tourPurchaseTokenRepository
+                    .ExistsAsync(touristUsername, item.TourId);
+
+                if (!alreadyPurchased)
+                {
+                    var purchaseToken = new TourPurchaseToken
+                    {
+                        TouristUsername = touristUsername,
+                        TourId = item.TourId,
+                        Token = Guid.NewGuid().ToString(),
+                        PurchasedAt = DateTime.UtcNow
+                    };
+
+                    tokens.Add(await _tourPurchaseTokenRepository.AddAsync(purchaseToken));
+                }
+            }
+
+            cart.Items.Clear();
+            cart.TotalPrice = 0;
+
+            await _shoppingCartRepository.UpdateAsync(cart);
+
+            return tokens;
         }
+        catch
+        {
+            for (int i = reservedTourIds.Count - 1; i >= 0; i--)
+            {
+                try
+                {
+                    await _tourSlotReservationClient.RollbackSlotReservationAsync(reservedTourIds[i], touristUsername);
+                }
+                catch
+                {
+                }
+            }
 
-        cart.Items.Clear();
-        cart.TotalPrice = 0;
-
-        await _shoppingCartRepository.UpdateAsync(cart);
-
-        return tokens;
+            throw;
+        }
     }
 
     public async Task<bool> HasPurchasedAsync(string touristUsername, long tourId)

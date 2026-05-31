@@ -47,15 +47,18 @@ services:
     ports:
       - "8081:8080"
     environment:
-      environment:
       ASPNETCORE_URLS: https://+:8080
       ASPNETCORE_Kestrel__Certificates__Default__Password: password
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/blog.pfx
       ConnectionStrings__MongoDb: "mongodb://mongo:mongo123@blog-mongo:27017/blog_db?authSource=admin"
+      Nats__Url: nats://nats:4222
+      Nats__TourPublishCommandSubject: tour.publish.command
+      Nats__TourPublishReplySubject: tour.publish.reply
     volumes:
       - ${USERPROFILE}/.aspnet/https:/https:ro    
     depends_on:
       - blog-mongo
+      - nats
 
   blog-mongo:
     image: mongo:7
@@ -119,10 +122,21 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       SERVER_PORT: 8083
+      NATS_URL: nats://nats:4222
+      NATS_TOUR_PUBLISH_COMMAND_SUBJECT: tour.publish.command
+      NATS_TOUR_PUBLISH_REPLY_SUBJECT: tour.publish.reply
+      NATS_TOUR_SLOTS_COMMAND_SUBJECT: tour.slots.command
       PURCHASE_GRPC_HOST: purchase
       PURCHASE_GRPC_PORT: 8085
     depends_on:
       - tours-database
+      - nats
+
+  nats:
+    image: nats
+    restart: on-failure
+    ports:
+      - "4222:4222"
 
   gateway:
     build:
@@ -191,9 +205,12 @@ services:
       ConnectionStrings__DefaultConnection: "Host=purchase-database;Port=5432;Database=purchase_db;Username=postgres;Password=postgres"
       Services__Tours: "http://tours:8083"
       Jwt__Key: "L1uKpZQzI1Yx0+OaS0kXkE7u0n/5Q0U3R5s3FVmXcXU="
+      Nats__Url: nats://nats:4222
+      Nats__TourSlotsCommandSubject: tour.slots.command
     depends_on:
       - purchase-database
       - tours
+      - nats
 
 volumes:
   database-data:
