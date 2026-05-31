@@ -50,9 +50,14 @@ public class TourService {
         tour.setTags(request.getTags());
         tour.setAuthorUsername(request.getAuthorUsername());
 
+        if (request.getAvailableSlots() <= 0) {
+            throw new RuntimeException("Available slots must be greater than zero");
+        }
+
         tour.setStatus(TourStatus.DRAFT);
         tour.setPrice(0);
         tour.setDistanceInKm(0);
+        tour.setAvailableSlots(request.getAvailableSlots());
 
         return tourRepository.save(tour);
     }

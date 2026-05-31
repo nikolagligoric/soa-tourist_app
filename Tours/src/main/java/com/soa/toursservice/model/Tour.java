@@ -29,6 +29,8 @@ public class Tour {
     
     private double distanceInKm;
 
+    private int availableSlots;
+
     private String authorUsername;
 
     @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -127,6 +129,14 @@ public class Tour {
 
     public void setDistanceInKm(double distanceInKm) {
         this.distanceInKm = distanceInKm;
+    }
+
+    public int getAvailableSlots() {
+        return availableSlots;
+    }
+
+    public void setAvailableSlots(int availableSlots) {
+        this.availableSlots = availableSlots;
     }
     
     public List<TourDuration> getDurations() {

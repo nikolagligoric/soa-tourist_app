@@ -44,6 +44,10 @@ builder.Services.AddScoped<ITourPurchaseTokenRepository, TourPurchaseTokenReposi
 
 // Services
 builder.Services.AddScoped<ShoppingCartService>();
+builder.Services.AddScoped<ITourSlotReservationClient>(_ =>
+    new TourSlotReservationClient(
+        builder.Configuration["Nats:Url"] ?? "nats://nats:4222",
+        builder.Configuration["Nats:TourSlotsCommandSubject"] ?? "tour.slots.command"));
 
 // HTTP Clients
 builder.Services.AddHttpClient<ITourClient, TourClient>(client =>
