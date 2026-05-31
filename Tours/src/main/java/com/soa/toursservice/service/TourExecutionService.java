@@ -46,7 +46,7 @@ public class TourExecutionService {
             throw new RuntimeException("Only published or archived tours can be started");
         }
 
-        boolean purchased = purchaseClient.hasPurchased(tourId, token);
+        boolean purchased = purchaseClient.hasPurchased(tourId, touristUsername);
 
         if (!purchased) {
             throw new RuntimeException("You must purchase the tour before starting it");

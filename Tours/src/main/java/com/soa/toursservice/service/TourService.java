@@ -328,7 +328,7 @@ public class TourService {
             throw new RuntimeException("Tour is not published");
         }
 
-        boolean purchased = purchaseClient.hasPurchased(tourId, token);
+        boolean purchased = purchaseClient.hasPurchased(tourId, touristUsername);
 
         if (!purchased) {
             throw new RuntimeException("You must purchase the tour to see full details");
