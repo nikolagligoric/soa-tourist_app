@@ -188,6 +188,11 @@ public class ShoppingCartService
         return await _tourPurchaseTokenRepository.ExistsAsync(touristUsername, tourId);
     }
 
+    public async Task<List<TourPurchaseToken>> GetPurchasedToursAsync(string touristUsername)
+    {
+        return await _tourPurchaseTokenRepository.GetByTouristUsernameAsync(touristUsername);
+    }
+
     private void RecalculateTotalPrice(ShoppingCart cart)
     {
         cart.TotalPrice = cart.Items.Sum(item => item.Price);
