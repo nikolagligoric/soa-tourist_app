@@ -1,0 +1,18 @@
+<nav class="main-navbar">
+  <div class="nav-logo" routerLink="/home">
+    🌍 TourApp
+  </div>
+  
+  <div class="nav-actions" *ngIf="isLoggedIn()">
+    <button 
+      *ngIf="currentUserRole !== 'Admin' && currentUserRole !== 'Administrator'" 
+      class="nav-btn profile-btn" 
+      routerLink="/profile">
+      👤 Moj Profil
+    </button>
+    
+    <button class="nav-btn logout-btn" (click)="onLogout()">
+      🚪 Odjavi se
+    </button>
+  </div>
+</nav>

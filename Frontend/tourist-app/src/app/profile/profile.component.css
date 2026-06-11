@@ -1,0 +1,145 @@
+/* Kontejner koji centrira karticu na ekranu */
+.profile-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 85vh;
+  background-color: #f4f6f9;
+  padding: 30px 20px;
+  font-family: sans-serif;
+}
+
+/* Glavna bela kartica profila */
+.profile-card {
+  background: white;
+  width: 100%;
+  max-width: 500px;
+  padding: 35px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.profile-card h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 25px;
+  font-size: 24px;
+}
+
+/* Avatar sekcija */
+.avatar-section {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.avatar-label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #495057;
+  font-size: 14px;
+  text-align: left;
+}
+
+.avatar-preview {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 3px solid #007bff;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  margin-bottom: 12px;
+  display: inline-block;
+}
+
+/* Dugme za izbor slike */
+.upload-btn {
+  display: block;
+  width: 100%;
+  background-color: #f8f9fa;
+  color: #495057;
+  border: 1px solid #ced4da;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  margin-bottom: 6px;
+}
+
+.upload-btn:hover {
+  background-color: #e2e6ea;
+  border-color: #adb5bd;
+}
+
+/* Form polja */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #495057;
+  font-size: 14px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 15px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.textarea-control {
+  resize: vertical;
+  font-family: sans-serif;
+}
+
+/* Glavno dugme za čuvanje izmena */
+.submit-btn {
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 13px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Pomoćni tekst i alerti */
+.text-muted {
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.alert {
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+  font-size: 14px;
+}
+
+.alert-success { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
+.alert-danger { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }

@@ -1,0 +1,39 @@
+<div class="home-wrapper">
+  <div class="welcome-section">
+    <h1>Dobrodošli na početnu stranicu</h1>
+    
+    <div class="user-badge" *ngIf="currentUser">
+      Ulogovani ste kao: <strong>{{ currentUser.username }}</strong> 
+      (Uloga: <span class="role-text">{{ currentUser.role }}</span>)
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    
+    <div class="dashboard-card admin-card" *ngIf="currentUser?.role === 'Administrator' || currentUser?.role === 'Admin'">
+      <h3>🔧 Administratorski panel</h3>
+      <p>Upravljanje korisničkim nalozima i bezbednošću sistema.</p>
+      <button class="action-btn danger-btn" routerLink="/admin/users">
+        Blokiraj korisnike
+      </button>
+    </div>
+
+    <div class="dashboard-card guide-card" *ngIf="currentUser?.role === 'Guide'">
+      <h3>🗺️ Panel za Vodiče</h3>
+      <p>Upravljajte svojim profilom i kreirajte uzbudljive rute za turiste.</p>
+      <div class="button-group">
+        <button class="action-btn secondary-btn">Kreiraj novu turu</button>
+      </div>
+    </div>
+
+    <div class="dashboard-card tourist-card" *ngIf="currentUser?.role === 'Tourist'">
+      <h3>🎒 Panel za Turiste</h3>
+      <p>Pregledajte svoje kupljene ture ili završite kupovinu u korpi.</p>
+      <div class="button-group">
+        <button class="action-btn primary-btn">Pregledaj korpu</button>
+        <button class="action-btn secondary-btn">Moje kupljene ture</button>
+      </div>
+    </div>
+
+  </div>
+</div>
