@@ -118,4 +118,19 @@ public class ShoppingCartController : ControllerBase
 
         return Ok(hasPurchased);
     }
+
+    [HttpGet("purchased/{touristUsername}")]
+    public async Task<IActionResult> GetPurchasedTours(string touristUsername)
+    {
+        try
+        {
+            var purchasedTours = await _shoppingCartService.GetPurchasedToursAsync(touristUsername);
+
+            return Ok(purchasedTours);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
 }

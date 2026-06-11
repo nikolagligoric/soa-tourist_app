@@ -12,7 +12,7 @@ using Purchase.Infrastructure.Database;
 namespace Purchase.Infrastructure.Migrations
 {
     [DbContext(typeof(PurchaseContext))]
-    [Migration("20260529235705_InitialCreate")]
+    [Migration("20260604070906_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

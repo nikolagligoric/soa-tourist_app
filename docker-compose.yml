@@ -244,6 +244,20 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+  
+  loki:
+    image: grafana/loki:2.9.2
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  fluent-bit:
+    image: fluent/fluent-bit:2.1.10
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+    depends_on:
+      - loki
 
 volumes:
   database-data:

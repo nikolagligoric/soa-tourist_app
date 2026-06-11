@@ -119,7 +119,7 @@ app.Map("/{**path}", async (HttpContext context, string path) =>
     if (path.StartsWith("blog/", StringComparison.OrdinalIgnoreCase))
     {
         var newPath = path["blog/".Length..];
-        await ProxyRequest(context, "http://blog:8080", newPath);
+        await ProxyRequest(context, "https://blog:8080", newPath);
         return;
     }
 
