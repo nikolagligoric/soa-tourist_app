@@ -1,0 +1,88 @@
+.home-wrapper {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: sans-serif;
+}
+
+.welcome-section {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.welcome-section h1 {
+  color: #1e293b;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.user-badge {
+  display: inline-block;
+  background-color: #e2e8f0;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #334155;
+}
+
+.role-text {
+  color: #2563eb;
+  font-weight: bold;
+}
+
+.dashboard-grid {
+  display: flex;
+  justify-content: center;
+}
+
+.dashboard-card {
+  background: white;
+  width: 100%;
+  max-width: 550px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border-top: 5px solid #ced4da;
+}
+
+.dashboard-card h3 {
+  margin-top: 0;
+  color: #1e293b;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.dashboard-card p {
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 25px;
+}
+
+.admin-card { border-top-color: #ef4444; }
+.guide-card { border-top-color: #10b981; }
+.tourist-card { border-top-color: #3b82f6; }
+
+.button-group {
+  display: flex;
+  gap: 15px;
+}
+
+.action-btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s;
+}
+
+.primary-btn { background-color: #3b82f6; color: white; }
+.primary-btn:hover { background-color: #2563eb; }
+
+.secondary-btn { background-color: #10b981; color: white; }
+.secondary-btn:hover { background-color: #059669; }
+
+.danger-btn { background-color: #ef4444; color: white; }
+.danger-btn:hover { background-color: #dc2626; }

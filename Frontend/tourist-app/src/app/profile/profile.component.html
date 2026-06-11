@@ -1,0 +1,58 @@
+<div class="profile-container" style="max-width: 500px; margin: 40px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; font-family: sans-serif;">
+  <h2>Moj Profil</h2>
+
+  <div *ngIf="successMessage" style="color: green; background-color: #e6ffe6; padding: 10px; border: 1px solid green; border-radius: 4px; margin-bottom: 15px; font-weight: bold;">
+    ✅ {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" style="color: red; background-color: #ffe6e6; padding: 10px; border: 1px solid red; border-radius: 4px; margin-bottom: 15px; font-weight: bold;">
+    ⚠️ {{ errorMessage }}
+  </div>
+
+  <form (ngSubmit)="onUpdateProfile()">
+    
+    <div style="margin-bottom: 20px; text-align: center;">
+      <label style="display: block; margin-bottom: 8px; font-weight: bold;">Profilna Slika:</label>
+      
+      <img [src]="profileData.profileImageUrl || 'assets/default-user.png'" 
+           alt="Profile Preview" 
+           style="width: 150px; height: 150px; border-radius: 50%; border: 3px solid #007bff; object-fit: cover; margin-bottom: 15px;">
+      
+      <input type="file" 
+             #fileInput 
+             (change)="onFileSelected($event)" 
+             accept="image/png, image/jpeg, image/jpg" 
+             style="display: none;" />
+      
+      <button type="button" 
+              (click)="fileInput.click()" 
+              style="display: block; width: 100%; background-color: #f8f9fa; color: #495057; border: 1px solid #ced4da; padding: 8px; border-radius: 4px; cursor: pointer;">
+        Izaberi sliku sa računara
+      </button>
+      <small style="color: #6c757d;">Dozvoljeni formati: PNG, JPEG</small>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; margin-bottom: 5px; font-weight: bold;">Ime:</label>
+      <input type="text" [(ngModel)]="profileData.firstName" name="firstName" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required />
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; margin-bottom: 5px; font-weight: bold;">Prezime:</label>
+      <input type="text" [(ngModel)]="profileData.lastName" name="lastName" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required />
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; margin-bottom: 5px; font-weight: bold;">Moto:</label>
+      <input type="text" [(ngModel)]="profileData.motto" name="motto" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; margin-bottom: 5px; font-weight: bold;">Biografija:</label>
+      <textarea [(ngModel)]="profileData.bio" name="bio" rows="4" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;"></textarea>
+    </div>
+
+    <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-size: 16px; width: 100%;">
+      Sačuvaj izmene
+    </button>
+  </form>
+</div>

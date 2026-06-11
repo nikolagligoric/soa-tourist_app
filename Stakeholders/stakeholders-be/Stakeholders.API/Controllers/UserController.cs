@@ -34,14 +34,21 @@ namespace Stakeholders.API.Controllers
         {
             try
             {
-                var token = _userService.Login(loginDto);
-                return Ok(new { token });
+                var result = _userService.Login(loginDto);
+
+                if (result == "BLOCKED")
+                {
+                    return BadRequest("Your account has been blocked by an administrator!");
+                }
+
+                return Ok(new { token = result });
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult GetAllUsers()
