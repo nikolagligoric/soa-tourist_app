@@ -194,3 +194,44 @@ func GetFollowing(username string) ([]string, error) {
 
 	return result.([]string), nil
 }
+
+func GetFollowers(username string) ([]string, error) {
+	ctx := context.Background()
+
+	session := config.Driver.NewSession(ctx, neo4j.SessionConfig{})
+	defer session.Close(ctx)
+
+	result, err := session.ExecuteRead(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
+
+		query := `
+			MATCH (followers:User)-[:FOLLOWS]->(u:User {username: $username})
+			RETURN followers.username AS username
+		`
+
+		params := map[string]any{
+			"username": username,
+		}
+
+		rows, err := tx.Run(ctx, query, params)
+
+		if err != nil {
+			return nil, err
+		}
+
+		var followers []string
+
+		for rows.Next(ctx) {
+			record := rows.Record()
+			value, _ := record.Get("username")
+			followers = append(followers, value.(string))
+		}
+
+		return followers, nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result.([]string), nil
+}

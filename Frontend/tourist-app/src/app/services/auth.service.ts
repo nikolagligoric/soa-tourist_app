@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { HttpClient as AngularHttp } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
-import { LoginDto, RegistrationDto } from './auth.models';
+import { Observable, tap, Subject } from 'rxjs';
+import { LoginDto, RegistrationDto } from '../auth.models';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
@@ -11,6 +10,8 @@ import { jwtDecode } from 'jwt-decode';
 export class AuthService {
   private apiUrl = '/api/api/users';
 
+  authStatusChange = new Subject<void>();
+
   constructor(private http: AngularHttp) { }
 
   login(loginDto: LoginDto): Observable<{ token: string }> {
@@ -18,9 +19,15 @@ export class AuthService {
       tap(response => {
         if (response && response.token) {
           localStorage.setItem('userToken', response.token);
+          this.authStatusChange.next();
         }
       })
     );
+  }
+
+  logout(): void {
+    localStorage.removeItem('userToken');
+    this.authStatusChange.next();
   }
 
   register(registerDto: RegistrationDto): Observable<any> {
@@ -49,7 +56,4 @@ export class AuthService {
     return !!localStorage.getItem('userToken');
   }
 
-  logout(): void {
-    localStorage.removeItem('userToken');
-  }
 }

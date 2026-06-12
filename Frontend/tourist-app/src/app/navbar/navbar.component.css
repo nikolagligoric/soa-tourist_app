@@ -3,9 +3,10 @@
   justify-content: space-between;
   align-items: center;
   background-color: #1e293b;
-  padding: 14px 24px;
+  padding: 12px 24px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   font-family: sans-serif;
+  position: relative;
 }
 
 .nav-logo {
@@ -18,33 +19,111 @@
 
 .nav-actions {
   display: flex;
-  gap: 15px;
+  align-items: center;
+  gap: 14px;
+  position: relative;
 }
 
-.nav-btn {
-  padding: 8px 16px;
+/* BEDŽ ZA ROLU */
+.navbar-role-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  background-color: rgba(56, 189, 248, 0.1);
+  padding: 5px 9px;
   border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  border: 1px solid rgba(56, 189, 248, 0.15);
+}
+
+/* OKIDAČ (SADA KAO PILULA SA USERNAME-OM) */
+.dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 6px 14px;
+  border-radius: 20px; /* Vraćamo duguljastu pilulu jer ima teksta */
+  background-color: rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+  user-select: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-trigger:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.nav-avatar {
+  font-size: 15px;
+  color: #f8fafc;
+}
+
+/* Stil za username tekst na samom navbaru */
+.nav-username-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f1f5f9; /* Bela/svetlo siva boja */
+}
+
+.dropdown-arrow {
+  font-size: 8px;
+  color: #94a3b8;
+}
+
+/* KUTIJA PADAJUĆEG MENIJA (MAKSIMALNO SREĐENA I ČISTA) */
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 44px;
+  background-color: #ffffff;
+  min-width: 160px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  border: 1px solid #e2e8f0;
+  padding: 6px 0;
+  z-index: 1000;
+  animation: fadeIn 0.12s ease-out;
+}
+
+/* Stavke u meniju */
+.dropdown-item {
+  display: block;
+  width: calc(100% - 12px);
+  margin: 2px 6px;
+  padding: 10px 12px;
+  text-align: left;
+  border: none;
+  background: none;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  border: none;
-  transition: all 0.2s ease;
+  border-radius: 6px;
+  transition: all 0.15s ease;
 }
 
-.profile-btn {
-  background-color: #3b82f6;
-  color: white;
+.profile-link {
+  color: #475569;
 }
 
-.profile-btn:hover {
-  background-color: #2563eb;
+.profile-link:hover {
+  background-color: #f1f5f9;
+  color: #2563eb;
 }
 
-.logout-btn {
-  background-color: #ef4444;
-  color: white;
+.logout-link {
+  color: #64748b;
 }
 
-.logout-btn:hover {
-  background-color: #dc2626;
+.logout-link:hover {
+  background-color: #fef2f2;
+  color: #ef4444;
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+

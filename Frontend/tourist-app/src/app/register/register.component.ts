@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../services/auth.service';
 import { RegistrationDto } from '../auth.models';
 import { Router } from '@angular/router';
 
@@ -15,7 +15,7 @@ export class RegisterComponent {
     userName: '',
     password: '',
     email: '',
-    role: 'Tourist' // Engleska reč, malo r
+    role: 'Tourist'
   };
 
   errorMessage: string = '';

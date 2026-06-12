@@ -1,46 +1,67 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   currentUserRole: string | null = null;
+  currentUserUsername: string = '';
+  isDropdownOpen: boolean = false;
+  loggedInStatus: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router, 
+    private eRef: ElementRef,
+    private authService: AuthService
+  ) {}
 
-  isLoggedIn(): boolean {
-    const token = localStorage.getItem('userToken');
-    
-    if (token) {
-      if (!this.currentUserRole) {
-        this.checkUserRole(token);
-      }
-      return true;
-    }
-    
-    this.currentUserRole = null;
-    return false;
+  get isLoggedIn(): boolean {
+    return this.loggedInStatus;
   }
 
-  checkUserRole(token: string): void {
-    try {
-      const decoded: any = jwtDecode(token);
-      this.currentUserRole = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded['role'];
-      console.log('Rola uspešno prepoznata u hodu:', this.currentUserRole);
-    } catch (error) {
-      console.error('Greška pri dekodiranju tokena u navbaru:', error);
-      this.currentUserRole = null;
+  ngOnInit(): void {
+    this.checkUserAuthentication();
+    this.authService.authStatusChange.subscribe(() => {
+      this.checkUserAuthentication();
+    });
+  }
+
+  checkUserAuthentication(): void {
+    const token = localStorage.getItem('userToken');
+    if (token) {
+      try {
+        const decoded: any = jwtDecode(token);
+        this.currentUserRole = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded['role'];
+        this.currentUserUsername = decoded['username'] || 'Korisnik';
+        this.loggedInStatus = true;
+      } catch (e) { this.logoutDataClean(); }
     }
+  }
+
+  logoutDataClean(): void {
+    this.currentUserRole = null;
+    this.currentUserUsername = '';
+    this.loggedInStatus = false;
+  }
+
+  toggleDropdown(event: Event): void {
+    event.stopPropagation();
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickout(event: Event) {
+    if (!this.eRef.nativeElement.contains(event.target)) this.isDropdownOpen = false;
   }
 
   onLogout(): void {
     localStorage.removeItem('userToken');
-    this.currentUserRole = null;
-    console.log('Korisnik uspešno odjavljen.');
+    this.logoutDataClean();
     this.router.navigate(['/login']);
   }
 }
