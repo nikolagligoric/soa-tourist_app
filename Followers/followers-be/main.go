@@ -2,12 +2,13 @@ package main
 
 import (
 	"followers-be/config"
+	_ "followers-be/docs"
 	"followers-be/handlers"
 	"followers-be/middleware"
 
-	_ "followers-be/docs"
-
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -25,6 +26,14 @@ func main() {
 
 	router := gin.Default()
 
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:4200"}, // Dozvoli tvoj Angular front
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"}, // Obavezno Authorization zbog Bearer tokena!
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
+
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "followers service works",
@@ -41,6 +50,7 @@ func main() {
 		followers.GET("/check/:username", handlers.CheckFollowing)
 		followers.GET("/recommendations", handlers.GetRecommendations)
 		followers.GET("/following", handlers.GetFollowing)
+		followers.GET("/followers", handlers.GetFollowers)
 	}
 
 	router.Run(":8082")

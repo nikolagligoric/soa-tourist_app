@@ -3,6 +3,17 @@ using TourExecutionRpc;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularPolicy", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
 builder.Services.AddControllers();
 
 builder.Services.AddGrpc().AddJsonTranscoding();
@@ -11,6 +22,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseCors("AngularPolicy");
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -22,6 +35,7 @@ app.MapGrpcService<BlogGrpcGatewayService>();
 app.MapGrpcService<TourExecutionGrpcGatewayService>();
 
 app.MapControllers();
+
 async Task ProxyRequest(HttpContext context, string targetBaseUrl, string path)
 {
     var handler = new HttpClientHandler();
@@ -109,6 +123,11 @@ app.MapPost("/api/tour-executions/{tourId}/start-rpc", async (
 
 app.Map("/{**path}", async (HttpContext context, string path) =>
 {
+    if (path.StartsWith("api/", StringComparison.OrdinalIgnoreCase))
+    {
+        path = path["api/".Length..];
+    }
+
     if (path.StartsWith("stakeholders/", StringComparison.OrdinalIgnoreCase))
     {
         var newPath = path["stakeholders/".Length..];
@@ -125,8 +144,8 @@ app.Map("/{**path}", async (HttpContext context, string path) =>
 
     if (path.StartsWith("followers/", StringComparison.OrdinalIgnoreCase))
     {
-        var newPath = path["followers/".Length..];
-        await ProxyRequest(context, "http://followers:8082", newPath);
+        var fullGoPath = "api/" + path;
+        await ProxyRequest(context, "http://followers:8082", fullGoPath);
         return;
     }
 
@@ -147,4 +166,5 @@ app.Map("/{**path}", async (HttpContext context, string path) =>
     context.Response.StatusCode = StatusCodes.Status404NotFound;
     await context.Response.WriteAsync("Gateway route not found.");
 });
+
 app.Run();

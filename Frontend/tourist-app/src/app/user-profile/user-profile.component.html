@@ -1,0 +1,36 @@
+<div class="profile-wrapper">
+  <div class="profile-card">
+    
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      ⚠️ {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!errorMessage" class="profile-view">
+      
+      <button class="back-link" [routerLink]="['/profile']">⬅ Moj Profil</button>
+
+      <div class="avatar-section">
+        <img [src]="userData.profileImageUrl || 'assets/default-user.png'" 
+             alt="Profile Picture" 
+             class="avatar-preview">
+        <h2>{{ userData.firstName }} {{ userData.lastName }}</h2>
+        <p class="profile-username">@{{ username }}</p>
+        <p class="profile-motto" *ngIf="userData.motto"><em>"{{ userData.motto }}"</em></p>
+      </div>
+
+      <div class="action-section">
+        <button type="button" 
+                [ngClass]="isFollowing ? 'unfollow-btn-large' : 'follow-btn-large'" 
+                (click)="toggleFollow()">
+          {{ isFollowing ? '❌ Otprati korisnika' : '👤 Zaprati korisnika' }}
+        </button>
+      </div>
+
+      <div class="profile-bio-box" *ngIf="userData.bio">
+        <h3>Biografija</h3>
+        <p>{{ userData.bio }}</p>
+      </div>
+
+    </div>
+  </div>
+</div>

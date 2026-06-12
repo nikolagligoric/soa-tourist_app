@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../services/auth.service';
+import { FollowersService } from '../services/followers.service';
 import { Router } from '@angular/router';
-import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-home',
@@ -10,30 +10,23 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class HomeComponent implements OnInit {
   currentUser: any = null;
-  rawTokenData: string = '';
+  recommendedUsers: string[] = [];
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private followersService: FollowersService, private router: Router) { }
 
   ngOnInit(): void {
     this.currentUser = this.authService.getUserDetails();
-    
-    const token = localStorage.getItem('userToken');
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        this.rawTokenData = JSON.stringify(decoded, null, 2);
-      } catch (e) {
-        this.rawTokenData = 'Greška pri čitanju tokena';
-      }
-    }
-
-    if (!this.currentUser) {
-      this.router.navigate(['/login']);
-    }
+    if (!this.currentUser) { this.router.navigate(['/login']); return; }
+    if (this.currentUser.role !== 'Admin' && this.currentUser.role !== 'Administrator') this.loadRecommendations();
   }
 
-  onLogout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+  loadRecommendations(): void {
+    this.followersService.getRecommendations().subscribe(users => this.recommendedUsers = users);
+  }
+
+  followFromHome(username: string): void {
+    this.followersService.follow(username).subscribe(() => {
+      this.recommendedUsers = this.recommendedUsers.filter(u => u !== username);
+    });
   }
 }

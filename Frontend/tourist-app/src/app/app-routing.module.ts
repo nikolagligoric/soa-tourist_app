@@ -5,6 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { BlockUserComponent } from './block-user/block-user.component';
 import { ProfileComponent } from './profile/profile.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'admin/users', component: BlockUserComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'profile/:username', component: UserProfileComponent },
   { path: 'home', component: HomeComponent }
 ];
 

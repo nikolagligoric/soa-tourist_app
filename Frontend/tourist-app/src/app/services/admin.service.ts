@@ -32,4 +32,8 @@ export class AdminService {
   updateMyProfile(profileData: any): Observable<any> {
     return this.http.put<any>('/api/stakeholders/api/users/profile', profileData, { headers: this.getAuthHeaders() });
   }
+
+  getProfileByUsername(username: string): Observable<any> {
+    return this.http.get<any>(`/api/stakeholders/api/users/profile/${username}`, { headers: this.getAuthHeaders() });
+  }
 }

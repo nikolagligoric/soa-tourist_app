@@ -118,5 +118,26 @@ namespace Stakeholders.API.Controllers
 
             }
         }
+
+        [Authorize(Roles = "Tourist,Guide")]
+        [HttpGet("profile/{username}")]
+        public IActionResult GetProfileByUsername(string username)
+        {
+            try
+            {
+                var userProfile = _userService.ViewMyProfile(username);
+
+                if (userProfile == null)
+                {
+                    return NotFound("User profile not found.");
+                }
+
+                return Ok(userProfile);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
