@@ -1,5 +1,7 @@
 using Gateway.API.Grpc;
 using TourExecutionRpc;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,24 @@ builder.Services.AddGrpc().AddJsonTranscoding();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+var serviceName = builder.Environment.ApplicationName;
+
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resource => resource.AddService(serviceName))
+    .WithTracing(tracing =>
+    {
+        tracing
+            .AddAspNetCoreInstrumentation() 
+            .AddHttpClientInstrumentation() 
+            .AddGrpcClientInstrumentation() 
+            .AddOtlpExporter(options =>
+            {
+                var endpoint = Environment.GetEnvironmentVariable("OTEL_EXPORTER_OTLP_ENDPOINT") ?? "http://localhost:4317";
+                options.Endpoint = new Uri(endpoint);
+            });
+    });
 
 var app = builder.Build();
 

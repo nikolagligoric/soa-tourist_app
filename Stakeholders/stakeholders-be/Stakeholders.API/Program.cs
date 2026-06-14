@@ -9,6 +9,8 @@ using Stakeholders.Infrastructure.Persistence;
 using Stakeholders.Infrastructure.Repositories;
 using Stakeholders.API.Grpc;
 using System.Text;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +45,23 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+
+var serviceName = builder.Environment.ApplicationName;
+
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resource => resource.AddService(serviceName))
+    .WithTracing(tracing =>
+    {
+        tracing
+            .AddAspNetCoreInstrumentation()
+            .AddSource("Npgsql")
+            .AddOtlpExporter(options =>
+            {
+                var endpoint = Environment.GetEnvironmentVariable("OTEL_EXPORTER_OTLP_ENDPOINT") ?? "http://localhost:4317";
+                options.Endpoint = new Uri(endpoint);
+            });
+    });
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -73,6 +92,21 @@ builder.Services.AddAuthentication(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<AppDbContext>();
+        context.Database.Migrate(); // Ovo kreira bazu i sve tabele ako ne postoje
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding or migrating the database.");
+    }
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();
