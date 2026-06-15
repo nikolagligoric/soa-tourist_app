@@ -246,14 +246,19 @@ namespace Blog.Application.Services
                 "http://followers:8082/api/followers/following"
             );
 
-            if (following == null || !following.Any())
+            if (following == null)
             {
-                return new List<Blog.Domain.Entities.Blog>();
+                following = new List<string>();
             }
 
-            if (!following.Contains(username))
+            if (!string.IsNullOrWhiteSpace(username) && !following.Contains(username))
             {
                 following.Add(username);
+            }
+
+            if (!following.Any())
+            {
+                return new List<Blog.Domain.Entities.Blog>();
             }
 
             return await _blogRepository.GetBlogsByAuthorsAsync(following);
