@@ -16,6 +16,8 @@ import { CartComponent } from './cart/cart.component';
 import { PurchasesComponent } from './purchases/purchases.component';
 import { TourDetailsComponent } from './tour-details/tour-details.component';
 import { ActiveTourComponent } from './active-tour/active-tour.component';
+import { BlogComponent } from './blog/blog.component';
+import { CurrentLocationComponent } from './current-location/current-location.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,8 @@ import { ActiveTourComponent } from './active-tour/active-tour.component';
     PurchasesComponent,
     TourDetailsComponent,
     ActiveTourComponent
+    BlogComponent,
+    CurrentLocationComponent
   ],
   imports: [
     BrowserModule,

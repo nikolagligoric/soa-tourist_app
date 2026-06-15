@@ -11,6 +11,8 @@ import { CartComponent } from './cart/cart.component';
 import { PurchasesComponent } from './purchases/purchases.component';
 import { TourDetailsComponent } from './tour-details/tour-details.component';
 import { ActiveTourComponent } from './active-tour/active-tour.component';
+import { BlogComponent } from './blog/blog.component';
+import { CurrentLocationComponent } from './current-location/current-location.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -27,6 +29,10 @@ const routes: Routes = [
   { path: 'tours/:id', component: TourDetailsComponent },
   { path: 'active-tour', component: ActiveTourComponent },
 ];  
+  { path: 'blogs', component: BlogComponent },
+  { path: 'current-location', component: CurrentLocationComponent },
+  { path: 'home', component: HomeComponent }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

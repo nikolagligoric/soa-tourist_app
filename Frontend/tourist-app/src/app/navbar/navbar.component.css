@@ -24,6 +24,25 @@
   position: relative;
 }
 
+.nav-blog-link,
+.nav-location-link {
+  background: #ffffff;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.nav-blog-link:hover,
+.nav-location-link:hover {
+  background: #f8fafc;
+  color: #2563eb;
+}
+
 /* BEDŽ ZA ROLU */
 .navbar-role-badge {
   font-size: 11px;
