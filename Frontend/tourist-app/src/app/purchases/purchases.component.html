@@ -1,0 +1,42 @@
+<div class="purchases-page">
+    <div class="page-header">
+        <p class="eyebrow">Moje kupovine</p>
+        <h1>Moje kupljene ture</h1>
+        <p>Ostavite recenzije za ture koje ste kupili.</p>
+    </div>
+
+    <p class="loading-message" *ngIf="isLoading">Učitavanje kupljenih tura...</p>
+    <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <div class="empty-state" *ngIf="!isLoading && purchasedTours.length === 0">
+        Još uvek niste kupili ture.
+    </div>
+
+    <div class="purchase-grid">
+        <article class="purchase-card" *ngFor="let tour of purchasedTours">
+            <div class="card-top">
+                <span class="status-badge">Kupljeno</span>
+                <span class="price">{{ getTourPrice(tour) }} RSD</span>
+            </div>
+
+            <h2>{{ getTourName(tour) }}</h2>
+
+            <div class="meta">
+                <span>Tour ID: {{ tour.tourId || tour.id }}</span>
+                <span *ngIf="tour.purchaseDate || tour.createdAt">
+                    Datum: {{ tour.purchaseDate || tour.createdAt | date:'short' }}
+                </span>
+            </div>
+
+            <div class="actions">
+                <button class="secondary-btn" (click)="viewDetails(tour)">
+                    Detalji
+                </button>
+
+                <button class="primary-btn" (click)="startTour(tour)">
+                    Započni turu
+                </button>
+            </div>
+        </article>
+    </div>
+</div>

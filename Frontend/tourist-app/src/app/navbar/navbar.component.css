@@ -146,3 +146,44 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+.nav-link {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: #e2e8f0;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  padding: 8px 16px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  transition: all .2s ease;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+
+  border-color: rgba(255, 255, 255, 0.18);
+
+  color: white;
+
+  transform: translateY(-1px);
+}
+
+.nav-link:active {
+  transform: translateY(0);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navbar-role-badge {
+  margin-left: 10px;
+}

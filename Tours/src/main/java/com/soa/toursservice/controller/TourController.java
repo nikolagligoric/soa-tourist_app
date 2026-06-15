@@ -39,7 +39,7 @@ public class TourController {
         String username = jwt.getClaim("username");
         String role = jwt.getClaim("role");
 
-        if (!"Guide".equals(role)) {
+        if (!"Guide".equalsIgnoreCase(role)) {
             throw new RuntimeException("Only guides can create tours");
         }
 
@@ -62,7 +62,7 @@ public class TourController {
         String username = jwt.getClaim("username");
         String role = jwt.getClaim("role");
 
-        if (!"Guide".equals(role)) {
+        if (!"Guide".equalsIgnoreCase(role)) {
             throw new RuntimeException("Only guides can add key points");
         }
 
@@ -77,7 +77,7 @@ public class TourController {
         String username = jwt.getClaim("username");
         String role = jwt.getClaim("role");
 
-        if (!"Guide".equals(role)) {
+        if (!"Guide".equalsIgnoreCase(role)) {
             throw new RuntimeException("Only guides can view key points");
         }
 
@@ -93,7 +93,7 @@ public class TourController {
         String username = jwt.getClaim("username");
         String role = jwt.getClaim("role");
 
-        if (!"Tourist".equals(role)) {
+        if (!"Tourist".equalsIgnoreCase(role)) {
             throw new RuntimeException("Only tourists can leave reviews");
         }
 
@@ -114,7 +114,7 @@ public class TourController {
         String username = jwt.getClaim("username");
         String role = jwt.getClaim("role");
 
-        if (!"Tourist".equals(role)) {
+        if (!"Tourist".equalsIgnoreCase(role)) {
             throw new RuntimeException("Only tourists can delete reviews");
         }
 
@@ -135,7 +135,7 @@ public class TourController {
         String username = jwt.getClaim("username");
         String role = jwt.getClaim("role");
 
-        if (!"Guide".equals(role)) {
+        if (!"Guide".equalsIgnoreCase(role)) {
             throw new RuntimeException("Only guides can update key points");
         }
 
@@ -151,7 +151,7 @@ public class TourController {
         String username = jwt.getClaim("username");
         String role = jwt.getClaim("role");
 
-        if (!"Guide".equals(role)) {
+        if (!"Guide".equalsIgnoreCase(role)) {
             throw new RuntimeException("Only guides can delete key points");
         }
 
@@ -166,7 +166,7 @@ public class TourController {
         String username = jwt.getClaim("username");
         String role = jwt.getClaim("role");
 
-        if (!"Guide".equals(role)) {
+        if (!"Guide".equalsIgnoreCase(role)) {
             throw new RuntimeException("Only guides can add durations");
         }
 
@@ -180,7 +180,7 @@ public class TourController {
         String username = jwt.getClaim("username");
         String role = jwt.getClaim("role");
 
-        if (!"Guide".equals(role)) {
+        if (!"Guide".equalsIgnoreCase(role)) {
             throw new RuntimeException("Only guides can publish tours");
         }
 
@@ -195,7 +195,7 @@ public class TourController {
         String username = jwt.getClaim("username");
         String role = jwt.getClaim("role");
 
-        if (!"Guide".equals(role)) {
+        if (!"Guide".equalsIgnoreCase(role)) {
             throw new RuntimeException("Only guides can archive tours");
         }
 
@@ -210,7 +210,7 @@ public class TourController {
         String username = jwt.getClaim("username");
         String role = jwt.getClaim("role");
 
-        if (!"Guide".equals(role)) {
+        if (!"Guide".equalsIgnoreCase(role)) {
             throw new RuntimeException("Only guides can reactivate tours");
         }
 
@@ -223,7 +223,7 @@ public class TourController {
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String role = jwt.getClaim("role");
 
-        if (!"Tourist".equals(role)) {
+        if (!"Tourist".equalsIgnoreCase(role)) {
             throw new RuntimeException("Only tourists can view published tours");
         }
 
@@ -239,7 +239,7 @@ public class TourController {
         String username = jwt.getClaim("username");
         String role = jwt.getClaim("role");
 
-        if (!"Tourist".equals(role)) {
+        if (!"Tourist".equalsIgnoreCase(role)) {
             throw new RuntimeException("Only tourists can view tour details");
         }
 

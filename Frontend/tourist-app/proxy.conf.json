@@ -6,5 +6,37 @@
     "pathRewrite": {
       "^/api": ""
     }
+  },
+  "/tour-api": {
+    "target": "http://localhost:8083",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/tour-api": "/api/tours"
+    }
+  },
+  "/cart-api": {
+    "target": "http://localhost:8084",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/cart-api": "/api/cart"
+    }
+  },
+  "/execution-api": {
+    "target": "http://localhost:8083",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/execution-api": "/api/tour-executions"
+    }
+  },
+  "/location-api": {
+    "target": "http://localhost:8083",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/location-api": "/api/location"
+    }
   }
 }
