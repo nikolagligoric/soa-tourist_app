@@ -13,6 +13,7 @@ import { TourDetailsComponent } from './tour-details/tour-details.component';
 import { ActiveTourComponent } from './active-tour/active-tour.component';
 import { BlogComponent } from './blog/blog.component';
 import { CurrentLocationComponent } from './current-location/current-location.component';
+import { AuthorToursComponent } from './author-tours/author-tours.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'active-tour', component: ActiveTourComponent }, 
   { path: 'blogs', component: BlogComponent },
   { path: 'current-location', component: CurrentLocationComponent },
+  { path: 'author/tours', component: AuthorToursComponent },
   { path: 'home', component: HomeComponent }
 ];
 

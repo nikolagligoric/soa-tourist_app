@@ -11,8 +11,15 @@ import { CartService } from '../services/cart.service';
 export class TourDetailsComponent implements OnInit {
   tour: TourDetails | null = null;
   isLoading = false;
+  isSavingReview = false;
   errorMessage = '';
   successMessage = '';
+  reviewForm = {
+    rating: 5,
+    comment: '',
+    visitDate: '',
+    imageUrlsText: ''
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -74,5 +81,71 @@ export class TourDetailsComponent implements OnInit {
     this.router.navigate(['/active-tour'], {
       queryParams: { tourId: this.tour.id }
     });
+  }
+
+  createReview(): void {
+    if (!this.tour) return;
+
+    if (this.reviewForm.rating < 1 || this.reviewForm.rating > 5) {
+      this.errorMessage = 'Ocena mora biti izmedju 1 i 5.';
+      return;
+    }
+
+    if (!this.reviewForm.comment.trim() || !this.reviewForm.visitDate) {
+      this.errorMessage = 'Unesi komentar i datum posete.';
+      return;
+    }
+
+    this.isSavingReview = true;
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    this.tourService.createReview(this.tour.id, {
+      rating: this.reviewForm.rating,
+      comment: this.reviewForm.comment,
+      visitDate: this.reviewForm.visitDate,
+      imageUrls: this.parseImageUrls()
+    }).subscribe({
+      next: review => {
+        this.tour = {
+          ...this.tour!,
+          reviews: [...(this.tour!.reviews || []), review]
+        };
+        this.reviewForm = { rating: 5, comment: '', visitDate: '', imageUrlsText: '' };
+        this.successMessage = 'Recenzija je uspesno dodata.';
+        this.isSavingReview = false;
+      },
+      error: error => {
+        this.errorMessage = error?.error?.message || error?.error || 'Nije moguce dodati recenziju.';
+        this.isSavingReview = false;
+      }
+    });
+  }
+
+  deleteReview(reviewId: number): void {
+    if (!this.tour) return;
+
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    this.tourService.deleteReview(this.tour.id, reviewId).subscribe({
+      next: () => {
+        this.tour = {
+          ...this.tour!,
+          reviews: (this.tour!.reviews || []).filter((review: any) => review.id !== reviewId)
+        };
+        this.successMessage = 'Recenzija je obrisana.';
+      },
+      error: error => {
+        this.errorMessage = error?.error?.message || error?.error || 'Nije moguce obrisati recenziju.';
+      }
+    });
+  }
+
+  private parseImageUrls(): string[] {
+    return this.reviewForm.imageUrlsText
+      .split('\n')
+      .map(url => url.trim())
+      .filter(url => url.length > 0);
   }
 }
