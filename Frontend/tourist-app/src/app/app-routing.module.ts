@@ -7,6 +7,7 @@ import { BlockUserComponent } from './block-user/block-user.component';
 import { ProfileComponent } from './profile/profile.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { BlogComponent } from './blog/blog.component';
+import { CurrentLocationComponent } from './current-location/current-location.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'profile/:username', component: UserProfileComponent },
   { path: 'blogs', component: BlogComponent },
+  { path: 'current-location', component: CurrentLocationComponent },
   { path: 'home', component: HomeComponent }
 ];
 
