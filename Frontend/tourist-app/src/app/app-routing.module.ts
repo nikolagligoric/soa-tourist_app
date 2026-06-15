@@ -27,8 +27,7 @@ const routes: Routes = [
   { path: 'cart', component: CartComponent },
   { path: 'purchases', component: PurchasesComponent },
   { path: 'tours/:id', component: TourDetailsComponent },
-  { path: 'active-tour', component: ActiveTourComponent },
-];  
+  { path: 'active-tour', component: ActiveTourComponent }, 
   { path: 'blogs', component: BlogComponent },
   { path: 'current-location', component: CurrentLocationComponent },
   { path: 'home', component: HomeComponent }
