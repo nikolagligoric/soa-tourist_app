@@ -11,6 +11,11 @@ import { BlockUserComponent } from './block-user/block-user.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { ToursComponent } from './tours/tours.component';
+import { CartComponent } from './cart/cart.component';
+import { PurchasesComponent } from './purchases/purchases.component';
+import { TourDetailsComponent } from './tour-details/tour-details.component';
+import { ActiveTourComponent } from './active-tour/active-tour.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +26,12 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
     BlockUserComponent,
     ProfileComponent,
     NavbarComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    ToursComponent,
+    CartComponent,
+    PurchasesComponent,
+    TourDetailsComponent,
+    ActiveTourComponent
   ],
   imports: [
     BrowserModule,

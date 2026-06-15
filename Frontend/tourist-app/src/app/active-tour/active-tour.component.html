@@ -1,0 +1,110 @@
+<div class="active-tour-page">
+    <button class="back-btn" (click)="goToPurchases()">← Nazad na kupovine</button>
+
+    <div class="page-header">
+        <p class="eyebrow">Izvršavanje ture</p>
+        <h1>Aktivna tura</h1>
+        <p>Pratite Vaš napredak ture i prijavite se na kontrolnu tačku pomoću simulatora lokacije.</p>
+    </div>
+
+    <p class="loading-message" *ngIf="isLoading">Učitavanje aktivnih tura...</p>
+    <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <p class="success-message" *ngIf="successMessage">{{ successMessage }}</p>
+
+    <section class="execution-card" *ngIf="execution">
+        <div class="execution-header">
+            <div>
+                <h2>Tura #{{ execution.tourId }}</h2>
+                <p>Status: <strong>{{ execution.status }}</strong></p>
+            </div>
+
+            <span class="status-badge">{{ execution.status }}</span>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <span>Execution ID</span>
+                <strong>{{ execution.id }}</strong>
+            </div>
+
+            <div class="info-item">
+                <span>Turista</span>
+                <strong>{{ execution.touristUsername }}</strong>
+            </div>
+
+            <div class="info-item">
+                <span>Počelo u:</span>
+                <strong>{{ execution.startedAt | date:'short' }}</strong>
+            </div>
+
+            <div class="info-item">
+                <span>Poslednja aktivnost</span>
+                <strong>{{ execution.lastActivityAt | date:'short' }}</strong>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Simulator lokacije</h3>
+
+            <div class="location-form">
+                <label>
+                    Latituda
+                    <input type="number" [(ngModel)]="latitude" placeholder="45.2671" />
+                </label>
+
+                <label>
+                    Longituda
+                    <input type="number" [(ngModel)]="longitude" placeholder="19.8335" />
+                </label>
+
+                <button class="secondary-btn" (click)="saveLocation()">
+                    Sačuvaj lokaciju
+                </button>
+            </div>
+
+            <p class="location-message" *ngIf="locationMessage">
+                {{ locationMessage }}
+            </p>
+        </div>
+
+        <div class="section">
+            <h3>Završene ključne tačke</h3>
+
+            <div class="empty-box" *ngIf="!execution.completedKeyPoints || execution.completedKeyPoints.length === 0">
+                Nema završenih ključnih tačaka.
+            </div>
+
+            <div class="keypoint-list" *ngIf="execution.completedKeyPoints && execution.completedKeyPoints.length > 0">
+                <div class="keypoint-card" *ngFor="let point of execution.completedKeyPoints; let i = index">
+                    <div class="keypoint-number">{{ i + 1 }}</div>
+
+                    <div>
+                        <h4>{{ point.name || point.keyPointName || 'Key point' }}</h4>
+                        <p>
+                            Završeno u:
+                            {{ point.completedAt || point.reachedAt | date:'short' }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="primary-btn" (click)="checkLocation()">
+                Proveri lokaciju
+            </button>
+
+            <button class="success-btn" (click)="completeTour()">
+                Završi turu
+            </button>
+
+            <button class="danger-btn" (click)="abandonTour()">
+                Napusti turu
+            </button>
+        </div>
+    </section>
+
+    <section class="empty-state" *ngIf="!isLoading && !execution">
+        Nijedna aktivna tura nije dostupna trenutno.
+    </section>
+</div>

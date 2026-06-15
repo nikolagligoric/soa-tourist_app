@@ -6,6 +6,11 @@ import { RegisterComponent } from './register/register.component';
 import { BlockUserComponent } from './block-user/block-user.component';
 import { ProfileComponent } from './profile/profile.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { ToursComponent } from './tours/tours.component';
+import { CartComponent } from './cart/cart.component';
+import { PurchasesComponent } from './purchases/purchases.component';
+import { TourDetailsComponent } from './tour-details/tour-details.component';
+import { ActiveTourComponent } from './active-tour/active-tour.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -15,8 +20,13 @@ const routes: Routes = [
   { path: 'admin/users', component: BlockUserComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'profile/:username', component: UserProfileComponent },
-  { path: 'home', component: HomeComponent }
-];
+  { path: 'home', component: HomeComponent },
+  { path: 'tours', component: ToursComponent },
+  { path: 'cart', component: CartComponent },
+  { path: 'purchases', component: PurchasesComponent },
+  { path: 'tours/:id', component: TourDetailsComponent },
+  { path: 'active-tour', component: ActiveTourComponent },
+];  
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

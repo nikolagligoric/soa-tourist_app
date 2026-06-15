@@ -1,0 +1,111 @@
+<div class="details-page">
+    <button class="back-btn" (click)="goBack()">← Nazad na ture</button>
+
+    <p class="loading-message" *ngIf="isLoading">Učitavanje tura...</p>
+    <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <p class="success-message" *ngIf="successMessage">{{ successMessage }}</p>
+
+    <section class="details-card" *ngIf="tour">
+        <div class="details-header">
+            <div>
+                <p class="eyebrow">Detalji ture</p>
+                <h1>{{ tour.name }}</h1>
+                <p class="subtitle">
+                    {{ tour.description || 'Opis nije dostupan.' }}
+                </p>
+            </div>
+
+            <div class="price-box">
+                <span>Cena</span>
+                <strong>{{ tour.price || 0 }} RSD</strong>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <span>Težina</span>
+                <strong>{{ tour.difficulty }}</strong>
+            </div>
+
+            <div class="info-item">
+                <span>Status</span>
+                <strong>{{ tour.status }}</strong>
+            </div>
+
+            <div class="info-item">
+                <span>Distanca</span>
+                <strong>{{ tour.distanceInKm || 0 }} km</strong>
+            </div>
+
+            <div class="info-item">
+                <span>Autor</span>
+                <strong>{{ tour.authorUsername }}</strong>
+            </div>
+        </div>
+
+        <div class="tags-section">
+            <h3>Tagovi</h3>
+            <p>{{ tour.tags || 'No tags' }}</p>
+        </div>
+
+        <div class="section" *ngIf="tour.durations && tour.durations.length > 0">
+            <h3>Trajanje ture</h3>
+
+            <div class="duration-list">
+                <div class="duration-item" *ngFor="let duration of tour.durations">
+                    <span>{{ duration.transportType || duration.transport || 'Transport' }}</span>
+                    <strong>
+                        {{ duration.durationInMinutes || duration.minutes || duration.timeInMinutes }} min
+                    </strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Kontrolne tačke</h3>
+
+            <div class="empty-box" *ngIf="!tour.keyPoints || tour.keyPoints.length === 0">
+                Kontrolne tačke za ovu turu nisu dostupne.
+            </div>
+
+            <div class="keypoint-list" *ngIf="tour.keyPoints && tour.keyPoints.length > 0">
+                <div class="keypoint-card" *ngFor="let point of tour.keyPoints; let i = index">
+                    <div class="keypoint-number">{{ i + 1 }}</div>
+
+                    <div>
+                        <h4>{{ point.name || point.title || 'Kontrolna tačka' }}</h4>
+                        <p>{{ point.description || 'Opis nije dostupan' }}</p>
+                        <small>
+                            Lat: {{ point.latitude || point.lat }},
+                            Lng: {{ point.longitude || point.lng }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Recenzije</h3>
+
+            <div class="empty-box" *ngIf="!tour.reviews || tour.reviews.length === 0">
+                Za ovu turu još uvek nema recenzija.
+            </div>
+
+            <div class="review-list" *ngIf="tour.reviews && tour.reviews.length > 0">
+                <div class="review-card" *ngFor="let review of tour.reviews">
+                    <strong>⭐ {{ review.rating || review.grade }}/5</strong>
+                    <p>{{ review.comment || 'Nema komentara.' }}</p>
+                    <small>{{ review.touristUsername || review.username }}</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="details-actions">
+            <button class="secondary-btn" (click)="addToCart()">Dodaj u korpu</button>
+        
+            <button class="primary-btn" (click)="startTour()">
+                Počni turu
+            </button>
+        </div>
+    </section>
+</div>

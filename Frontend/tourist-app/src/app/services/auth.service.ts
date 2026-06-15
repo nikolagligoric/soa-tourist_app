@@ -8,7 +8,7 @@ import { jwtDecode } from 'jwt-decode';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8000/stakeholders/api/users';
+  private apiUrl = 'api/api/users';
 
   authStatusChange = new Subject<void>();
 

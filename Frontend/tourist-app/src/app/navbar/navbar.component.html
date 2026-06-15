@@ -3,6 +3,18 @@
   
   <div class="nav-actions" *ngIf="isLoggedIn">
 
+    <button *ngIf="currentUserRole === 'Tourist'" class="nav-link" routerLink="/tours">
+      Ture
+    </button>
+    
+    <button *ngIf="currentUserRole === 'Tourist'" class="nav-link" routerLink="/cart">
+      Korpa
+    </button>
+    
+    <button *ngIf="currentUserRole === 'Tourist'" class="nav-link" routerLink="/purchases">
+      Moje kupovine
+    </button>
+
     <span class="navbar-role-badge">{{ currentUserRole }}</span>
 
     <div class="dropdown-trigger" (click)="toggleDropdown($event)">

@@ -1,0 +1,148 @@
+<div class="tours-page">
+
+  <div class="page-header">
+
+    <p class="eyebrow">
+
+      Istraži ture
+
+    </p>
+
+    <h1>
+
+      Dostupne ture
+
+    </h1>
+
+    <p>
+
+      Pregledaj objavljene ture i dodaj ih u korpu.
+
+    </p>
+
+  </div>
+
+
+  <p
+    class="loading-message"
+    *ngIf="isLoading">
+
+    Učitavanje tura ...
+
+  </p>
+
+
+  <p
+    class="error-message"
+    *ngIf="errorMessage">
+
+    {{ errorMessage }}
+
+  </p>
+
+
+  <p
+    class="success-message"
+    *ngIf="successMessage">
+
+    {{ successMessage }}
+
+  </p>
+
+
+  <div
+    class="empty-state"
+    *ngIf="!isLoading && tours.length === 0">
+
+    Greška pri učitavanju tura.
+
+  </div>
+
+
+  <div class="tour-grid">
+
+    <article
+      class="tour-card"
+      *ngFor="let tour of tours">
+
+
+      <div class="card-top">
+
+        <span class="difficulty-badge">
+
+          {{ tour.difficulty }}
+
+        </span>
+
+        <span class="price">
+
+          {{ tour.price || 0 }} RSD
+
+        </span>
+
+      </div>
+
+
+      <h2>
+
+        {{ tour.name }}
+
+      </h2>
+
+
+      <p class="description">
+
+        {{ tour.description || 'Opis nije dostupan.' }}
+
+      </p>
+
+
+      <div class="meta">
+
+        <span>
+
+          📍 {{ tour.distanceInKm || 0 }} km
+
+        </span>
+
+        <span>
+
+          🏷️ {{ tour.tags || 'Nema tagova' }}
+
+        </span>
+
+        <span>
+
+          👤 {{ tour.authorUsername }}
+
+        </span>
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          class="secondary-btn"
+          (click)="viewDetails(tour.id)">
+
+          Details
+
+        </button>
+
+
+        <button
+          class="primary-btn"
+          (click)="addToCart(tour.id)">
+
+          Dodaj u korpu
+
+        </button>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</div>
