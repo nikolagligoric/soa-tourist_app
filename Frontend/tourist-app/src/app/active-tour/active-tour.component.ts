@@ -92,6 +92,7 @@ export class ActiveTourComponent implements OnInit {
         this.loadLocation();
       },
       error: () => {
+        this.execution = null;
         this.errorMessage = 'Ne postoji ni jedna aktivna tura.';
         this.isLoading = false;
       }

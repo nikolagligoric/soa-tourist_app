@@ -52,15 +52,15 @@ public class TourExecutionService {
             throw new RuntimeException("You must purchase the tour before starting it");
         }
 
-        boolean alreadyActive = tourExecutionRepository
-                .existsByTouristUsernameAndTourIdAndStatus(
-                        touristUsername,
-                        tourId,
-                        TourExecutionStatus.ACTIVE
-                );
+        boolean alreadyActive =
+                tourExecutionRepository
+                        .existsByTouristUsernameAndStatus(
+                                touristUsername,
+                                TourExecutionStatus.ACTIVE
+                        );
 
         if (alreadyActive) {
-            throw new RuntimeException("You already have an active execution for this tour");
+            throw new RuntimeException("You already have an active tour");
         }
 
         TouristLocation location = touristLocationService.getLocation(touristUsername);
