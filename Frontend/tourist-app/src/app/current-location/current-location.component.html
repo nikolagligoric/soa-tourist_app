@@ -1,0 +1,30 @@
+<div class="location-page">
+  <section class="location-header">
+    <div>
+      <h1>Trenutna lokacija</h1>
+      <p>Klikni na mapu da izaberes poziciju koju simulator cuva kao tvoju trenutnu lokaciju.</p>
+    </div>
+    <button class="save-btn" type="button" (click)="saveLocation()" [disabled]="isSaving || selectedLatitude === null || selectedLongitude === null">
+      {{ isSaving ? 'Cuvanje...' : 'Sacuvaj lokaciju' }}
+    </button>
+  </section>
+
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+  <div *ngIf="isLoading" class="alert alert-info">Ucitavanje trenutne lokacije...</div>
+
+  <section class="map-card">
+    <div id="currentLocationMap" class="map-container"></div>
+  </section>
+
+  <section class="coordinates-card">
+    <div>
+      <span class="label">Latitude</span>
+      <strong>{{ selectedLatitude !== null ? (selectedLatitude | number:'1.6-6') : 'Nije izabrano' }}</strong>
+    </div>
+    <div>
+      <span class="label">Longitude</span>
+      <strong>{{ selectedLongitude !== null ? (selectedLongitude | number:'1.6-6') : 'Nije izabrano' }}</strong>
+    </div>
+  </section>
+</div>
