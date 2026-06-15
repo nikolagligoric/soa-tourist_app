@@ -33,7 +33,7 @@ import { CurrentLocationComponent } from './current-location/current-location.co
     CartComponent,
     PurchasesComponent,
     TourDetailsComponent,
-    ActiveTourComponent
+    ActiveTourComponent,
     BlogComponent,
     CurrentLocationComponent
   ],
