@@ -1,0 +1,89 @@
+<div class="blog-page">
+  <section class="create-panel">
+    <div class="section-heading">
+      <h1>Blogovi</h1>
+      <p>Kreiraj objavu sa markdown opisom, slikama, komentarima i lajkovima.</p>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <form class="blog-form" (ngSubmit)="createBlog()">
+      <div class="form-group">
+        <label for="blogTitle">Naslov</label>
+        <input id="blogTitle" type="text" name="title" [(ngModel)]="title" placeholder="Tema bloga" required>
+      </div>
+
+      <div class="form-group">
+        <label for="blogDescription">Opis u markdown formatu</label>
+        <textarea id="blogDescription" name="description" rows="8" [(ngModel)]="description" placeholder="# Naslov&#10;**Vazan deo teksta** i obican opis..." required></textarea>
+      </div>
+
+      <div class="markdown-preview" *ngIf="description.trim()">
+        <span class="preview-label">Pregled opisa</span>
+        <div class="markdown-body" [innerHTML]="renderMarkdown(description)"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="blogImages">Slike (opciono)</label>
+        <input id="blogImages" type="file" multiple accept="image/png,image/jpeg,image/jpg,image/webp" (change)="onImagesSelected($event)">
+        <div class="selected-images" *ngIf="selectedImageNames.length > 0">
+          <span *ngFor="let imageName of selectedImageNames">{{ imageName }}</span>
+        </div>
+      </div>
+
+      <button class="primary-btn" type="submit" [disabled]="isCreating">
+        {{ isCreating ? 'Kreiranje...' : 'Objavi blog' }}
+      </button>
+    </form>
+  </section>
+
+  <section class="feed-panel">
+    <h2>Najnovije objave</h2>
+
+    <div *ngIf="isLoading" class="empty-state">Ucitavanje blogova...</div>
+    <div *ngIf="!isLoading && blogs.length === 0" class="empty-state">Nema objava korisnika koje pratis.</div>
+
+    <article class="blog-card" *ngFor="let blog of blogs">
+      <div class="blog-header">
+        <div>
+          <h3>{{ blog.title }}</h3>
+          <p class="blog-meta">Autor: {{ blog.authorUsername }} | Kreirano: {{ formatDate(blog.createdAt) }}</p>
+        </div>
+        <button class="like-btn" type="button" [class.active]="blog.hasLiked" (click)="toggleLike(blog)">
+          {{ blog.hasLiked ? 'Ukloni lajk' : 'Lajkuj' }} · {{ blog.likes || 0 }}
+        </button>
+      </div>
+
+      <div class="image-grid" *ngIf="blog.imageUrls && blog.imageUrls.length > 0">
+        <img *ngFor="let imageUrl of blog.imageUrls" [src]="getImageUrl(imageUrl)" [alt]="blog.title">
+      </div>
+
+      <div class="markdown-body blog-description" [innerHTML]="renderMarkdown(blog.description)"></div>
+
+      <div class="blog-actions">
+        <button class="secondary-btn" type="button" (click)="toggleComments(blog)">
+          {{ blog.showComments ? 'Sakrij komentare' : 'Prikazi komentare' }}
+        </button>
+      </div>
+
+      <div class="comments-section" *ngIf="blog.showComments">
+        <form class="comment-form" (ngSubmit)="addComment(blog)">
+          <textarea name="comment-{{ blog.id }}" rows="3" [(ngModel)]="blog.newCommentText" placeholder="Ostavi komentar..."></textarea>
+          <button class="primary-btn small-btn" type="submit">Komentarisi</button>
+        </form>
+
+        <div *ngIf="!blog.comments || blog.comments.length === 0" class="empty-state small">Nema komentara.</div>
+
+        <div class="comment-item" *ngFor="let comment of blog.comments">
+          <div class="comment-header">
+            <strong>{{ comment.authorUsername }}</strong>
+            <span>Kreirano: {{ formatDate(comment.createdAt) }}</span>
+          </div>
+          <p>{{ comment.text }}</p>
+          <span class="comment-edited">Poslednja izmena: {{ formatDate(comment.lastModifiedAt) }}</span>
+        </div>
+      </div>
+    </article>
+  </section>
+</div>

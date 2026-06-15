@@ -3,6 +3,8 @@
   
   <div class="nav-actions" *ngIf="isLoggedIn">
 
+    <button class="nav-blog-link" routerLink="/blogs">Blogovi</button>
+
     <span class="navbar-role-badge">{{ currentUserRole }}</span>
 
     <div class="dropdown-trigger" (click)="toggleDropdown($event)">

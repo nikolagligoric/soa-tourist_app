@@ -11,6 +11,7 @@ import { BlockUserComponent } from './block-user/block-user.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { BlogComponent } from './blog/blog.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
     BlockUserComponent,
     ProfileComponent,
     NavbarComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    BlogComponent
   ],
   imports: [
     BrowserModule,
