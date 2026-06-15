@@ -87,6 +87,40 @@
         <div class="section">
             <h3>Recenzije</h3>
 
+            <form class="review-form" (ngSubmit)="createReview()" #reviewCreateForm="ngForm">
+                <div class="review-form-grid">
+                    <label>
+                        Ocena
+                        <select name="rating" [(ngModel)]="reviewForm.rating" required>
+                            <option [ngValue]="1">1</option>
+                            <option [ngValue]="2">2</option>
+                            <option [ngValue]="3">3</option>
+                            <option [ngValue]="4">4</option>
+                            <option [ngValue]="5">5</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Datum posete
+                        <input type="date" name="visitDate" [(ngModel)]="reviewForm.visitDate" required />
+                    </label>
+                </div>
+
+                <label>
+                    Komentar
+                    <textarea name="comment" rows="3" [(ngModel)]="reviewForm.comment" required></textarea>
+                </label>
+
+                <label>
+                    Slike
+                    <textarea name="imageUrlsText" rows="3" [(ngModel)]="reviewForm.imageUrlsText" placeholder="Jedan URL slike po redu"></textarea>
+                </label>
+
+                <button class="primary-btn" type="submit" [disabled]="reviewCreateForm.invalid || isSavingReview">
+                    {{ isSavingReview ? 'Cuvanje...' : 'Ostavi recenziju' }}
+                </button>
+            </form>
+
             <div class="empty-box" *ngIf="!tour.reviews || tour.reviews.length === 0">
                 Za ovu turu još uvek nema recenzija.
             </div>
@@ -95,7 +129,19 @@
                 <div class="review-card" *ngFor="let review of tour.reviews">
                     <strong>⭐ {{ review.rating || review.grade }}/5</strong>
                     <p>{{ review.comment || 'Nema komentara.' }}</p>
-                    <small>{{ review.touristUsername || review.username }}</small>
+                    <small>Turista: {{ review.touristUsername || review.username || 'Nepoznat turista' }}</small>
+                    <small>
+                        Poseta: {{ review.visitDate || 'Nije navedeno' }} |
+                        Komentar: {{ review.commentDate || 'Nije navedeno' }}
+                    </small>
+
+                    <div class="review-images" *ngIf="review.imageUrls && review.imageUrls.length > 0">
+                        <img *ngFor="let imageUrl of review.imageUrls" [src]="imageUrl" [alt]="review.comment || 'Slika recenzije'" />
+                    </div>
+
+                    <button class="secondary-btn delete-review-btn" type="button" *ngIf="review.id" (click)="deleteReview(review.id)">
+                        Obrisi moju recenziju
+                    </button>
                 </div>
             </div>
         </div>

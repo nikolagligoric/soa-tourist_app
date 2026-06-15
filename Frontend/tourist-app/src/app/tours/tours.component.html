@@ -96,6 +96,15 @@
 
       </p>
 
+      <div class="first-keypoint" *ngIf="tour.firstKeyPoint">
+        <img *ngIf="tour.firstKeyPoint.imageUrl" [src]="tour.firstKeyPoint.imageUrl" [alt]="tour.firstKeyPoint.name" />
+        <div>
+          <span>Prva kljucna tacka</span>
+          <strong>{{ tour.firstKeyPoint.name }}</strong>
+          <p>{{ tour.firstKeyPoint.description }}</p>
+        </div>
+      </div>
+
 
       <div class="meta">
 

@@ -18,6 +18,7 @@ import { TourDetailsComponent } from './tour-details/tour-details.component';
 import { ActiveTourComponent } from './active-tour/active-tour.component';
 import { BlogComponent } from './blog/blog.component';
 import { CurrentLocationComponent } from './current-location/current-location.component';
+import { AuthorToursComponent } from './author-tours/author-tours.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { CurrentLocationComponent } from './current-location/current-location.co
     TourDetailsComponent,
     ActiveTourComponent,
     BlogComponent,
-    CurrentLocationComponent
+    CurrentLocationComponent,
+    AuthorToursComponent
   ],
   imports: [
     BrowserModule,

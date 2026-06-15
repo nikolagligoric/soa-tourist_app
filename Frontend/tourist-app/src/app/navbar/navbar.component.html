@@ -14,6 +14,9 @@
     <button *ngIf="currentUserRole === 'Tourist'" class="nav-link" routerLink="/purchases">
       Moje kupovine
     </button>
+    <button *ngIf="currentUserRole === 'Guide'" class="nav-link" routerLink="/author/tours">
+      Moje ture
+    </button>
     <button class="nav-blog-link" routerLink="/blogs">Blogovi</button>
     <button class="nav-location-link" routerLink="/current-location" *ngIf="currentUserRole === 'Tourist'">Trenutna lokacija</button>
 
