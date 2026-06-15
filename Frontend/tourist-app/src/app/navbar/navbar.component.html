@@ -4,6 +4,7 @@
   <div class="nav-actions" *ngIf="isLoggedIn">
 
     <button class="nav-blog-link" routerLink="/blogs">Blogovi</button>
+    <button class="nav-location-link" routerLink="/current-location" *ngIf="currentUserRole === 'Tourist'">Trenutna lokacija</button>
 
     <span class="navbar-role-badge">{{ currentUserRole }}</span>
 

@@ -12,6 +12,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { BlogComponent } from './blog/blog.component';
+import { CurrentLocationComponent } from './current-location/current-location.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { BlogComponent } from './blog/blog.component';
     ProfileComponent,
     NavbarComponent,
     UserProfileComponent,
-    BlogComponent
+    BlogComponent,
+    CurrentLocationComponent
   ],
   imports: [
     BrowserModule,
