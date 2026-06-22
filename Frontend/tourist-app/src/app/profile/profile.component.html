@@ -45,7 +45,7 @@
         <button type="button" class="cancel-link" (click)="toggleEditMode(false)">Otkaži</button>
       </div>
 
-      <form (ngSubmit)="onUpdateProfile()">
+      <form (ngSubmit)="onUpdateProfile()" #profileForm="ngForm">
         
         <div class="avatar-section">
           <label class="avatar-label">Profilna Slika:</label>
@@ -67,12 +67,14 @@
 
         <div class="form-group">
           <label>Ime:</label>
-          <input type="text" [(ngModel)]="profileData.firstName" name="firstName" class="form-control" required />
+          <input type="text" [(ngModel)]="profileData.firstName" name="firstName" class="form-control" #firstName="ngModel" required />
+          <div *ngIf="firstName.invalid && firstName.touched" class="error-msg">Ime je obavezno polje.</div>
         </div>
 
         <div class="form-group">
           <label>Prezime:</label>
-          <input type="text" [(ngModel)]="profileData.lastName" name="lastName" class="form-control" required />
+          <input type="text" [(ngModel)]="profileData.lastName" name="lastName" class="form-control" #lastName="ngModel" required />
+          <div *ngIf="lastName.invalid && lastName.touched" class="error-msg">Prezime je obavezno polje.</div>
         </div>
 
         <div class="form-group">
@@ -85,7 +87,7 @@
           <textarea [(ngModel)]="profileData.bio" name="bio" rows="4" class="form-control textarea-control" placeholder="Napiši nešto o sebi..."></textarea>
         </div>
 
-        <button type="submit" class="submit-btn">
+        <button type="submit" class="submit-btn" [disabled]="!profileForm.valid">
           Sačuvaj izmene
         </button>
       </form>
@@ -105,35 +107,15 @@
     </div>
     <ul class="users-list">
       <li *ngFor="let username of activeModalList" class="user-list-item">
-        
         <div class="user-info-click" [routerLink]="['/profile', username]" (click)="closeModal()">
           <span class="user-icon">👤</span>
           <span class="modal-username">{{ username }}</span>
         </div>
-
-        <button *ngIf="modalType === 'following'" 
-                type="button" 
-                class="unfollow-btn" 
-                (click)="unfollowFromList(username)">
-          Otprati
-        </button>
-
+        <button *ngIf="modalType === 'following'" type="button" class="unfollow-btn" (click)="unfollowFromList(username)">Otprati</button>
         <ng-container *ngIf="modalType === 'followers'">
-          <button *ngIf="followingMap[username]" 
-                  type="button" 
-                  class="unfollow-btn text-muted-btn" 
-                  (click)="unfollowFromList(username)">
-            Pratiš ✔
-          </button>
-          
-          <button *ngIf="!followingMap[username]" 
-                  type="button" 
-                  class="follow-btn" 
-                  (click)="followFromList(username)">
-            Zaprati
-          </button>
+          <button *ngIf="followingMap[username]" type="button" class="unfollow-btn text-muted-btn" (click)="unfollowFromList(username)">Pratiš ✔</button>
+          <button *ngIf="!followingMap[username]" type="button" class="follow-btn" (click)="followFromList(username)">Zaprati</button>
         </ng-container>
-
       </li>
     </ul>
   </div>
