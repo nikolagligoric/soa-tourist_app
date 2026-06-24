@@ -14,10 +14,12 @@ namespace Blog.Application.Services
     public class BlogService
     {
         private readonly IBlogRepository _blogRepository;
+        private readonly HttpClient _httpClient;
 
-        public BlogService(IBlogRepository blogRepository)
+        public BlogService(IBlogRepository blogRepository, HttpClient httpClient)
         {
             _blogRepository = blogRepository;
+            _httpClient = httpClient;
         }
 
         public async Task<Blog.Domain.Entities.Blog> CreateBlogAsync(CreateBlogDTO createBlogDto, string authorUsername)
@@ -133,12 +135,11 @@ namespace Blog.Application.Services
 
             if (authorUsername != blog.AuthorUsername)
             {
-                using var client = new HttpClient();
 
-                client.DefaultRequestHeaders.Authorization =
+                _httpClient.DefaultRequestHeaders.Authorization =
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var response = await client.GetAsync(
+                var response = await _httpClient.GetAsync(
                     $"http://followers:8082/api/followers/check/{blog.AuthorUsername}"
                 );
 

@@ -150,5 +150,90 @@ namespace Stakeholders.Application.Tests
 
             _jwtGeneratorMock.Verify(gen => gen.GenerateAccessToken(mockUser), Times.Once);
         }
+
+        [Fact]
+        public void UpdateMyProfile_ValidData_UpdatesAllFieldsCorrectly()
+        {
+            // Arrange
+            var username = "nikola";
+            var user = new User
+            {
+                UserName = username,
+                FirstName = "StaroIme",
+                LastName = "StaroPrezime",
+                Bio = "Stara biografija",
+                Motto = "Stari moto"
+            };
+
+            var dto = new UpdateProfileDto
+            {
+                FirstName = "Nikola",
+                LastName = "Gligoric",
+                Bio = "Nova biografija.",
+                Motto = "Novi moto.",
+                ProfileImageUrl = "nova_slika.jpg"
+            };
+
+            _userRepositoryMock.Setup(repo => repo.GetUserByUsername(username)).Returns(user);
+
+            // Act
+            _userService.UpdateMyProfile(username, dto);
+
+            // Assert
+            Assert.Equal("Nikola", user.FirstName);
+            Assert.Equal("Gligoric", user.LastName);
+            Assert.Equal("Nova biografija.", user.Bio);
+            Assert.Equal("Novi moto.", user.Motto);
+            Assert.Equal("nova_slika.jpg", user.ProfileImageUrl);
+
+            _userRepositoryMock.Verify(repo => repo.UpdateUser(It.Is<User>(u =>
+                u.FirstName == "Nikola" &&
+                u.LastName == "Gligoric" &&
+                u.Bio == "Nova biografija." &&
+                u.Motto == "Novi moto.")), Times.Once);
+        }
+
+        [Fact]
+        public void UpdateMyProfile_UserNotFound_ThrowsArgumentException()
+        {
+            // Arrange
+            var username = "nepostojeci";
+            var dto = new UpdateProfileDto { FirstName = "Haker" };
+
+            _userRepositoryMock.Setup(repo => repo.GetUserByUsername(username)).Returns((User)null);
+
+            // Act & Assert
+            var exception = Assert.Throws<ArgumentException>(() => _userService.UpdateMyProfile(username, dto));
+
+            Assert.Equal("User doesn't exists!", exception.Message);
+            _userRepositoryMock.Verify(repo => repo.UpdateUser(It.IsAny<User>()), Times.Never);
+        }
+
+        [Fact]
+        public void GetProfile_ExistingUser_ReturnsUser()
+        {
+            // Arrange
+            var username = "nikola";
+            var mockUser = new User
+            {
+                UserName = username,
+                FirstName = "Nikola",
+                LastName = "Gligoric",
+                Role = UserRole.Tourist
+            };
+
+            _userRepositoryMock.Setup(repo => repo.GetUserByUsername(username))
+                               .Returns(mockUser);
+
+            // Act
+            var result = _userService.ViewMyProfile(username);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal("Nikola", result.FirstName);
+            Assert.Equal("Gligoric", result.LastName);
+
+            _userRepositoryMock.Verify(repo => repo.GetUserByUsername(username), Times.Once);
+        }
     }
 }
