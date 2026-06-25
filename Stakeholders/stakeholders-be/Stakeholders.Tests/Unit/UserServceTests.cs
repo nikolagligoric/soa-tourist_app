@@ -8,7 +8,7 @@ using Stakeholders.Application.Services;
 using Stakeholders.Domain.Entities;
 using Stakeholders.Domain.Enums;
 
-namespace Stakeholders.Application.Tests
+namespace Stakeholders.Tests.Unit
 {
     public class UserServiceTests
     {
@@ -154,7 +154,6 @@ namespace Stakeholders.Application.Tests
         [Fact]
         public void UpdateMyProfile_ValidData_UpdatesAllFieldsCorrectly()
         {
-            // Arrange
             var username = "nikola";
             var user = new User
             {
@@ -176,10 +175,8 @@ namespace Stakeholders.Application.Tests
 
             _userRepositoryMock.Setup(repo => repo.GetUserByUsername(username)).Returns(user);
 
-            // Act
             _userService.UpdateMyProfile(username, dto);
 
-            // Assert
             Assert.Equal("Nikola", user.FirstName);
             Assert.Equal("Gligoric", user.LastName);
             Assert.Equal("Nova biografija.", user.Bio);
@@ -196,13 +193,11 @@ namespace Stakeholders.Application.Tests
         [Fact]
         public void UpdateMyProfile_UserNotFound_ThrowsArgumentException()
         {
-            // Arrange
             var username = "nepostojeci";
             var dto = new UpdateProfileDto { FirstName = "Haker" };
 
             _userRepositoryMock.Setup(repo => repo.GetUserByUsername(username)).Returns((User)null);
 
-            // Act & Assert
             var exception = Assert.Throws<ArgumentException>(() => _userService.UpdateMyProfile(username, dto));
 
             Assert.Equal("User doesn't exists!", exception.Message);
@@ -212,7 +207,6 @@ namespace Stakeholders.Application.Tests
         [Fact]
         public void GetProfile_ExistingUser_ReturnsUser()
         {
-            // Arrange
             var username = "nikola";
             var mockUser = new User
             {
@@ -225,10 +219,8 @@ namespace Stakeholders.Application.Tests
             _userRepositoryMock.Setup(repo => repo.GetUserByUsername(username))
                                .Returns(mockUser);
 
-            // Act
             var result = _userService.ViewMyProfile(username);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal("Nikola", result.FirstName);
             Assert.Equal("Gligoric", result.LastName);

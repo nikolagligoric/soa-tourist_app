@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Net;
 using Xunit;
 
-namespace Blog.Application.Tests
+namespace Blog.Tests.Unit
 {
     public class BlogServiceTests
     {
@@ -30,7 +30,6 @@ namespace Blog.Application.Tests
         [Fact]
         public async Task AddCommentAsync_ValidFollower_ReturnsComment()
         {
-            // Arrange
             var blogId = "b1";
             var blogAuthor = "marko";
             var commenter = "nikola";
@@ -57,10 +56,8 @@ namespace Blog.Application.Tests
             _blogRepositoryMock.Setup(r => r.AddCommentAsync(blogId, It.IsAny<Comment>()))
                 .ReturnsAsync(new Comment { AuthorUsername = commenter, Text = dto.Text });
 
-            // Act
             var result = await _blogService.AddCommentAsync(blogId, dto, commenter, "token");
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal("Sjajan blog post!", result.Text);
 
@@ -77,7 +74,6 @@ namespace Blog.Application.Tests
         [Fact]
         public async Task AddCommentAsync_NotFollowingAuthor_ThrowsArgumentException()
         {
-            // Arrange
             var blogId = "b1";
             var blogAuthor = "marko";
             var commenter = "nikola";
@@ -101,7 +97,6 @@ namespace Blog.Application.Tests
             )
             .ReturnsAsync(response);
 
-            // Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
                 _blogService.AddCommentAsync(blogId, dto, commenter, "token"));
 

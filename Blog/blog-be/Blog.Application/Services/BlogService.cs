@@ -238,12 +238,11 @@ namespace Blog.Application.Services
 
         public async Task<List<Blog.Domain.Entities.Blog>> GetBlogsFromFollowingAsync(string token, string username)
         {
-            using var client = new HttpClient();
 
-            client.DefaultRequestHeaders.Authorization =
+            _httpClient.DefaultRequestHeaders.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var following = await client.GetFromJsonAsync<List<string>>(
+            var following = await _httpClient.GetFromJsonAsync<List<string>>(
                 "http://followers:8082/api/followers/following"
             );
 
