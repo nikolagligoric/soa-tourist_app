@@ -1,6 +1,4 @@
-using System.Reflection;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -12,9 +10,12 @@ using Stakeholders.Domain.Entities;
 using Stakeholders.Domain.Enums;
 using Stakeholders.Infrastructure.Persistence;
 using Stakeholders.Infrastructure.Repositories;
+using System;
+using System.Reflection;
+using System.Security.Claims;
 using Xunit;
 
-namespace Stakeholders.API.Tests
+namespace Stakeholders.Tests.Integration
 {
     public class UserControllerIntegrationTests
     {
@@ -149,6 +150,42 @@ namespace Stakeholders.API.Tests
             Assert.Equal("Nova", savedUser.LastName);
             Assert.Equal("Vodi ture po planinama.", savedUser.Bio);
             Assert.Equal("Korak po korak.", savedUser.Motto);
+        }
+
+        [Fact]
+        public void ViewMyProfile_ReturnsProfileLoadedFromDatabase()
+        {
+            using var context = CreateDbContext();
+
+            context.Users.Add(new User
+            {
+                UserName = "nikola",
+                FirstName = "Nikola",
+                LastName = "Gligoric",
+                Bio = "Biografija",
+                Motto = "Moto",
+                ProfileImageUrl = "img.png",
+                Email = "nikola@test.com",
+                Password = "123",
+                Role = UserRole.Tourist
+            });
+
+            context.SaveChanges();
+
+            var controller = CreateController(context);
+
+            SetUserClaims(controller, "nikola");
+
+            var result = controller.ViewMyProfile();
+
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var profile = Assert.IsType<ProfileDto>(okResult.Value);
+
+            Assert.Equal("Nikola", profile.FirstName);
+            Assert.Equal("Gligoric", profile.LastName);
+            Assert.Equal("Biografija", profile.Bio);
+            Assert.Equal("Moto", profile.Motto);
+            Assert.Equal("img.png", profile.ProfileImageUrl);
         }
 
         private static UserController CreateController(AppDbContext context, IJwtGenerator? jwtGenerator = null)
