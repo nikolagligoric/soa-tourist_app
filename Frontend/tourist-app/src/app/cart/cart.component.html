@@ -42,7 +42,7 @@
 
             </div>
 
-            <div class="table-row" *ngFor="let item of cart.items">
+            <div class="table-row" [attr.data-tour-id]="item.tourId" *ngFor="let item of cart.items">
 
                 <div>
 
@@ -86,7 +86,7 @@
 
             </div>
 
-            <button class="primary-btn" (click)="checkout()">
+            <button class="primary-btn" data-testid="checkout-button" (click)="checkout()">
 
                 Plati
 
