@@ -4,7 +4,7 @@
       <h1>Trenutna lokacija</h1>
       <p>Klikni na mapu da izaberes poziciju koju simulator cuva kao tvoju trenutnu lokaciju.</p>
     </div>
-    <button class="save-btn" type="button" (click)="saveLocation()" [disabled]="isSaving || selectedLatitude === null || selectedLongitude === null">
+    <button class="save-btn" type="button" data-testid="save-current-location-button" (click)="saveLocation()" [disabled]="isSaving || selectedLatitude === null || selectedLongitude === null">
       {{ isSaving ? 'Cuvanje...' : 'Sacuvaj lokaciju' }}
     </button>
   </section>
@@ -14,7 +14,7 @@
   <div *ngIf="isLoading" class="alert alert-info">Ucitavanje trenutne lokacije...</div>
 
   <section class="map-card">
-    <div id="currentLocationMap" class="map-container"></div>
+    <div id="currentLocationMap" data-testid="current-location-map" class="map-container"></div>
   </section>
 
   <section class="coordinates-card">

@@ -63,6 +63,8 @@
 
     <article
       class="tour-card"
+      [attr.data-tour-id]="tour.id"
+      [attr.data-tour-name]="tour.name"
       *ngFor="let tour of tours">
 
 
@@ -142,6 +144,7 @@
 
         <button
           class="primary-btn"
+          data-testid="add-to-cart-button"
           (click)="addToCart(tour.id)">
 
           Dodaj u korpu

@@ -8,6 +8,7 @@
         <input 
           type="text" 
           id="username" 
+          data-testid="login-username"
           name="username" 
           [(ngModel)]="loginData.username" 
           class="form-control"
@@ -20,6 +21,7 @@
         <input 
           type="password" 
           id="password" 
+          data-testid="login-password"
           name="password" 
           [(ngModel)]="loginData.password" 
           class="form-control"
@@ -31,7 +33,7 @@
         ⚠️ {{ errorMessage }}
       </div>
 
-      <button type="submit" class="submit-btn">Prijavi se</button>
+      <button type="submit" class="submit-btn" data-testid="login-submit">Prijavi se</button>
     </form>
 
     <div class="login-footer">

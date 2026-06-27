@@ -64,7 +64,8 @@ export class ActiveTourComponent implements OnInit {
 
         if (
           message.toLowerCase().includes('already have an active execution') ||
-          message.toLowerCase().includes('active execution')
+          message.toLowerCase().includes('active execution') ||
+          message.toLowerCase().includes('already have an active tour')
         ) {
           this.errorMessage = '';
           this.successMessage = '';
@@ -124,6 +125,9 @@ export class ActiveTourComponent implements OnInit {
       next: (data) => {
         this.location = data;
         this.locationMessage = 'Lokacija uspešno sačuvana,';
+        if (this.execution) {
+          this.loadActiveExecution();
+        }
       },
       error: () => {
         this.locationMessage = 'Greška pri čuvanju lokacije';

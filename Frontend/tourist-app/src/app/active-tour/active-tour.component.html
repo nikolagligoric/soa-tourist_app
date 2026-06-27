@@ -49,15 +49,15 @@
             <div class="location-form">
                 <label>
                     Latituda
-                    <input type="number" [(ngModel)]="latitude" placeholder="45.2671" />
+                    <input type="number" data-testid="execution-latitude" [(ngModel)]="latitude" placeholder="45.2671" />
                 </label>
 
                 <label>
                     Longituda
-                    <input type="number" [(ngModel)]="longitude" placeholder="19.8335" />
+                    <input type="number" data-testid="execution-longitude" [(ngModel)]="longitude" placeholder="19.8335" />
                 </label>
 
-                <button class="secondary-btn" (click)="saveLocation()">
+                <button class="secondary-btn" data-testid="save-execution-location-button" (click)="saveLocation()">
                     Sačuvaj lokaciju
                 </button>
             </div>
@@ -90,11 +90,11 @@
         </div>
 
         <div class="actions">
-            <button class="primary-btn" (click)="checkLocation()">
+            <button class="primary-btn" data-testid="check-location-button" (click)="checkLocation()">
                 Proveri lokaciju
             </button>
 
-            <button class="success-btn" (click)="completeTour()">
+            <button class="success-btn" data-testid="complete-tour-button" (click)="completeTour()">
                 Završi turu
             </button>
 

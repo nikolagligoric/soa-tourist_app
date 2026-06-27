@@ -17,27 +17,27 @@
 
       <label>
         Naziv
-        <input type="text" name="name" [(ngModel)]="tourForm.name" required />
+        <input type="text" name="name" data-testid="tour-name" [(ngModel)]="tourForm.name" required />
       </label>
 
       <label>
         Opis
-        <textarea name="description" rows="4" [(ngModel)]="tourForm.description" required></textarea>
+        <textarea name="description" data-testid="tour-description" rows="4" [(ngModel)]="tourForm.description" required></textarea>
       </label>
 
       <label>
         Tezina
-        <select name="difficulty" [(ngModel)]="tourForm.difficulty" required>
+        <select name="difficulty" data-testid="tour-difficulty" [(ngModel)]="tourForm.difficulty" required>
           <option *ngFor="let difficulty of difficulties" [value]="difficulty">{{ difficulty }}</option>
         </select>
       </label>
 
       <label>
         Tagovi
-        <input type="text" name="tags" [(ngModel)]="tourForm.tags" placeholder="muzej, park, istorija" required />
+        <input type="text" name="tags" data-testid="tour-tags" [(ngModel)]="tourForm.tags" placeholder="muzej, park, istorija" required />
       </label>
 
-      <button class="primary-btn" type="submit" [disabled]="tourCreateForm.invalid || isSavingTour">
+      <button class="primary-btn" type="submit" data-testid="create-tour-button" [disabled]="tourCreateForm.invalid || isSavingTour">
         {{ isSavingTour ? 'Cuvanje...' : 'Kreiraj draft turu' }}
       </button>
     </form>
@@ -76,17 +76,17 @@
 
         <label>
           Naziv
-          <input type="text" name="keyPointName" [(ngModel)]="keyPointForm.name" required />
+        <input type="text" name="keyPointName" data-testid="keypoint-name" [(ngModel)]="keyPointForm.name" required />
         </label>
 
         <label>
           Opis
-          <textarea name="keyPointDescription" rows="3" [(ngModel)]="keyPointForm.description" required></textarea>
+          <textarea name="keyPointDescription" data-testid="keypoint-description" rows="3" [(ngModel)]="keyPointForm.description" required></textarea>
         </label>
 
         <label>
           Slika URL
-          <input type="text" name="imageUrl" [(ngModel)]="keyPointForm.imageUrl" placeholder="https://..." required />
+          <input type="text" name="imageUrl" data-testid="keypoint-image-url" [(ngModel)]="keyPointForm.imageUrl" placeholder="https://..." required />
         </label>
 
         <div class="coordinates">
@@ -94,7 +94,7 @@
           <span>Lon: {{ selectedLongitude !== null ? (selectedLongitude | number:'1.6-6') : 'izaberi na mapi' }}</span>
         </div>
 
-        <button class="primary-btn" type="submit" [disabled]="keyPointCreateForm.invalid || isSavingKeyPoint">
+        <button class="primary-btn" type="submit" data-testid="add-keypoint-button" [disabled]="keyPointCreateForm.invalid || isSavingKeyPoint">
           {{ isSavingKeyPoint ? 'Cuvanje...' : (editingKeyPoint ? 'Sacuvaj izmenu' : 'Dodaj tacku') }}
         </button>
         <button class="secondary-btn" type="button" *ngIf="editingKeyPoint" (click)="cancelEditKeyPoint()">
@@ -120,10 +120,10 @@
 
         <label>
           Trajanje u minutima
-          <input type="number" name="durationMinutes" [(ngModel)]="durationForm.durationMinutes" min="1" required />
+          <input type="number" name="durationMinutes" data-testid="duration-minutes" [(ngModel)]="durationForm.durationMinutes" min="1" required />
         </label>
 
-        <button class="primary-btn" type="submit" [disabled]="durationCreateForm.invalid || isSavingDuration">
+        <button class="primary-btn" type="submit" data-testid="add-duration-button" [disabled]="durationCreateForm.invalid || isSavingDuration">
           {{ isSavingDuration ? 'Dodavanje...' : 'Dodaj vreme' }}
         </button>
       </form>
@@ -142,7 +142,7 @@
           </li>
         </ul>
 
-        <button class="primary-btn" type="button" (click)="publishSelectedTour()" [disabled]="isPublishing || selectedTour.status !== 'DRAFT'">
+        <button class="primary-btn" type="button" data-testid="publish-tour-button" (click)="publishSelectedTour()" [disabled]="isPublishing || selectedTour.status !== 'DRAFT'">
           {{ isPublishing ? 'Objavljivanje...' : 'Objavi turu' }}
         </button>
         <button class="secondary-btn" type="button" *ngIf="selectedTour.status === 'PUBLISHED'" (click)="archiveSelectedTour()" [disabled]="isChangingStatus">
