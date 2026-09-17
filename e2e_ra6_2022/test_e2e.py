@@ -190,6 +190,6 @@ class TestE2E:
 
 
 def pause_step():
-    step_delay = float(os.getenv("E2E_STEP_DELAY", "0"))
+    step_delay = float(os.getenv("E2E_STEP_DELAY", "1"))
     if step_delay > 0:
         time.sleep(step_delay)

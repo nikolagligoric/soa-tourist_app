@@ -8,6 +8,8 @@ using System.Text;
 using MongoDB.Driver;
 using Blog.API.Grpc;
 using Blog.API.Messaging;
+using System.Diagnostics;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,7 @@ builder.Services.AddScoped<BlogService>();
 builder.Services.AddHostedService<TourPublishCommandSubscriber>();
 
 builder.Services.AddControllers();
+builder.Services.AddHealthChecks();
 builder.Services.AddHttpClient();
 
 builder.Services.AddGrpc();
@@ -84,12 +87,91 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+app.Use(async (context, next) =>
+{
+    const string headerName = "X-Correlation-ID";
+
+    var correlationId = context.Request.Headers.TryGetValue(
+        headerName,
+        out var existingCorrelationId)
+        ? existingCorrelationId.ToString()
+        : string.Empty;
+
+    if (string.IsNullOrWhiteSpace(correlationId))
+    {
+        correlationId = Guid.NewGuid().ToString();
+    }
+
+    context.Request.Headers[headerName] = correlationId;
+    context.Response.Headers[headerName] = correlationId;
+    context.Items["CorrelationId"] = correlationId;
+
+    await next();
+});
+
+app.Use(async (context, next) =>
+{
+    var stopwatch = Stopwatch.StartNew();
+    var requestStartedAt = DateTime.UtcNow;
+
+    Exception? caughtException = null;
+
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        caughtException = ex;
+        throw;
+    }
+    finally
+    {
+        stopwatch.Stop();
+
+        var statusCode = caughtException != null
+            ? StatusCodes.Status500InternalServerError
+            : context.Response.StatusCode;
+
+        var level = caughtException != null
+            ? "ERROR"
+            : statusCode switch
+            {
+                >= 500 => "ERROR",
+                >= 400 => "WARNING",
+                _ => "INFO"
+            };
+
+        var logEntry = new
+        {
+            timestamp = requestStartedAt.ToString("O"),
+            serviceName = "Blog",
+            level,
+            correlationId = context.Items["CorrelationId"]?.ToString(),
+            method = context.Request.Method,
+            path = context.Request.Path.Value,
+            statusCode,
+            latencyMs = Math.Round(
+                stopwatch.Elapsed.TotalMilliseconds,
+                3),
+            message = "HTTP request",
+            exception = caughtException == null
+                ? null
+                : $"{caughtException.GetType().Name}: {caughtException.Message}"
+        };
+
+        Console.WriteLine(
+            JsonSerializer.Serialize(logEntry));
+    }
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseStaticFiles();
 app.MapControllers();
+app.MapHealthChecks("/health");
 
 app.MapGrpcService<BlogGrpcService>();
 
