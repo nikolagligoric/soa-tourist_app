@@ -1,0 +1,354 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><title>testreport Testiranje turističke aplikacije</title>
+<link type="text/css" rel="stylesheet" href="http://localhost/gui/themes/default/css/tl_documents.css" />
+<style type="text/css" media="print">.notprintable { display:none;}</style>
+</head>
+<body>
+<div>
+<div style="float:right;">TestLink Community [configure $tlCfg-&gt;document_generator-&gt;company_name]</div>
+<div>&nbsp;</div><hr />
+<p style="text-align: center;"><img alt="TestLink logo" title="configure using $tlCfg->document_generator->company_logo"  width= height= src="http://localhost/gui/themes/default/images/tl-logo-transparent-25.png" /></p></div>
+<div class="doc_title"><p>Test Plan Execution Report</p></div>
+<div class="doc_title" style="text-align:left;margin: auto;"><p>Test Project: Standardizacija i kvalitet softvera<br/>Test Plan: Testiranje turističke aplikacije</p></div>
+<div class="summary"><p id="printedby">Printed by TestLink on 06/22/2026</p></div>
+<div class="pagefooter" id="copyright">2012 &copy; TestLink Community</div>
+<h1 class="doclevel" >Test Project: Standardizacija i kvalitet softvera</h1>
+<div class="txtlevel"><p>Testiranje funkcionalnosti turističke aplikacije.</p></div>
+ <br/><h1 class="doclevel" style="page-break-before: avoid;"  >Test Plan: Testiranje turističke aplikacije</h1>
+<div class="txtlevel"><p>Testiranje turističke aplikacije</p></div>
+ <br/><h1 class='doclevel'>Test Suite : Upravljanje korisničkim profilom</h1>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-1: Pregled sopstvenog profila&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera da li ulogovan korisnik vidi svoje podatke na profilu</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Kliknuti na padajući meni u gornjem desnom uglu na kome pi&scaron;e username ulogovanog korisnika</p>
+</td><td><p>Otvara se padajući meni sa opcijama &quot;Moj profil&quot; i &quot;Odjavi se&quot;</p>
+</td><td>Passed</td></tr><tr><td width="5">2</td><td><p>Kliknuti na opciju &quot;Moj profil&quot; u padajućem meniju</p>
+</td><td><p>Otvara se stranica sa prikazom profila i svim podacima o korisniku</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-2: Izmena profila sa validnim podacima&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera da li sistem ispravno ažurira profil korisnika kada se unesu ispravni podaci.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Kliknuti na dugme &quot;Izmeni profil&quot; na dnu ekrana</p>
+</td><td><p>Otvori se forma gde je moguće menjati profilnu sliku, ime, prezime, moto i biografiju</p>
+</td><td>Passed</td></tr><tr><td width="5">2</td><td><p>Izmeniti jedno ili vi&scaron;e polja validnim podacima</p>
+</td><td><p>Vrednosti u promenjenim poljima su se promenile.</p>
+</td><td>Passed</td></tr><tr><td width="5">3</td><td><p>Kliknuti na dugme &quot;Sačuvaj izmene&quot;</p>
+</td><td><p>Na vrhu se pojavi poruka &quot;Profil je uspe&scaron;no ažuriran!&quot; i podaci na profilu su promenjeni</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-3: Izmena profila sa praznim obaveznim poljem&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera validacije podataka pri poku&scaron;aju čuvanja praznog obaveznog polja (ime ili prezime).</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Kliknuti na dugme &quot;Izmeni profil&quot; na dnu ekrana</p>
+</td><td><p>Otvori se forma gde je moguće menjati profilnu sliku, ime, prezime, moto i biografiju</p>
+</td><td>Passed</td></tr><tr><td width="5">2</td><td><p>Obrisati vrednosti iz polja ime i/ili prezime</p>
+</td><td><p>Vrednost u obrisanim poljima je prazan string i dugme &quot;Sačuvaj izmene&quot; je sivo</p>
+</td><td>Passed</td></tr><tr><td width="5">3</td><td><p>Kliknuti na dugme &quot;Sačuvaj izmene&quot;</p>
+</td><td><p>Polje koje je prazno treba da pocrveni i ispod njega treba da pi&scaron;e &quot;Ime/Prezime je obavezno polje.&quot;</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">High</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-4: Pokušaj izmene profila drugog korisnika&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera&nbsp;da korisnik ne može menjati tuđe podatke.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Kliknuti na opciju&nbsp;&quot;Prati&quot; ili opciju&nbsp;&quot;Pratioca&quot;</p>
+</td><td><p>Na ekranu se prikazuje prozor &quot;Korisnici koje prati&scaron;&quot; ili &quot;Tvoji pratioci&quot; sa listom zapraćenih korisnika ili pratioca ulogovanog korisnika</p>
+</td><td>Passed</td></tr><tr><td width="5">2</td><td><p>Kliknuti na username jednog korisnika iz liste</p>
+</td><td><p>Otvara nam se stranica sa prikazom profila drugog korisnika na kojoj se ne nalazi dugme &quot;Izmeni profil&quot;</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">High</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-5: Prikaz izmenjenih podataka nakon čuvanja profila&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera da li se nakon osvežavanja stranice vide izmenjeni podaci.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Osvežiti stranicu nakon izmene profila</p>
+</td><td><p>Prikazani podaci na profilu su i dalje oni koje je korisnik prethodno sačuvao</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<h1 class='doclevel'>Test Suite : Upravljanje praćenjem korisnika i preporukama</h1>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-6: Zapraćivanje korisnika sa validnim podacima&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera da li sistem ispravno evidentira vezu praćenja između dva korisnika.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Kliknuti na dugme &quot;Zaprati korisnika&quot;</p>
+</td><td><p>Dugme &quot;Zaprati korisnika&quot; se menja u dugme &quot;Otprati korisnika&quot; i korisnik kojeg smo zapratili se pojavljuje u listi &quot;Korisnici koje prati&scaron;&quot;</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-7: Pokušaj zapraćivanja samog sebe&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera da li sistem onemogućava korisniku da zaprati sopstveni profil.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Proveriti da li postoji dugme &quot;Zaprati korisnika&quot; na sopstvenom profilu.</p>
+</td><td><p>Dugme &quot;Zaprati korisnika&quot; ne postoji na stranici sopstvenog profila</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-8: Pokušaj duplog zapraćivanja istog korisnika&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera da sistem ne kreira duplirane veze praćenja.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Proveriti da li na profilu korisnika kojeg ulogovani korisnik prati postoji dugme &quot;Zaprati korisnika&quot;</p>
+</td><td><p>Prikazuje se dugme &quot;Otprati korisnika&quot;, a ne &quot;Zaprati korisnika&quot;</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-9: Otpraćivanje prethodno zapraćenog korisnika&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera uklanjanja veze praćenja.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Kliknuti na dugme &quot;Otprati korisnika&quot;</p>
+</td><td><p>Dugme &quot;Otprati korisnika&quot; se menja u dugme &quot;Zaprati korisnika&quot; i korisnik se bri&scaron;e iz liste &quot;Korisnici koje prati&scaron;&quot;</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-10: Prikaz liste korisnika koje korisnik prati&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera da li se ispravno prikazuje lista svih zapraćenih osoba.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Kliknuti na opciju &quot;Prati&quot;</p>
+</td><td><p>Otvara se prozor &quot;Korisnici koje prati&scaron;&quot;</p>
+</td><td>Passed</td></tr><tr><td width="5">2</td><td><p>Proveriti da li se na listi u prozoru nalaze svi korisnici koje prijavljeni korisnik prati</p>
+</td><td><p>Na listi su svi korisnici koje prijavljeni korisnik prati</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-11: Prikaz preporučenih profila za praćenje&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera funkcionalnosti algoritma za preporuke.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Na početnoj stranici pogledati sekciju &quot;Predlozi za tebe&quot;</p>
+</td><td><p>Prikazuje se korisnik kojeg prati drugi korisnik, a ne prati ga ulogovani korisnik</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-12: Preporuke ne prikazuju već zapraćene korisnike&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera da li algoritam filtrira korisnike koje već pratimo.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Na početnoj stranici pogledati sekciju &quot;Predlozi za tebe&quot;</p>
+</td><td><p>Ne prikazuje se korisnik kojeg prijavljeni korisnik već prati</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-13: Preporuke ne prikazuju trenutno prijavljenog korisnika&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera da li se korisnik pojavljuje u sopstvenim preporukama.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Na početnoj stranici pogledati sekciju &quot;Predlozi za tebe&quot;</p>
+</td><td><p>Ne prikazuje se username trenutno ulogovanog korisnika</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<h1 class='doclevel'>Test Suite : Prikaz i komentarisanje blogova zapraćenih korisnika</h1>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-14: Prikaz blogova zapraćenog autora&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera da li sistem prikazuje blogove autora koje korisnik prati.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Kliknuti na dugme &quot;Blogovi&quot; u gornjem desnom uglu početne stranice</p>
+</td><td><p>Otvara se stranica na kojoj se i prikazuju blogovi koje prijavljeni korisnik prati</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-15: Sakrivanje blogova autora kojeg korisnik ne prati&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera da li se vide blogovi autora koje korisnik ne prati.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Kliknuti na dugme &quot;Blogovi&quot; u gornjem desnom uglu početne stanice</p>
+</td><td><p>Otvara se stranica&nbsp;na kojoj se ne vide blogovi korisnika kojeg prijavljeni korisnik ne prati</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-16: Prikaz prazne liste kada korisnik ne prati nijednog autora&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera pona&scaron;anja sistema kada nema sadržaja za prikaz.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Kliknuti na dugme &quot;Blogovi&quot; u gornjem desnom uglu početne stranice</p>
+</td><td><p>Otvori se stranica&nbsp;gde se ispisuje poruka &quot;Nema objava korisnika koje prati&scaron;.&quot;</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-17: Ostavljanje komentara na blog zapraćenog autora&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera funkcionalnosti komentarisanja kod dozvoljenog autora.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Kliknuti na dugme &quot;Prikaži komentare&quot; na blogu koji želimo da komentari&scaron;emo</p>
+</td><td><p>Otvori se polje za ostavljanje komentara</p>
+</td><td>Passed</td></tr><tr><td width="5">2</td><td><p>Uneti komentar</p>
+</td><td><p>Polje za ostavljanje komentara je popunjeno</p>
+</td><td>Passed</td></tr><tr><td width="5">3</td><td><p>Kliknuti na dugme &quot;Komentari&scaron;i&quot; ispod polja za ostavljanje komentara</p>
+</td><td><p>Komentar je objavljen i prikazuje se ispod bloga</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-18: Pokušaj komentarisanja bloga autora koji nije zapraćen&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera da li korisnik&nbsp;sme komentarisati blogove autora koje ne prati.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Proveriti da li se vide blogovi autora kojeg prijavljeni korisnik ne prati</p>
+</td><td><p>Blogovi autora kojeg prijavljeni korisnik ne prati se ne prikazuju, pa automatski se ne može ni ostaviti komentar na taj blog</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-19: Provera podataka komentara nakon kreiranja&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera podataka komentara.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Pogledati komentar koji je ulogovani korisnik ostavio</p>
+</td><td><p>U polju sa komentarima se nalazi tekst komentara, username autora i vreme i datum objavljivanja komentara</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+<p>&nbsp;</p><div> <table class="tc" width="90%" ><tr><th colspan="5">Test Case SIKS-20: Blogovi autora se ne prikazuju nakon otpraćivanja&nbsp;<span style="font-size: 80%;">[Version : 1]</span></th></tr>
+<tr><td colspan="5"><span class="label">Summary:</span><br /><p>Provera ažuriranja sadržaja nakon promene statusa praćenja.</p>
+</td></tr><tr><td><span class="label">#:</span></td><td><span class="label">Step actions:</span></td><td><span class="label">Expected Results:</span></td><td><span class="label">Execution Status:</span></td></tr><tr><td width="5">1</td><td><p>Kliknuti na dugme &quot;Blogovi&quot; u gornjem desnom uglu početne stranice</p>
+</td><td><p>Otvori se stranica na kojoj su prikazani blogovi korisnika kojeg prijavljeni korisnik prati</p>
+</td><td>Passed</td></tr><tr><td width="5">2</td><td><p>Kliknuti na padajući meni u gornjem desnom uglu</p>
+</td><td><p>Otvori se padajući meni sa opcijama &quot;Moj profil&quot; i &quot;Odjavi se&quot;</p>
+</td><td>Passed</td></tr><tr><td width="5">3</td><td><p>Kliknuti na opciju &quot;Moj profil&quot;</p>
+</td><td><p>Orvori se stranica sa prikazom profila ulogovanog korisnika</p>
+</td><td>Passed</td></tr><tr><td width="5">4</td><td><p>Kliknuti na opciju &quot;Prati&quot;</p>
+</td><td><p>Prikazuje se prozor &quot;Korisnici koje prati&scaron;&quot;</p>
+</td><td>Passed</td></tr><tr><td width="5">5</td><td><p>Kliknuti na dugme &quot;Otprati&quot; pored korisnika koji ima objavljen blog</p>
+</td><td><p>Korisnik koji je otpraćen nestaje iz liste</p>
+</td><td>Passed</td></tr><tr><td width="5">6</td><td><p>Kliknuti na dugme &quot;Blogovi&quot; u gornjem desnom uglu</p>
+</td><td><p>Otvara se stranica na kojoj vi&scaron;e nema prikazanih blogova korisnika koji je otpraćen</p>
+</td><td>Passed</td></tr><tr><td width="20%" valign="top"><span class="label">Execution type:</span></td><td colspan="4">Manual</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Estimated exec. duration (min):</span></td><td colspan="4"></td></tr>
+<tr><td width="20%" valign="top"><span class="label">Priority:</span></td><td colspan="4">Medium</td></tr>
+<tr><td colspan="5"></td></tr><tr style="font-weight: bold;background: #EEE;text-align: left;"><td width="20%" valign="top">Execution Details</td><td colspan="4">&nbsp;</td></tr>
+<tr><td width="20%" valign="top">Build</td><td colspan="4">Manuelno izvršavanje testova</td></tr>
+<tr><td width="20%" valign="top">Tester</td><td  colspan="4" >admin</td></tr>
+<tr><td width="20%" valign="top"><span class="label">Execution Result:</span></td><td  colspan="4" ><b>Passed</b></td></tr>
+<tr><td width="20%"><span class="label">Execution Mode:</span></td><td  colspan="4" ><b>Manual</b></td></tr>
+<tr><td width="20%"><span class="label">Execution duration (min):</span></td><td  colspan="4" ><b>&nbsp;</b></td></tr>
+</table>
+</div>
+
+</body>
+</html>

@@ -19,11 +19,13 @@ services:
       DATABASE_PASSWORD: postgres
       DATABASE_USER: postgres
       DATABASE_SCHEMA: stakeholders_db
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
 
     volumes:
       - ${USERPROFILE}/.aspnet/https:/https:ro
     depends_on:
       - database
+      - jaeger
 
   database:
     image: postgres:13
@@ -37,7 +39,7 @@ services:
         source: database-data
         target: /var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "5434:5432"
  
   blog:
     build:
@@ -47,10 +49,18 @@ services:
     ports:
       - "8081:8080"
     environment:
-      ASPNETCORE_URLS: http://+:8080
-      ConnectionStrings__MongoDb: "mongodb://mongo:mongo123@blog-mongo:27017/blog_db?authSource=admin"    
+      ASPNETCORE_URLS: https://+:8080
+      ASPNETCORE_Kestrel__Certificates__Default__Password: password
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/blog.pfx
+      ConnectionStrings__MongoDb: "mongodb://mongo:mongo123@blog-mongo:27017/blog_db?authSource=admin"
+      Nats__Url: nats://nats:4222
+      Nats__TourPublishCommandSubject: tour.publish.command
+      Nats__TourPublishReplySubject: tour.publish.reply
+    volumes:
+      - ${USERPROFILE}/.aspnet/https:/https:ro    
     depends_on:
       - blog-mongo
+      - nats
 
   blog-mongo:
     image: mongo:7
@@ -108,13 +118,27 @@ services:
     restart: on-failure
     ports:
       - "8083:8083"
+      - "9091:9091"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://tours-database:5432/tours_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       SERVER_PORT: 8083
+      NATS_URL: nats://nats:4222
+      NATS_TOUR_PUBLISH_COMMAND_SUBJECT: tour.publish.command
+      NATS_TOUR_PUBLISH_REPLY_SUBJECT: tour.publish.reply
+      NATS_TOUR_SLOTS_COMMAND_SUBJECT: tour.slots.command
+      PURCHASE_GRPC_HOST: purchase
+      PURCHASE_GRPC_PORT: 8085
     depends_on:
       - tours-database
+      - nats
+
+  nats:
+    image: nats
+    restart: on-failure
+    ports:
+      - "4222:4222"
 
   gateway:
     build:
@@ -125,8 +149,11 @@ services:
       - "8000:8080"
     environment:
       ASPNETCORE_URLS: http://+:8080
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
     depends_on:
       - stakeholders
+      - blog
+      - jaeger
 
   pgadmin:
     image: dpage/pgadmin4
@@ -155,9 +182,125 @@ services:
       ME_CONFIG_BASICAUTH: "true"
     depends_on:
       - blog-mongo
+  
+  purchase-database:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: purchase_db
+    volumes:
+      - purchase-database-data:/var/lib/postgresql/data
+    ports:
+      - "5436:5432"
+
+  purchase:
+    build:
+      context: ./Purchase
+      dockerfile: Purchase.API/Dockerfile
+      target: final
+    restart: on-failure
+    ports:
+      - "8084:8080"
+      - "9090:8085"
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: "Host=purchase-database;Port=5432;Database=purchase_db;Username=postgres;Password=postgres"
+      Services__Tours: "http://tours:8083"
+      Jwt__Key: "L1uKpZQzI1Yx0+OaS0kXkE7u0n/5Q0U3R5s3FVmXcXU="
+      Nats__Url: nats://nats:4222
+      Nats__TourSlotsCommandSubject: tour.slots.command
+    depends_on:
+      - purchase-database
+      - tours
+      - nats
+
+  monitoring-database:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: monitoring_db
+    volumes:
+      - monitoring-database-data:/var/lib/postgresql/data
+    ports:
+      - "5437:5432"
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    ports:
+      - "8086:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9092:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - cadvisor
+      - node-exporter
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./monitoring/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./monitoring/grafana/dashboards/node-exporter:/var/lib/grafana/dashboards/node-exporter:ro
+    depends_on:
+      - prometheus
+  
+  loki:
+    image: grafana/loki:2.9.2
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.53
+    container_name: jaeger
+    restart: unless-stopped
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+      - "4318:4318"
+      
+  fluent-bit:
+    image: fluent/fluent-bit:2.1.10
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+    depends_on:
+      - loki
+
 volumes:
   database-data:
   blog-mongo-data:
   pgadmin-data:
   neo4j-followers-data:
   tours-database-data:
+  purchase-database-data:
+  monitoring-database-data:

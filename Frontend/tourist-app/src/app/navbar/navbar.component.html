@@ -1,0 +1,36 @@
+<nav class="main-navbar">
+  <div class="nav-logo" routerLink="/home">🌍 TourApp</div>
+  
+  <div class="nav-actions" *ngIf="isLoggedIn">
+
+    <button *ngIf="currentUserRole === 'Tourist'" class="nav-link" routerLink="/tours">
+      Ture
+    </button>
+    
+    <button *ngIf="currentUserRole === 'Tourist'" class="nav-link" routerLink="/cart">
+      Korpa
+    </button>
+    
+    <button *ngIf="currentUserRole === 'Tourist'" class="nav-link" routerLink="/purchases">
+      Moje kupovine
+    </button>
+    <button *ngIf="currentUserRole === 'Guide'" class="nav-link" routerLink="/author/tours">
+      Moje ture
+    </button>
+    <button class="nav-blog-link" routerLink="/blogs">Blogovi</button>
+    <button class="nav-location-link" routerLink="/current-location" *ngIf="currentUserRole === 'Tourist'">Trenutna lokacija</button>
+
+    <span class="navbar-role-badge">{{ currentUserRole }}</span>
+
+    <div class="dropdown-trigger" (click)="toggleDropdown($event)">
+      <span class="nav-avatar">👤</span>
+      <span class="nav-username-text">{{ currentUserUsername }}</span>
+      <span class="dropdown-arrow">▼</span>
+    </div>
+
+    <div class="dropdown-menu" *ngIf="isDropdownOpen">
+      <button *ngIf="currentUserRole !== 'Admin' && currentUserRole !== 'Administrator'" class="dropdown-item profile-link" routerLink="/profile" (click)="isDropdownOpen = false">👤 Moj Profil</button>
+      <button class="dropdown-item logout-link" (click)="onLogout()">🚪 Odjavi se</button>
+    </div>
+  </div>
+</nav>

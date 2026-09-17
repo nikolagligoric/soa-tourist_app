@@ -73,6 +73,11 @@ namespace Stakeholders.Application.Services
                 throw new ArgumentException("Password is incorrect!");
             }
 
+            if (user.IsBlocked)
+            {
+                return "BLOCKED";
+            }
+
             var token = _jwtGenerator.GenerateAccessToken(user);
             return token.AccessToken;
         }

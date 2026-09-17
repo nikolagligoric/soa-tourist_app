@@ -38,6 +38,7 @@ namespace Blog.API.Controllers
                     Title = blog.Title,
                     Description = blog.Description,
                     CreatedAt = blog.CreatedAt,
+                    TourId = blog.TourId,
                     AuthorUsername = blog.AuthorUsername,
                     ImageUrls = blog.Images.Select(i => i.ImageUrl).ToList()
                 };
@@ -63,6 +64,7 @@ namespace Blog.API.Controllers
                     Title = blog.Title,
                     Description = blog.Description,
                     CreatedAt = blog.CreatedAt,
+                    TourId = blog.TourId,
                     AuthorUsername = blog.AuthorUsername,
                     ImageUrls = blog.Images.Select(i => i.ImageUrl).ToList()
                 }).ToList();
@@ -88,6 +90,7 @@ namespace Blog.API.Controllers
                     Title = blog.Title,
                     Description = blog.Description,
                     CreatedAt = blog.CreatedAt,
+                    TourId = blog.TourId,
                     AuthorUsername = blog.AuthorUsername,
                     ImageUrls = blog.Images.Select(i => i.ImageUrl).ToList()
                 };
@@ -248,6 +251,7 @@ namespace Blog.API.Controllers
                     Title = blog.Title,
                     Description = blog.Description,
                     CreatedAt = blog.CreatedAt,
+                    TourId = blog.TourId,
                     AuthorUsername = blog.AuthorUsername,
                     ImageUrls = blog.Images.Select(i => i.ImageUrl).ToList()
                 }).ToList();

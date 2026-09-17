@@ -1,0 +1,178 @@
+.management-wrapper {
+  padding: 40px 20px;
+  background-color: #f4f6f9;
+  min-height: 85vh;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+.management-card {
+  background: white;
+  width: 100%;
+  max-width: 1200px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.management-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 15px;
+}
+
+.management-header h2 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 22px;
+}
+
+.back-btn {
+  background-color: #64748b;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.back-btn:hover {
+  background-color: #475569;
+}
+
+/* Stilovi za responsive tabelu */
+.table-responsive {
+  overflow-x: auto;
+  margin-top: 15px;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 15px;
+}
+
+.user-table th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 700;
+  padding: 14px 16px;
+  border-bottom: 2px solid #e2e8f0;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.user-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+  vertical-align: middle;
+}
+
+/* Zebra efekat na redovima */
+.user-table tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+.user-table tbody tr:hover {
+  background-color: #f1f5f9;
+}
+
+/* Stil kada je korisnik blokiran - zamuti ceo red */
+.row-blocked {
+  background-color: #fdf2f2 !important;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-muted {
+  color: #64748b;
+}
+
+/* Bedževi za ID i Uloge */
+.id-badge {
+  background-color: #e2e8f0;
+  color: #475569;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.role-badge {
+  background-color: #e0f2fe;
+  color: #0369a1;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Statusni bedževi (Aktivan / Blokiran) */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.status-active {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.status-blocked {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Dugmad unutar tabele */
+.table-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.block-btn {
+  background-color: #ef4444;
+  color: white;
+}
+
+.block-btn:hover {
+  background-color: #dc2626;
+}
+
+/* Onemogućeno dugme kada je već blokiran */
+.table-btn:disabled {
+  background-color: #cbd5e1;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* Alerti za poruke */
+.alert {
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+  font-size: 14px;
+}
+.alert-success { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
+.alert-danger { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }

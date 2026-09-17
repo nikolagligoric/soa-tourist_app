@@ -26,7 +26,8 @@ namespace Stakeholders.Infrastructure.Authentication
             var claims = new List<Claim>
             {
                 new("username", user.UserName),
-                new("role", user.Role.ToString())
+                new("role", user.Role.ToString()),
+                new("id", user.Id.ToString())
             };
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));

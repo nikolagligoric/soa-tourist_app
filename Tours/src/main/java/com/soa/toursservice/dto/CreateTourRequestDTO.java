@@ -12,6 +12,8 @@ public class CreateTourRequestDTO {
 
     private String tags;
 
+    private int availableSlots;
+
     private String authorUsername;
 
     public CreateTourRequestDTO() {
@@ -33,6 +35,10 @@ public class CreateTourRequestDTO {
         return tags;
     }
 
+    public int getAvailableSlots() {
+        return availableSlots;
+    }
+
     public String getAuthorUsername() {
         return authorUsername;
     }
@@ -51,6 +57,10 @@ public class CreateTourRequestDTO {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public void setAvailableSlots(int availableSlots) {
+        this.availableSlots = availableSlots;
     }
 
     public void setAuthorUsername(String authorUsername) {

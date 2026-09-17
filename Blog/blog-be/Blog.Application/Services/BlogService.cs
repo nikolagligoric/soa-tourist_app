@@ -14,10 +14,12 @@ namespace Blog.Application.Services
     public class BlogService
     {
         private readonly IBlogRepository _blogRepository;
+        private readonly HttpClient _httpClient;
 
-        public BlogService(IBlogRepository blogRepository)
+        public BlogService(IBlogRepository blogRepository, HttpClient httpClient)
         {
             _blogRepository = blogRepository;
+            _httpClient = httpClient;
         }
 
         public async Task<Blog.Domain.Entities.Blog> CreateBlogAsync(CreateBlogDTO createBlogDto, string authorUsername)
@@ -72,6 +74,33 @@ namespace Blog.Application.Services
             return _blogRepository.Add(blog);
         }
 
+        public Blog.Domain.Entities.Blog CreateTourAnnouncementBlog(CreateTourBlogDTO createTourBlogDto)
+        {
+            if (createTourBlogDto.TourId <= 0)
+                throw new ArgumentException("Tour id is required.");
+
+            if (string.IsNullOrWhiteSpace(createTourBlogDto.TourName))
+                throw new ArgumentException("Tour name is required.");
+
+            if (string.IsNullOrWhiteSpace(createTourBlogDto.TourDescription))
+                throw new ArgumentException("Tour description is required.");
+
+            if (string.IsNullOrWhiteSpace(createTourBlogDto.AuthorUsername))
+                throw new ArgumentException("Author username is required.");
+
+            var blog = new Blog.Domain.Entities.Blog
+            {
+                TourId = createTourBlogDto.TourId,
+                Title = $"New tour published: {createTourBlogDto.TourName}",
+                Description = createTourBlogDto.TourDescription,
+                CreatedAt = DateTime.UtcNow,
+                AuthorUsername = createTourBlogDto.AuthorUsername,
+                Images = new List<BlogImage>()
+            };
+
+            return _blogRepository.Add(blog);
+        }
+
         public async Task<List<Blog.Domain.Entities.Blog>> GetAllBlogsAsync()
         {
             return await _blogRepository.GetAllAsync();
@@ -106,12 +135,11 @@ namespace Blog.Application.Services
 
             if (authorUsername != blog.AuthorUsername)
             {
-                using var client = new HttpClient();
 
-                client.DefaultRequestHeaders.Authorization =
+                _httpClient.DefaultRequestHeaders.Authorization =
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var response = await client.GetAsync(
+                var response = await _httpClient.GetAsync(
                     $"http://followers:8082/api/followers/check/{blog.AuthorUsername}"
                 );
 
@@ -210,23 +238,27 @@ namespace Blog.Application.Services
 
         public async Task<List<Blog.Domain.Entities.Blog>> GetBlogsFromFollowingAsync(string token, string username)
         {
-            using var client = new HttpClient();
 
-            client.DefaultRequestHeaders.Authorization =
+            _httpClient.DefaultRequestHeaders.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var following = await client.GetFromJsonAsync<List<string>>(
+            var following = await _httpClient.GetFromJsonAsync<List<string>>(
                 "http://followers:8082/api/followers/following"
             );
 
-            if (following == null || !following.Any())
+            if (following == null)
             {
-                return new List<Blog.Domain.Entities.Blog>();
+                following = new List<string>();
             }
 
-            if (!following.Contains(username))
+            if (!string.IsNullOrWhiteSpace(username) && !following.Contains(username))
             {
                 following.Add(username);
+            }
+
+            if (!following.Any())
+            {
+                return new List<Blog.Domain.Entities.Blog>();
             }
 
             return await _blogRepository.GetBlogsByAuthorsAsync(following);

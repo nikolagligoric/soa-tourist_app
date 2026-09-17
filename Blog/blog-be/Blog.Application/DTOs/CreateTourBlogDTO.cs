@@ -1,0 +1,10 @@
+namespace Blog.Application.DTOs
+{
+    public class CreateTourBlogDTO
+    {
+        public long TourId { get; set; }
+        public string TourName { get; set; } = string.Empty;
+        public string TourDescription { get; set; } = string.Empty;
+        public string AuthorUsername { get; set; } = string.Empty;
+    }
+}

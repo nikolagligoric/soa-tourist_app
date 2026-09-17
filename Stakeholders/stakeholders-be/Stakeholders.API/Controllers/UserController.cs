@@ -34,14 +34,21 @@ namespace Stakeholders.API.Controllers
         {
             try
             {
-                var token = _userService.Login(loginDto);
-                return Ok(new { token });
+                var result = _userService.Login(loginDto);
+
+                if (result == "BLOCKED")
+                {
+                    return BadRequest("Your account has been blocked by an administrator!");
+                }
+
+                return Ok(new { token = result });
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult GetAllUsers()
@@ -109,6 +116,27 @@ namespace Stakeholders.API.Controllers
             {
                 return BadRequest(ex.Message);
 
+            }
+        }
+
+        [Authorize(Roles = "Tourist,Guide")]
+        [HttpGet("profile/{username}")]
+        public IActionResult GetProfileByUsername(string username)
+        {
+            try
+            {
+                var userProfile = _userService.ViewMyProfile(username);
+
+                if (userProfile == null)
+                {
+                    return NotFound("User profile not found.");
+                }
+
+                return Ok(userProfile);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

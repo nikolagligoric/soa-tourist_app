@@ -1,0 +1,117 @@
+.profile-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 85vh;
+  background-color: #f4f6f9;
+  padding: 30px 20px;
+  font-family: sans-serif;
+}
+
+.profile-card {
+  background: white;
+  width: 100%;
+  max-width: 500px;
+  padding: 35px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.avatar-section {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.avatar-preview {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 3px solid #007bff;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  margin-bottom: 12px;
+  display: inline-block;
+}
+
+.profile-username {
+  color: #64748b;
+  font-weight: 600;
+  margin-top: -10px;
+}
+
+.profile-motto {
+  color: #64748b;
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+.profile-bio-box {
+  margin-top: 25px;
+  text-align: left;
+}
+
+.profile-bio-box h3 {
+  font-size: 16px;
+  color: #334155;
+  margin-bottom: 8px;
+}
+
+.profile-bio-box p {
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.6;
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.alert-danger { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 12px; border-radius: 6px; text-align: center;}
+
+.action-section {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.follow-btn-large, .unfollow-btn-large {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.follow-btn-large {
+  background-color: #007bff;
+  color: white;
+}
+
+.follow-btn-large:hover {
+  background-color: #0056b3;
+}
+
+.unfollow-btn-large {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.unfollow-btn-large:hover {
+  background-color: #fee2e2;
+  color: #ef4444;
+  border-color: #fca5a5;
+}
+
+.back-link {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+.back-link:hover {
+  text-decoration: underline;
+}

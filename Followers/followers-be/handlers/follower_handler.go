@@ -141,3 +141,27 @@ func GetFollowing(c *gin.Context) {
 
 	c.JSON(http.StatusOK, following)
 }
+
+// GetFollowers godoc
+// @Summary Get followers
+// @Description Get users that follow the authenticated user
+// @Tags followers
+// @Security BearerAuth
+// @Success 200 {array} string
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/followers/followers [get]
+func GetFollowers(c *gin.Context) {
+	username := c.MustGet("username").(string)
+
+	followers, err := services.GetFollowers(username) // Poziv ka novom servisu
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, followers)
+}

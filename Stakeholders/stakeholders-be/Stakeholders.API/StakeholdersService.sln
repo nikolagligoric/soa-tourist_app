@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stakeholders.Application", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stakeholders.Infrastructure", "..\Stakeholders.Infrastructure\Stakeholders.Infrastructure.csproj", "{DC0754CA-D497-54A0-A3AE-082036C419FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stakeholders.Tests", "..\Stakeholders.Tests\Stakeholders.Tests.csproj", "{423F648F-577D-465D-9EA0-D1B3FAC68136}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{DC0754CA-D497-54A0-A3AE-082036C419FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC0754CA-D497-54A0-A3AE-082036C419FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC0754CA-D497-54A0-A3AE-082036C419FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{423F648F-577D-465D-9EA0-D1B3FAC68136}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{423F648F-577D-465D-9EA0-D1B3FAC68136}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{423F648F-577D-465D-9EA0-D1B3FAC68136}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{423F648F-577D-465D-9EA0-D1B3FAC68136}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

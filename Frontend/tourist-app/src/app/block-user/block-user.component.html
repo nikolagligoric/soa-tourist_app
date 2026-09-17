@@ -1,0 +1,51 @@
+<div class="management-wrapper">
+  <div class="management-card">
+    
+    <div class="management-header">
+      <h2>🔧 Upravljanje korisnicima (Admin Panel)</h2>
+      <button routerLink="/home" class="back-btn">← Nazad na početnu</button>
+    </div>
+    
+    <div *ngIf="successMessage" class="alert alert-success">✅ {{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">⚠️ {{ errorMessage }}</div>
+
+    <div class="table-responsive">
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Ime i prezime</th>
+            <th>Korisničko ime</th>
+            <th>Email</th>
+            <th>Uloga</th>
+            <th>Status</th>
+            <th>Akcija</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users" [class.row-blocked]="user.isBlocked">
+            <td><span class="id-badge">{{ user.id }}</span></td>
+            <td class="font-semibold">{{ user.firstName }} {{ user.lastName }}</td>
+            <td>{{ user.userName }}</td>
+            <td class="text-muted">{{ user.email }}</td>
+            <td><span class="role-badge">{{ user.role }}</span></td>
+            <td>
+              <span class="status-badge" [ngClass]="user.isBlocked ? 'status-blocked' : 'status-active'">
+                {{ user.isBlocked ? 'Blokiran' : 'Aktivan' }}
+              </span>
+            </td>
+            <td>
+              <button 
+                (click)="onBlock(user.id)" 
+                [disabled]="user.isBlocked"
+                class="table-btn block-btn">
+                Blokiraj
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
