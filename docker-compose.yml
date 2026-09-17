@@ -278,6 +278,8 @@ services:
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki-data:/loki
 
   jaeger:
     image: jaegertracing/all-in-one:1.53
@@ -304,3 +306,4 @@ volumes:
   tours-database-data:
   purchase-database-data:
   monitoring-database-data:
+  loki-data:
