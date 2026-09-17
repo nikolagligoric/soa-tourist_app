@@ -216,6 +216,18 @@ services:
       - tours
       - nats
 
+  monitoring-database:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: monitoring_db
+    volumes:
+      - monitoring-database-data:/var/lib/postgresql/data
+    ports:
+      - "5437:5432"
+
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor
@@ -291,3 +303,4 @@ volumes:
   neo4j-followers-data:
   tours-database-data:
   purchase-database-data:
+  monitoring-database-data:
