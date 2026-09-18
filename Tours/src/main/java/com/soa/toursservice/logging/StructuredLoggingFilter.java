@@ -19,6 +19,11 @@ public class StructuredLoggingFilter extends OncePerRequestFilter {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private final String instanceId =
+            System.getenv().getOrDefault(
+                    "INSTANCE_ID",
+                    "unknown");
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -94,6 +99,10 @@ public class StructuredLoggingFilter extends OncePerRequestFilter {
             logEntry.put(
                     "serviceName",
                     "Tours");
+
+            logEntry.put(
+                    "instanceId",
+                    instanceId);
 
             logEntry.put(
                     "level",

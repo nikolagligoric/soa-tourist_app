@@ -1,0 +1,819 @@
+<div class="alerts-page">
+
+  <header class="alerts-toolbar">
+
+    <div>
+
+      <span class="page-eyebrow">
+        Monitoring
+      </span>
+
+      <h2>
+        Alerti sistema
+      </h2>
+
+      <p>
+        Pregledaj aktivne incidente i istoriju prethodno razrešenih monitoring alerta.
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <div
+    class="state-card"
+    *ngIf="isLoading">
+
+    <div class="loading-spinner"></div>
+
+    <div>
+
+      <strong>
+        Učitavanje alerta...
+      </strong>
+
+      <p>
+        Preuzimanje trenutnog stanja monitoring alerta.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div
+    class="state-card error-state"
+    *ngIf="errorMessage">
+
+    <div>
+
+      <strong>
+        Nije moguće učitati alerte
+      </strong>
+
+      <p>
+        {{ errorMessage }}
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div *ngIf="!isLoading">
+
+    <section class="alert-summary">
+
+      <article class="alert-summary-card active-summary">
+
+        <div class="summary-icon">
+          !
+        </div>
+
+        <div>
+
+          <span>
+            Aktivni alerti
+          </span>
+
+          <strong>
+            {{ activeAlerts.length }}
+          </strong>
+
+          <small>
+            trenutno zahtevaju pažnju
+          </small>
+
+        </div>
+
+      </article>
+
+
+      <article class="alert-summary-card resolved-summary">
+
+        <div class="summary-icon">
+          ✓
+        </div>
+
+        <div>
+
+          <span>
+            Razrešeni alerti
+          </span>
+
+          <strong>
+            {{ alertHistory.length }}
+          </strong>
+
+          <small>
+            zabeleženi u istoriji
+          </small>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <section class="alerts-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            Trenutno stanje
+          </span>
+
+          <h3>
+            Aktivni alerti
+          </h3>
+
+          <p>
+            Problemi koji trenutno zahtevaju pažnju administratora.
+          </p>
+
+        </div>
+
+
+        <span
+          class="active-count"
+          *ngIf="activeAlerts.length > 0">
+
+          {{ activeAlerts.length }}
+          aktivnih
+
+        </span>
+
+      </div>
+
+
+      <div
+        class="alerts-table-card"
+        *ngIf="activeAlerts.length > 0">
+
+        <div class="table-wrapper">
+
+          <table class="alerts-table">
+
+            <thead>
+
+              <tr>
+                <th>Aktiviran</th>
+                <th>Servis</th>
+                <th>Instanca</th>
+                <th>Tip</th>
+                <th>Ozbiljnost</th>
+                <th>Status</th>
+                <th>Poruka</th>
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              <tr
+                *ngFor="let alert of activeAlerts"
+                (click)="selectAlert(alert)"
+                [class.critical-row]="
+                  alert.severity === 'CRITICAL'
+                "
+                [class.warning-row]="
+                  alert.severity === 'WARNING'
+                ">
+
+                <td>
+
+                  <div class="timestamp-cell">
+
+                    <strong>
+                      {{ alert.triggeredAt | date:'HH:mm:ss' }}
+                    </strong>
+
+                    <span>
+                      {{ alert.triggeredAt | date:'dd.MM.yyyy' }}
+                    </span>
+
+                  </div>
+
+                </td>
+
+
+                <td>
+
+                  <div class="service-cell">
+
+                    <div class="service-icon">
+                      {{ alert.serviceName.charAt(0) }}
+                    </div>
+
+                    <strong>
+                      {{ alert.serviceName }}
+                    </strong>
+
+                  </div>
+
+                </td>
+
+
+                <td>
+
+                  <code class="instance-code">
+                    {{ alert.instanceId || '-' }}
+                  </code>
+
+                </td>
+
+
+                <td>
+
+                  <span class="type-badge">
+                    {{ alert.type }}
+                  </span>
+
+                </td>
+
+
+                <td>
+
+                  <span
+                    class="severity-badge"
+                    [ngClass]="{
+                      'severity-critical':
+                        alert.severity === 'CRITICAL',
+
+                      'severity-warning':
+                        alert.severity === 'WARNING'
+                    }">
+
+                    <span class="severity-dot"></span>
+
+                    {{ alert.severity }}
+
+                  </span>
+
+                </td>
+
+
+                <td>
+
+                  <span class="status-badge status-active">
+
+                    <span class="status-dot"></span>
+
+                    {{ alert.status }}
+
+                  </span>
+
+                </td>
+
+
+                <td>
+
+                  <div
+                    class="message-cell"
+                    [title]="alert.message">
+
+                    {{ alert.message }}
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="healthy-state"
+        *ngIf="activeAlerts.length === 0">
+
+        <div class="healthy-icon">
+          ✓
+        </div>
+
+        <div>
+
+          <h4>
+            Nema aktivnih alerta
+          </h4>
+
+          <p>
+            Sva trenutno praćena monitoring pravila nalaze se u zdravom stanju.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="alerts-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            Istorija
+          </span>
+
+          <h3>
+            Istorija alerta
+          </h3>
+
+          <p>
+            Prethodno detektovani i razrešeni monitoring incidenti.
+          </p>
+
+        </div>
+
+
+        <div
+          class="history-count"
+          *ngIf="alertHistory.length > 0">
+
+          {{ visibleAlertHistory.length }}
+          /
+          {{ alertHistory.length }}
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="alerts-history-container"
+        *ngIf="alertHistory.length > 0"
+        (scroll)="onAlertHistoryScroll($event)">
+
+        <table class="alerts-table">
+
+          <thead>
+
+            <tr>
+              <th>Aktiviran</th>
+              <th>Razrešen</th>
+              <th>Servis</th>
+              <th>Instanca</th>
+              <th>Tip</th>
+              <th>Ozbiljnost</th>
+              <th>Status</th>
+              <th>Poruka</th>
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            <tr
+              *ngFor="let alert of visibleAlertHistory"
+              (click)="selectAlert(alert)"
+              [class.critical-row]="
+                alert.severity === 'CRITICAL'
+              "
+              [class.warning-row]="
+                alert.severity === 'WARNING'
+              ">
+
+              <td>
+
+                <div class="timestamp-cell">
+
+                  <strong>
+                    {{ alert.triggeredAt | date:'HH:mm:ss' }}
+                  </strong>
+
+                  <span>
+                    {{ alert.triggeredAt | date:'dd.MM.yyyy' }}
+                  </span>
+
+                </div>
+
+              </td>
+
+
+              <td>
+
+                <div
+                  class="timestamp-cell"
+                  *ngIf="alert.resolvedAt">
+
+                  <strong>
+                    {{ alert.resolvedAt | date:'HH:mm:ss' }}
+                  </strong>
+
+                  <span>
+                    {{ alert.resolvedAt | date:'dd.MM.yyyy' }}
+                  </span>
+
+                </div>
+
+                <span *ngIf="!alert.resolvedAt">
+                  -
+                </span>
+
+              </td>
+
+
+              <td>
+
+                <div class="service-cell">
+
+                  <div class="service-icon">
+                    {{ alert.serviceName.charAt(0) }}
+                  </div>
+
+                  <strong>
+                    {{ alert.serviceName }}
+                  </strong>
+
+                </div>
+
+              </td>
+
+
+              <td>
+
+                <code class="instance-code">
+                  {{ alert.instanceId || '-' }}
+                </code>
+
+              </td>
+
+
+              <td>
+
+                <span class="type-badge">
+                  {{ alert.type }}
+                </span>
+
+              </td>
+
+
+              <td>
+
+                <span
+                  class="severity-badge"
+                  [ngClass]="{
+                    'severity-critical':
+                      alert.severity === 'CRITICAL',
+
+                    'severity-warning':
+                      alert.severity === 'WARNING'
+                  }">
+
+                  <span class="severity-dot"></span>
+
+                  {{ alert.severity }}
+
+                </span>
+
+              </td>
+
+
+              <td>
+
+                <span class="status-badge status-resolved">
+
+                  <span class="status-dot"></span>
+
+                  {{ alert.status }}
+
+                </span>
+
+              </td>
+
+
+              <td>
+
+                <div
+                  class="message-cell"
+                  [title]="alert.message">
+
+                  {{ alert.message }}
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+
+        <div
+          class="history-loading"
+          *ngIf="hasMoreAlertHistory">
+
+          Skroluj naniže za još alerta
+
+        </div>
+
+
+        <div
+          class="history-end"
+          *ngIf="!hasMoreAlertHistory">
+
+          Prikazani su svi alerti.
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="empty-state"
+        *ngIf="alertHistory.length === 0">
+
+        <h4>
+          Nema istorije alerta
+        </h4>
+
+        <p>
+          Još uvek nema razrešenih monitoring alerta.
+        </p>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <div
+    class="alert-modal-overlay"
+    *ngIf="selectedAlert"
+    (click)="closeAlertDetails()">
+
+    <div
+      class="alert-modal"
+      (click)="$event.stopPropagation()">
+
+      <div class="alert-modal-header">
+
+        <div>
+
+          <span class="modal-eyebrow">
+            MONITORING ALERT
+          </span>
+
+          <h2>
+            Detalji alerta
+          </h2>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="closeAlertDetails()">
+
+          ×
+
+        </button>
+
+      </div>
+
+
+      <div class="alert-modal-content">
+
+        <div class="alert-highlight">
+
+          <div>
+
+            <span class="highlight-label">
+              {{ selectedAlert.type }}
+            </span>
+
+            <h3>
+              {{ selectedAlert.message }}
+            </h3>
+
+          </div>
+
+
+          <span
+            class="severity-badge severity-large"
+            [ngClass]="{
+              'severity-critical':
+                selectedAlert.severity === 'CRITICAL',
+
+              'severity-warning':
+                selectedAlert.severity === 'WARNING'
+            }">
+
+            <span class="severity-dot"></span>
+
+            {{ selectedAlert.severity }}
+
+          </span>
+
+        </div>
+
+
+        <section class="details-section">
+
+          <h3>
+            Cilj alerta
+          </h3>
+
+          <div class="details-grid">
+
+            <div class="detail-item">
+
+              <span>
+                Servis
+              </span>
+
+              <strong>
+                {{ selectedAlert.serviceName }}
+              </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+              <span>
+                Instanca
+              </span>
+
+              <strong>
+                {{ selectedAlert.instanceId || '-' }}
+              </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+              <span>
+                Tip alerta
+              </span>
+
+              <strong>
+                {{ selectedAlert.type }}
+              </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+              <span>
+                Status
+              </span>
+
+              <strong>
+
+                <span
+                  class="status-badge"
+                  [ngClass]="{
+                    'status-active':
+                      selectedAlert.status === 'ACTIVE',
+
+                    'status-resolved':
+                      selectedAlert.status !== 'ACTIVE'
+                  }">
+
+                  <span class="status-dot"></span>
+
+                  {{ selectedAlert.status }}
+
+                </span>
+
+              </strong>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <section class="details-section">
+
+          <h3>
+            Vremenski tok
+          </h3>
+
+          <div class="details-grid">
+
+            <div class="detail-item">
+
+              <span>
+                Aktiviran
+              </span>
+
+              <strong>
+                {{
+                  selectedAlert.triggeredAt
+                    | date:'dd.MM.yyyy HH:mm:ss'
+                }}
+              </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+              <span>
+                Razrešen
+              </span>
+
+              <strong>
+
+                {{
+                  selectedAlert.resolvedAt
+                    ? (
+                        selectedAlert.resolvedAt
+                        | date:'dd.MM.yyyy HH:mm:ss'
+                      )
+                    : '-'
+                }}
+
+              </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+              <span>
+                Trajanje
+              </span>
+
+              <strong>
+                {{ getAlertDuration(selectedAlert) }}
+              </strong>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <section class="details-section">
+
+          <h3>
+            Poruka
+          </h3>
+
+          <div class="message-box">
+            {{ selectedAlert.message }}
+          </div>
+
+        </section>
+
+
+        <div class="modal-actions">
+
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="closeAlertDetails()">
+
+            Zatvori
+
+          </button>
+
+
+          <button
+            type="button"
+            class="primary-button"
+            (click)="viewRelatedLogs(selectedAlert)">
+
+            Prikaži povezane logove
+
+            <span>
+              →
+            </span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

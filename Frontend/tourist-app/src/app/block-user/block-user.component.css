@@ -1,178 +1,313 @@
-.management-wrapper {
-  padding: 40px 20px;
-  background-color: #f4f6f9;
-  min-height: 85vh;
-  font-family: sans-serif;
-  display: flex;
-  justify-content: center;
-}
-
-.management-card {
-  background: white;
+.users-page {
   width: 100%;
-  max-width: 1200px;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  max-width: 1460px;
+  margin: 0 auto;
+  padding: 42px 42px 60px;
 }
 
-.management-header {
+.page-header {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-  border-bottom: 2px solid #f1f5f9;
-  padding-bottom: 15px;
+  gap: 30px;
+  margin-bottom: 30px;
 }
 
-.management-header h2 {
+.eyebrow {
+  display: block;
+  margin-bottom: 7px;
+  color: #315bef;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.page-header h1 {
   margin: 0;
-  color: #1e293b;
-  font-size: 22px;
+  color: #172033;
+  font-size: 30px;
+  font-weight: 750;
+  letter-spacing: -0.7px;
+}
+
+.page-header p {
+  margin: 8px 0 0;
+  color: #778197;
+  font-size: 14px;
 }
 
 .back-btn {
-  background-color: #64748b;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  transition: background-color 0.2s;
+  min-height: 38px;
+  flex-shrink: 0;
+  padding: 0 13px;
+  background: #ffffff;
+  border: 1px solid #e0e5ed;
+  border-radius: 8px;
+  color: #657288;
+  font-size: 10px;
+  font-weight: 700;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .back-btn:hover {
-  background-color: #475569;
+  background: #f6f8fb;
+  border-color: #d5dbe5;
+  color: #315bef;
 }
 
-/* Stilovi za responsive tabelu */
+.users-card {
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #e7ebf2;
+  border-radius: 11px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 20px 22px 17px;
+  border-bottom: 1px solid #eef1f6;
+}
+
+.section-eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  color: #315bef;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+.card-header h2 {
+  margin: 0;
+  color: #263145;
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.user-count {
+  min-width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 9px;
+  background: #edf2ff;
+  border-radius: 7px;
+  color: #315bef;
+  font-size: 10px;
+  font-weight: 750;
+}
+
 .table-responsive {
   overflow-x: auto;
-  margin-top: 15px;
 }
 
 .user-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 15px;
 }
 
 .user-table th {
-  background-color: #f8fafc;
-  color: #475569;
-  font-weight: 700;
-  padding: 14px 16px;
-  border-bottom: 2px solid #e2e8f0;
+  padding: 12px 16px;
+  background: #f8f9fc;
+  border-bottom: 1px solid #e8ecf2;
+  color: #8792a4;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.55px;
   text-transform: uppercase;
-  font-size: 12px;
-  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .user-table td {
-  padding: 14px 16px;
-  border-bottom: 1px solid #e2e8f0;
-  color: #334155;
+  padding: 13px 16px;
+  border-bottom: 1px solid #f0f2f6;
+  color: #536076;
+  font-size: 11px;
   vertical-align: middle;
 }
 
-/* Zebra efekat na redovima */
-.user-table tbody tr:nth-child(even) {
-  background-color: #f8fafc;
+.user-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.user-table tbody tr {
+  transition: background-color 0.14s ease;
 }
 
 .user-table tbody tr:hover {
-  background-color: #f1f5f9;
+  background: #fafbfc;
 }
 
-/* Stil kada je korisnik blokiran - zamuti ceo red */
-.row-blocked {
-  background-color: #fdf2f2 !important;
+.user-table tbody tr.row-blocked {
+  background: #fffafa;
 }
 
-.font-semibold {
-  font-weight: 600;
-}
-
-.text-muted {
-  color: #64748b;
-}
-
-/* Bedževi za ID i Uloge */
 .id-badge {
-  background-color: #e2e8f0;
-  color: #475569;
-  padding: 3px 8px;
-  border-radius: 4px;
-  font-family: monospace;
-  font-weight: bold;
+  min-width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 7px;
+  background: #f1f4f8;
+  border-radius: 6px;
+  color: #69768a;
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.user-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 170px;
+}
+
+.user-avatar {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #edf2ff;
+  border-radius: 50%;
+  color: #315bef;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.user-name strong {
+  color: #344055;
+  font-size: 11px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.username {
+  color: #536076;
+  font-weight: 650;
+}
+
+.email {
+  color: #7e899a;
 }
 
 .role-badge {
-  background-color: #e0f2fe;
-  color: #0369a1;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 13px;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 8px;
+  background: #edf2ff;
+  border: 1px solid #dfe6fb;
+  border-radius: 6px;
+  color: #315bef;
+  font-size: 9px;
+  font-weight: 750;
 }
 
-/* Statusni bedževi (Aktivan / Blokiran) */
 .status-badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 750;
 }
 
 .status-active {
-  background-color: #dcfce7;
-  color: #15803d;
+  background: #eef9f2;
+  border: 1px solid #d8ecdf;
+  color: #3f7b57;
 }
 
 .status-blocked {
-  background-color: #fee2e2;
-  color: #b91c1c;
-}
-
-/* Dugmad unutar tabele */
-.table-btn {
-  padding: 6px 14px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s;
+  background: #fff2f2;
+  border: 1px solid #f0d7d7;
+  color: #be5151;
 }
 
 .block-btn {
-  background-color: #ef4444;
-  color: white;
+  min-height: 32px;
+  padding: 0 11px;
+  background: #fff3f3;
+  border: 1px solid #efd6d6;
+  border-radius: 7px;
+  color: #c55353;
+  font-size: 9px;
+  font-weight: 750;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease;
 }
 
-.block-btn:hover {
-  background-color: #dc2626;
+.block-btn:hover:not(:disabled) {
+  background: #ffe8e8;
+  border-color: #e9c6c6;
 }
 
-/* Onemogućeno dugme kada je već blokiran */
-.table-btn:disabled {
-  background-color: #cbd5e1;
-  color: #94a3b8;
+.block-btn:disabled {
+  background: #f5f6f8;
+  border-color: #e8eaee;
+  color: #a6aeb9;
   cursor: not-allowed;
 }
 
-/* Alerti za poruke */
 .alert {
-  padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  font-weight: bold;
-  text-align: center;
-  font-size: 14px;
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
 }
-.alert-success { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
-.alert-danger { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }
+
+.alert-success {
+  background: #eff9f3;
+  border: 1px solid #d8ecdf;
+  color: #42775a;
+}
+
+.alert-danger {
+  background: #fff3f3;
+  border: 1px solid #f1d8d8;
+  color: #ad5050;
+}
+
+@media (max-width: 760px) {
+  .users-page {
+    padding: 28px 20px 45px;
+  }
+
+  .page-header {
+    flex-direction: column;
+  }
+
+  .back-btn {
+    width: 100%;
+  }
+
+  .page-header h1 {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .users-page {
+    padding: 24px 15px 40px;
+  }
+
+  .card-header {
+    padding-left: 17px;
+    padding-right: 17px;
+  }
+}

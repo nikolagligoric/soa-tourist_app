@@ -1,99 +1,200 @@
 <div class="cart-page">
 
-    <div class="page-header">
-        <p class="eyebrow">Korpa</p>
+  <header class="page-header">
+    <span class="eyebrow">Korpa</span>
 
-        <h1>Moja korpa</h1>
+    <h1>Moja korpa</h1>
 
-        <p>
-            Pregledajte korpu i završite kupovinu.
-        </p>
+    <p>
+      Pregledaj izabrane ture i završi kupovinu.
+    </p>
+  </header>
+
+
+  <div
+    class="status-message loading-message"
+    *ngIf="isLoading">
+    Učitavanje korpe...
+  </div>
+
+  <div
+    class="status-message error-message"
+    *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div
+    class="status-message success-message"
+    *ngIf="successMessage">
+    {{ successMessage }}
+  </div>
+
+
+  <ng-container *ngIf="cart">
+
+    <div
+      class="empty-state"
+      *ngIf="!cart.items || cart.items.length === 0">
+
+      <div class="empty-icon">
+        ◇
+      </div>
+
+      <h2>Korpa je prazna</h2>
+
+      <p>
+        Trenutno nema tura u tvojoj korpi.
+      </p>
+
     </div>
 
-    <p class="loading-message" *ngIf="isLoading">
-        Učitavanje korpe...
-    </p>
 
-    <p class="error-message" *ngIf="errorMessage">
-        {{ errorMessage }}
-    </p>
+    <div
+      class="cart-layout"
+      *ngIf="cart.items && cart.items.length > 0">
 
-    <p class="success-message" *ngIf="successMessage">
-        {{ successMessage }}
-    </p>
+      <main class="cart-content">
 
-    <section class="cart-card" *ngIf="cart">
+        <section class="cart-card">
 
-        <div class="empty-state" *ngIf="!cart.items || cart.items.length === 0">
+          <div class="cart-card-header">
 
-            Vaša korpa je prazna.
+            <div>
+              <span class="section-eyebrow">
+                Izabrane ture
+              </span>
 
-        </div>
-
-        <div class="cart-table" *ngIf="cart.items && cart.items.length > 0">
-
-            <div class="table-header">
-
-                <span>Tura</span>
-
-                <span>Cena</span>
-
-                <span>Akcija</span>
-
+              <h2>
+                Ture u korpi
+              </h2>
             </div>
 
-            <div class="table-row" [attr.data-tour-id]="item.tourId" *ngFor="let item of cart.items">
+            <span class="item-count">
+              {{ cart.items.length }}
+            </span>
 
-                <div>
+          </div>
 
-                    <strong>
-                        {{ getItemName(item) }}
-                    </strong>
 
-                    <small>
-                        ID ture: {{ item.tourId }}
-                    </small>
+          <div class="cart-items">
+
+            <article
+              class="cart-item"
+              [attr.data-tour-id]="item.tourId"
+              *ngFor="let item of cart.items">
+
+              <div class="item-main">
+
+                <div class="item-icon">
+                  T
+                </div>
+
+                <div class="item-info">
+
+                  <span class="item-label">
+                    Tura
+                  </span>
+
+                  <h3>
+                    {{ getItemName(item) }}
+                  </h3>
+
+                  <span class="item-id">
+                    ID ture: {{ item.tourId }}
+                  </span>
 
                 </div>
 
-                <span class="price">
+              </div>
 
-                    {{ item.price || 0 }} RSD
 
+              <div class="item-price">
+
+                <span>
+                  Cena
                 </span>
 
-                <button class="danger-btn" (click)="removeItem(item)">
-
-                    Ukloni
-
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="summary" *ngIf="cart.items && cart.items.length > 0">
-
-            <div>
-
-                <span>Ukupno</span>
-
                 <strong>
-
-                    {{ cart.totalPrice || 0 }} RSD
-
+                  {{ item.price || 0 }} RSD
                 </strong>
 
-            </div>
+              </div>
 
-            <button class="primary-btn" data-testid="checkout-button" (click)="checkout()">
 
-                Plati
+              <button
+                type="button"
+                class="remove-btn"
+                (click)="removeItem(item)">
 
-            </button>
+                Ukloni
+
+              </button>
+
+            </article>
+
+          </div>
+
+        </section>
+
+      </main>
+
+
+      <aside class="summary-card">
+
+        <span class="summary-eyebrow">
+          Pregled kupovine
+        </span>
+
+        <h2>
+          Ukupno za plaćanje
+        </h2>
+
+
+        <div class="summary-details">
+
+          <div class="summary-row">
+
+            <span>
+              Broj tura
+            </span>
+
+            <strong>
+              {{ cart.items.length }}
+            </strong>
+
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-total">
+
+            <span>
+              Ukupno
+            </span>
+
+            <strong>
+              {{ cart.totalPrice || 0 }} RSD
+            </strong>
+
+          </div>
 
         </div>
 
-    </section>
+
+        <button
+          type="button"
+          class="checkout-btn"
+          data-testid="checkout-button"
+          (click)="checkout()">
+
+          Plati
+
+        </button>
+
+      </aside>
+
+    </div>
+
+  </ng-container>
 
 </div>

@@ -23,9 +23,13 @@ public class LogsController : ControllerBase
     [FromQuery] DateTimeOffset? to = null,
     [FromQuery] string? search = null,
     [FromQuery] string? instance = null,
-    [FromQuery] string? correlationId = null)
+    [FromQuery] string? correlationId = null,
+    [FromQuery] int limit = 50,
+    [FromQuery] DateTimeOffset? before = null)
     {
         var client = _httpClientFactory.CreateClient("Loki");
+
+        limit = Math.Clamp(limit, 1, 200);
 
         var lokiQuery = string.IsNullOrWhiteSpace(service)
             ? "{job=\"fluentbit\",service=~\".+\"}"
@@ -48,7 +52,7 @@ public class LogsController : ControllerBase
                 .Replace("\"", "\\\"");
 
             lokiQuery +=
-                $" | container_path=~\".*{escapedInstance}.*\"";
+                $" | instanceId=\"{escapedInstance}\"";
         }
 
         if (!string.IsNullOrWhiteSpace(correlationId))
@@ -72,7 +76,7 @@ public class LogsController : ControllerBase
 
         var query = Uri.EscapeDataString(lokiQuery);
 
-        var requestUrl = $"/loki/api/v1/query_range?query={query}&limit=50&direction=backward";
+        var requestUrl = $"/loki/api/v1/query_range?query={query}&limit={limit}&direction=backward";
 
         if (from.HasValue)
         {
@@ -82,10 +86,22 @@ public class LogsController : ControllerBase
             requestUrl += $"&start={startNanoseconds}";
         }
 
-        if (to.HasValue)
+        DateTimeOffset? endTime = to;
+
+        if (before.HasValue)
+        {
+            var beforeTime = before.Value.AddTicks(-1);
+
+            if (!endTime.HasValue || beforeTime < endTime.Value)
+            {
+                endTime = beforeTime;
+            }
+        }
+
+        if (endTime.HasValue)
         {
             var endNanoseconds =
-                to.Value.ToUnixTimeMilliseconds() * 1_000_000;
+                endTime.Value.ToUnixTimeMilliseconds() * 1_000_000;
 
             requestUrl += $"&end={endNanoseconds}";
         }
@@ -133,6 +149,7 @@ public class LogsController : ControllerBase
                     : rawLog;
 
                 var serviceName = string.Empty;
+                var logInstanceId = string.Empty;
                 var logLevel = string.Empty;
                 var logCorrelationId = string.Empty;
                 var method = string.Empty;
@@ -168,6 +185,15 @@ public class LogsController : ControllerBase
                         {
                             serviceName =
                                 serviceNameProperty.GetString()
+                                ?? string.Empty;
+                        }
+
+                        if (structuredLog.TryGetProperty(
+                                "instanceId",
+                                out var instanceIdProperty))
+                        {
+                            logInstanceId =
+                                instanceIdProperty.GetString()
                                 ?? string.Empty;
                         }
 
@@ -298,6 +324,9 @@ public class LogsController : ControllerBase
                     Stream = stream,
                     ContainerId = containerId,
                     ServiceName = serviceName,
+                    InstanceId = !string.IsNullOrWhiteSpace(logInstanceId)
+                        ? logInstanceId
+                        : containerId,
                     Level = logLevel,
                     CorrelationId = logCorrelationId,
                     Method = method,
@@ -314,6 +343,6 @@ public class LogsController : ControllerBase
             return Ok(logs.OrderBy(log => log.Timestamp));
         }
 
-        return Ok(logs);
+        return Ok(logs.OrderByDescending(log => log.Timestamp));
     }
 }

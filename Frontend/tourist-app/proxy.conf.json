@@ -38,5 +38,13 @@
     "pathRewrite": {
       "^/location-api": "/api/location"
     }
+  },
+    "/monitoring-api": {
+    "target": "http://localhost:5185",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/monitoring-api": "/api"
+    }
   }
 }

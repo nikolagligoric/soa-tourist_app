@@ -1,36 +1,213 @@
-<div class="profile-wrapper">
-  <div class="profile-card">
-    
-    <div *ngIf="errorMessage" class="alert alert-danger">
-      ⚠️ {{ errorMessage }}
+<div class="user-profile-page">
+
+  <header class="page-header">
+
+    <div>
+      <span class="eyebrow">
+        Profil korisnika
+      </span>
+
+      <h1>
+        {{ userData.firstName }} {{ userData.lastName }}
+      </h1>
+
+      <p>
+        Pogledaj profil i poveži se sa korisnikom.
+      </p>
     </div>
 
-    <div *ngIf="!errorMessage" class="profile-view">
-      
-      <button class="back-link" [routerLink]="['/profile']">⬅ Moj Profil</button>
+    <button
+      type="button"
+      class="back-btn"
+      [routerLink]="['/profile']">
 
-      <div class="avatar-section">
-        <img [src]="userData.profileImageUrl || 'assets/default-user.png'" 
-             alt="Profile Picture" 
-             class="avatar-preview">
-        <h2>{{ userData.firstName }} {{ userData.lastName }}</h2>
-        <p class="profile-username">@{{ username }}</p>
-        <p class="profile-motto" *ngIf="userData.motto"><em>"{{ userData.motto }}"</em></p>
-      </div>
+      ← Moj profil
 
-      <div class="action-section">
-        <button type="button" 
-                [ngClass]="isFollowing ? 'unfollow-btn-large' : 'follow-btn-large'" 
-                (click)="toggleFollow()">
-          {{ isFollowing ? '❌ Otprati korisnika' : '👤 Zaprati korisnika' }}
-        </button>
-      </div>
+    </button>
 
-      <div class="profile-bio-box" *ngIf="userData.bio">
-        <h3>Biografija</h3>
-        <p>{{ userData.bio }}</p>
-      </div>
+  </header>
 
-    </div>
+
+  <div
+    *ngIf="errorMessage"
+    class="alert alert-danger">
+
+    {{ errorMessage }}
+
   </div>
+
+
+  <section
+    class="profile-layout"
+    *ngIf="!errorMessage">
+
+    <aside class="profile-summary-card">
+
+      <img
+        [src]="userData.profileImageUrl || 'assets/default-user.png'"
+        alt="Profilna slika"
+        class="profile-avatar">
+
+      <h2>
+        {{ userData.firstName }} {{ userData.lastName }}
+      </h2>
+
+      <span class="username">
+        @{{ username }}
+      </span>
+
+      <p
+        class="profile-motto"
+        *ngIf="userData.motto">
+
+        “{{ userData.motto }}”
+
+      </p>
+
+
+      <div class="follow-section">
+
+        <button
+          type="button"
+          class="follow-btn"
+          *ngIf="!isFollowing"
+          (click)="toggleFollow()">
+
+          Zaprati korisnika
+
+        </button>
+
+
+        <button
+          type="button"
+          class="unfollow-btn"
+          *ngIf="isFollowing"
+          (click)="toggleFollow()">
+
+          Otprati korisnika
+
+        </button>
+
+      </div>
+
+    </aside>
+
+
+    <main class="profile-content">
+
+      <section class="content-card">
+
+        <div class="section-header">
+
+          <div>
+            <span class="section-eyebrow">
+              O korisniku
+            </span>
+
+            <h2>
+              Biografija
+            </h2>
+          </div>
+
+        </div>
+
+
+        <div
+          class="bio-box"
+          *ngIf="userData.bio">
+
+          {{ userData.bio }}
+
+        </div>
+
+
+        <div
+          class="empty-box"
+          *ngIf="!userData.bio">
+
+          Korisnik nije uneo biografiju.
+
+        </div>
+
+      </section>
+
+
+      <section class="content-card">
+
+        <div class="section-header">
+
+          <div>
+            <span class="section-eyebrow">
+              Informacije
+            </span>
+
+            <h2>
+              Podaci profila
+            </h2>
+          </div>
+
+        </div>
+
+
+        <div class="profile-info-grid">
+
+          <div class="info-item">
+
+            <span>
+              Ime
+            </span>
+
+            <strong>
+              {{ userData.firstName || 'Nije uneseno' }}
+            </strong>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <span>
+              Prezime
+            </span>
+
+            <strong>
+              {{ userData.lastName || 'Nije uneseno' }}
+            </strong>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <span>
+              Korisničko ime
+            </span>
+
+            <strong>
+              {{ username }}
+            </strong>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <span>
+              Moto
+            </span>
+
+            <strong>
+              {{ userData.motto || 'Nije unet' }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </section>
+
 </div>

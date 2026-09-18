@@ -1,36 +1,438 @@
-<nav class="main-navbar">
-  <div class="nav-logo" routerLink="/home">🌍 TourApp</div>
-  
-  <div class="nav-actions" *ngIf="isLoggedIn">
+<header class="top-navbar">
 
-    <button *ngIf="currentUserRole === 'Tourist'" class="nav-link" routerLink="/tours">
-      Ture
-    </button>
-    
-    <button *ngIf="currentUserRole === 'Tourist'" class="nav-link" routerLink="/cart">
-      Korpa
-    </button>
-    
-    <button *ngIf="currentUserRole === 'Tourist'" class="nav-link" routerLink="/purchases">
-      Moje kupovine
-    </button>
-    <button *ngIf="currentUserRole === 'Guide'" class="nav-link" routerLink="/author/tours">
-      Moje ture
-    </button>
-    <button class="nav-blog-link" routerLink="/blogs">Blogovi</button>
-    <button class="nav-location-link" routerLink="/current-location" *ngIf="currentUserRole === 'Tourist'">Trenutna lokacija</button>
+  <div class="navbar-left">
 
-    <span class="navbar-role-badge">{{ currentUserRole }}</span>
+    <button
+      *ngIf="isLoggedIn"
+      class="hamburger-button"
+      type="button"
+      (click)="toggleSidebar($event)"
+      aria-label="Otvori navigaciju">
 
-    <div class="dropdown-trigger" (click)="toggleDropdown($event)">
-      <span class="nav-avatar">👤</span>
-      <span class="nav-username-text">{{ currentUserUsername }}</span>
-      <span class="dropdown-arrow">▼</span>
+      <span></span>
+      <span></span>
+      <span></span>
+
+    </button>
+
+
+    <div
+      class="navbar-brand"
+      routerLink="/home">
+
+      <div class="brand-icon">
+        T
+      </div>
+
+      <span class="brand-name">
+        TourApp
+      </span>
+
     </div>
 
-    <div class="dropdown-menu" *ngIf="isDropdownOpen">
-      <button *ngIf="currentUserRole !== 'Admin' && currentUserRole !== 'Administrator'" class="dropdown-item profile-link" routerLink="/profile" (click)="isDropdownOpen = false">👤 Moj Profil</button>
-      <button class="dropdown-item logout-link" (click)="onLogout()">🚪 Odjavi se</button>
-    </div>
   </div>
-</nav>
+
+  <div
+    class="navbar-right"
+    *ngIf="isLoggedIn">
+
+    <div class="user-area">
+
+      <button
+        class="user-trigger"
+        type="button"
+        (click)="toggleDropdown($event)">
+
+        <div class="user-avatar">
+          {{ currentUserUsername.charAt(0).toUpperCase() }}
+        </div>
+
+        <div class="user-summary">
+
+          <span class="username">
+            {{ currentUserUsername }}
+          </span>
+
+          <span class="user-role">
+            {{ currentUserRole }}
+          </span>
+
+        </div>
+
+        <span
+          class="user-chevron"
+          [class.open]="isDropdownOpen">
+
+          ▾
+
+        </span>
+
+      </button>
+
+      <div
+        class="user-dropdown"
+        *ngIf="isDropdownOpen">
+
+        <div class="dropdown-user-header">
+
+          <div class="dropdown-avatar">
+            {{ currentUserUsername.charAt(0).toUpperCase() }}
+          </div>
+
+          <div class="dropdown-user-info">
+
+            <span class="dropdown-username">
+              {{ currentUserUsername }}
+            </span>
+
+            <span class="dropdown-role">
+              {{ currentUserRole }}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="dropdown-divider"></div>
+
+
+        <button
+          *ngIf="
+            currentUserRole !== 'Admin' &&
+            currentUserRole !== 'Administrator'
+          "
+          class="dropdown-item"
+          routerLink="/profile"
+          (click)="closeDropdown()">
+
+          <span class="dropdown-icon">
+            ○
+          </span>
+
+          Moj profil
+
+        </button>
+
+
+        <button
+          class="dropdown-item logout"
+          type="button"
+          (click)="onLogout()">
+
+          <span class="dropdown-icon">
+            ↪
+          </span>
+
+          Odjavi se
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</header>
+
+<div
+  class="sidebar-overlay"
+  *ngIf="isSidebarOpen"
+  (click)="closeSidebar()">
+</div>
+
+<aside
+  class="sidebar-drawer"
+  [class.open]="isSidebarOpen">
+
+  <div class="sidebar-header">
+
+    <div
+      class="sidebar-brand"
+      routerLink="/home"
+      (click)="closeSidebar()">
+
+      <div class="sidebar-brand-icon">
+        T
+      </div>
+
+      <span>
+        TourApp
+      </span>
+
+    </div>
+
+
+    <button
+      class="sidebar-close"
+      type="button"
+      (click)="closeSidebar()">
+
+      ×
+
+    </button>
+
+  </div>
+
+  <div
+    class="sidebar-content"
+    *ngIf="isLoggedIn">
+
+    <div class="sidebar-section">
+
+      <div class="section-title">
+        Pregled
+      </div>
+
+
+      <a
+        class="sidebar-link"
+        routerLink="/home"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeSidebar()">
+
+        <span class="sidebar-icon home-icon">
+          ⌂
+        </span>
+
+        <span>
+          Početna
+        </span>
+
+      </a>
+
+    </div>
+
+    <div
+      class="sidebar-section"
+      *ngIf="currentUserRole === 'Tourist'">
+
+      <div class="section-title">
+        Putovanja
+      </div>
+
+
+      <a
+        class="sidebar-link"
+        routerLink="/tours"
+        routerLinkActive="active"
+        (click)="closeSidebar()">
+
+        <span class="sidebar-icon">
+          ⌖
+        </span>
+
+        <span>
+          Ture
+        </span>
+
+      </a>
+
+
+      <a
+        class="sidebar-link"
+        routerLink="/cart"
+        routerLinkActive="active"
+        (click)="closeSidebar()">
+
+        <span class="sidebar-icon">
+          ▣
+        </span>
+
+        <span>
+          Korpa
+        </span>
+
+      </a>
+
+
+      <a
+        class="sidebar-link"
+        routerLink="/purchases"
+        routerLinkActive="active"
+        (click)="closeSidebar()">
+
+        <span class="sidebar-icon">
+          ▤
+        </span>
+
+        <span>
+          Moje kupovine
+        </span>
+
+      </a>
+
+
+      <a
+        class="sidebar-link"
+        routerLink="/current-location"
+        routerLinkActive="active"
+        (click)="closeSidebar()">
+
+        <span class="sidebar-icon location-icon">
+          ●
+        </span>
+
+        <span>
+          Trenutna lokacija
+        </span>
+
+      </a>
+
+    </div>
+
+    <div
+      class="sidebar-section"
+      *ngIf="currentUserRole === 'Guide'">
+
+      <div class="section-title">
+        Ture
+      </div>
+
+
+      <a
+        class="sidebar-link"
+        routerLink="/author/tours"
+        routerLinkActive="active"
+        (click)="closeSidebar()">
+
+        <span class="sidebar-icon">
+          ⌖
+        </span>
+
+        <span>
+          Moje ture
+        </span>
+
+      </a>
+
+    </div>
+
+
+    <div class="sidebar-section">
+
+
+      <a
+        *ngIf="
+          currentUserRole !== 'Admin' &&
+          currentUserRole !== 'Administrator'
+        "
+        class="sidebar-link"
+        routerLink="/blogs"
+        routerLinkActive="active"
+        (click)="closeSidebar()">
+
+        <span class="sidebar-icon">
+          ✎
+        </span>
+
+        <span>
+          Blogovi
+        </span>
+
+      </a>
+
+
+      <a
+        *ngIf="
+          currentUserRole !== 'Admin' &&
+          currentUserRole !== 'Administrator'
+        "
+        class="sidebar-link"
+        routerLink="/profile"
+        routerLinkActive="active"
+        (click)="closeSidebar()">
+
+        <span class="sidebar-icon">
+          ○
+        </span>
+
+        <span>
+          Moj profil
+        </span>
+
+      </a>
+
+    </div>
+
+
+    <div
+      class="sidebar-section"
+      *ngIf="isAdmin">
+
+      <div class="section-title">
+        Administracija
+      </div>
+
+
+      <a
+        class="sidebar-link"
+        routerLink="/admin/users"
+        routerLinkActive="active"
+        (click)="closeSidebar()">
+
+        <span class="sidebar-icon">
+          ♙
+        </span>
+
+        <span>
+          Korisnici
+        </span>
+
+      </a>
+
+    </div>
+
+    <div
+      class="sidebar-section"
+      *ngIf="isAdmin">
+
+      <div class="section-title">
+        Sistem
+      </div>
+
+      <a
+        class="sidebar-link"
+        routerLink="/monitoring"
+        routerLinkActive="active"
+        (click)="closeSidebar()">
+
+        <span class="sidebar-icon">
+          ◫
+        </span>
+
+        <span>
+          Monitoring
+        </span>
+
+      </a>
+
+    </div>
+
+  </div>
+
+  <div
+    class="sidebar-footer"
+    *ngIf="isLoggedIn">
+
+    <div class="sidebar-footer-avatar">
+      {{ currentUserUsername.charAt(0).toUpperCase() }}
+    </div>
+
+    <div class="sidebar-footer-info">
+
+      <span class="sidebar-footer-name">
+        {{ currentUserUsername }}
+      </span>
+
+      <span class="sidebar-footer-role">
+        {{ currentUserRole }}
+      </span>
+
+    </div>
+
+  </div>
+
+</aside>

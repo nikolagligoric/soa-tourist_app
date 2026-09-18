@@ -12,6 +12,8 @@ public class LogEntry
 
     public string ServiceName { get; set; } = string.Empty;
 
+    public string InstanceId { get; set; } = string.Empty;
+
     public string Level { get; set; } = string.Empty;
 
     public string CorrelationId { get; set; } = string.Empty;

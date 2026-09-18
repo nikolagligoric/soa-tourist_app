@@ -19,6 +19,12 @@ import { ActiveTourComponent } from './active-tour/active-tour.component';
 import { BlogComponent } from './blog/blog.component';
 import { CurrentLocationComponent } from './current-location/current-location.component';
 import { AuthorToursComponent } from './author-tours/author-tours.component';
+import { DashboardComponent } from './monitoring/dashboard/dashboard.component';
+import { NgChartsModule } from 'ng2-charts';
+import { LogsComponent } from './monitoring/logs/logs.component';
+import { AlertsComponent } from './monitoring/alerts/alerts.component';
+import { ServiceDetailsComponent } from './monitoring/service-details/service-details.component';
+import { MonitoringLayoutComponent } from './monitoring/layout/monitoring-layout.component';
 
 @NgModule({
   declarations: [
@@ -37,13 +43,19 @@ import { AuthorToursComponent } from './author-tours/author-tours.component';
     ActiveTourComponent,
     BlogComponent,
     CurrentLocationComponent,
-    AuthorToursComponent
+    AuthorToursComponent,
+    MonitoringLayoutComponent,
+    DashboardComponent,
+    LogsComponent,
+    AlertsComponent,
+    ServiceDetailsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    NgChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,181 +1,848 @@
 <div class="author-tours-page">
-  <section class="page-header">
+
+  <header class="page-header">
+
     <div>
-      <p class="eyebrow">Autor</p>
-      <h1>Moje ture</h1>
-      <p>Kreiraj draft turu i dodaj kljucne tacke izborom lokacije na mapi.</p>
+      <span class="eyebrow">
+        Vodič
+      </span>
+
+      <h1>
+        Moje ture
+      </h1>
+
+      <p>
+        Kreiraj ture, dodaj ključne tačke i upravljaj njihovim objavljivanjem.
+      </p>
     </div>
-  </section>
 
-  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
-  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-  <div *ngIf="isLoading" class="alert alert-info">Ucitavanje tura...</div>
+  </header>
 
-  <section class="layout">
-    <form class="panel" (ngSubmit)="createTour()" #tourCreateForm="ngForm">
-      <h2>Nova tura</h2>
 
-      <label>
-        Naziv
-        <input type="text" name="name" data-testid="tour-name" [(ngModel)]="tourForm.name" required />
-      </label>
+  <div
+    *ngIf="successMessage"
+    class="alert alert-success">
+    {{ successMessage }}
+  </div>
 
-      <label>
-        Opis
-        <textarea name="description" data-testid="tour-description" rows="4" [(ngModel)]="tourForm.description" required></textarea>
-      </label>
+  <div
+    *ngIf="errorMessage"
+    class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
 
-      <label>
-        Tezina
-        <select name="difficulty" data-testid="tour-difficulty" [(ngModel)]="tourForm.difficulty" required>
-          <option *ngFor="let difficulty of difficulties" [value]="difficulty">{{ difficulty }}</option>
+  <div
+    *ngIf="isLoading"
+    class="alert alert-info">
+    Učitavanje tura...
+  </div>
+
+
+  <section class="top-layout">
+
+    <form
+      class="panel create-tour-panel"
+      (ngSubmit)="createTour()"
+      #tourCreateForm="ngForm">
+
+      <div class="panel-header">
+
+        <div>
+          <span class="section-eyebrow">
+            Nova tura
+          </span>
+
+          <h2>
+            Kreiraj draft
+          </h2>
+        </div>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="tourName">
+          Naziv
+        </label>
+
+        <input
+          id="tourName"
+          type="text"
+          name="name"
+          data-testid="tour-name"
+          [(ngModel)]="tourForm.name"
+          required>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="tourDescription">
+          Opis
+        </label>
+
+        <textarea
+          id="tourDescription"
+          name="description"
+          data-testid="tour-description"
+          rows="4"
+          [(ngModel)]="tourForm.description"
+          required>
+        </textarea>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="difficulty">
+          Težina
+        </label>
+
+        <select
+          id="difficulty"
+          name="difficulty"
+          data-testid="tour-difficulty"
+          [(ngModel)]="tourForm.difficulty"
+          required>
+
+          <option
+            *ngFor="let difficulty of difficulties"
+            [value]="difficulty">
+            {{ difficulty }}
+          </option>
+
         </select>
-      </label>
 
-      <label>
-        Tagovi
-        <input type="text" name="tags" data-testid="tour-tags" [(ngModel)]="tourForm.tags" placeholder="muzej, park, istorija" required />
-      </label>
+      </div>
 
-      <button class="primary-btn" type="submit" data-testid="create-tour-button" [disabled]="tourCreateForm.invalid || isSavingTour">
-        {{ isSavingTour ? 'Cuvanje...' : 'Kreiraj draft turu' }}
-      </button>
-    </form>
 
-    <section class="panel">
-      <h2>Sve moje ture</h2>
-      <p class="empty" *ngIf="!isLoading && tours.length === 0">Nemate kreiranih tura.</p>
+      <div class="form-group">
+
+        <label for="tags">
+          Tagovi
+        </label>
+
+        <input
+          id="tags"
+          type="text"
+          name="tags"
+          data-testid="tour-tags"
+          [(ngModel)]="tourForm.tags"
+          placeholder="muzej, park, istorija"
+          required>
+
+      </div>
+
 
       <button
-        class="tour-row"
-        type="button"
-        *ngFor="let tour of tours"
-        [class.active]="selectedTour?.id === tour.id"
-        (click)="selectTour(tour)">
-        <span>
-          <strong>{{ tour.name }}</strong>
-          <small>{{ tour.status }} - {{ tour.difficulty }} - {{ tour.price || 0 }} RSD - {{ (tour.distanceInKm || 0) | number:'1.2-2' }} km</small>
-        </span>
-        <span class="tag-text">{{ tour.tags }}</span>
+        class="primary-btn"
+        type="submit"
+        data-testid="create-tour-button"
+        [disabled]="tourCreateForm.invalid || isSavingTour">
+
+        {{ isSavingTour ? 'Čuvanje...' : 'Kreiraj draft turu' }}
+
       </button>
+
+    </form>
+
+
+    <section class="panel tours-panel">
+
+      <div class="panel-header">
+
+        <div>
+          <span class="section-eyebrow">
+            Tvoje ture
+          </span>
+
+          <h2>
+            Sve moje ture
+          </h2>
+        </div>
+
+        <span
+          class="tour-count"
+          *ngIf="tours.length > 0">
+
+          {{ tours.length }}
+
+        </span>
+
+      </div>
+
+
+      <div
+        class="empty-state"
+        *ngIf="!isLoading && tours.length === 0">
+
+        Nema kreiranih tura.
+
+      </div>
+
+
+      <div class="tour-list">
+
+        <button
+          class="tour-row"
+          type="button"
+          *ngFor="let tour of tours"
+          [class.active]="selectedTour?.id === tour.id"
+          (click)="selectTour(tour)">
+
+          <div class="tour-main">
+
+            <div class="tour-row-top">
+
+              <strong>
+                {{ tour.name }}
+              </strong>
+
+              <span
+                class="status-badge"
+                [class.published]="tour.status === 'PUBLISHED'"
+                [class.archived]="tour.status === 'ARCHIVED'">
+
+                {{ tour.status }}
+
+              </span>
+
+            </div>
+
+
+            <div class="tour-meta">
+
+              <span>
+                {{ tour.difficulty }}
+              </span>
+
+              <span>
+                {{ tour.price || 0 }} RSD
+              </span>
+
+              <span>
+                {{ (tour.distanceInKm || 0) | number:'1.2-2' }} km
+              </span>
+
+            </div>
+
+
+            <span
+              class="tag-text"
+              *ngIf="tour.tags">
+
+              {{ tour.tags }}
+
+            </span>
+
+          </div>
+
+
+          <span class="tour-arrow">
+            →
+          </span>
+
+        </button>
+
+      </div>
+
     </section>
+
   </section>
 
-  <section class="keypoint-section" *ngIf="selectedTour">
-    <div class="keypoint-header">
+
+  <section
+    class="selected-tour-section"
+    *ngIf="selectedTour">
+
+
+    <header class="selected-tour-header">
+
       <div>
-        <p class="eyebrow">Kljucne tacke</p>
-        <h2>{{ selectedTour.name }}</h2>
+
+        <span class="eyebrow">
+          Izabrana tura
+        </span>
+
+        <h2>
+          {{ selectedTour.name }}
+        </h2>
+
       </div>
-      <span class="count">{{ selectedTour.status }} - {{ keyPoints.length }} tacaka - {{ (selectedTour.distanceInKm || 0) | number:'1.2-2' }} km</span>
-    </div>
+
+
+      <div class="selected-tour-stats">
+
+        <span class="summary-pill">
+          {{ selectedTour.status }}
+        </span>
+
+        <span class="summary-pill">
+          {{ keyPoints.length }} tačaka
+        </span>
+
+        <span class="summary-pill">
+          {{ (selectedTour.distanceInKm || 0) | number:'1.2-2' }} km
+        </span>
+
+      </div>
+
+    </header>
+
 
     <div class="keypoint-layout">
-      <form class="panel" (ngSubmit)="saveKeyPoint()" #keyPointCreateForm="ngForm">
-        <h3>{{ editingKeyPoint ? 'Izmena kljucne tacke' : 'Nova kljucna tacka' }}</h3>
 
-        <label>
-          Naziv
-        <input type="text" name="keyPointName" data-testid="keypoint-name" [(ngModel)]="keyPointForm.name" required />
-        </label>
+      <form
+        class="panel keypoint-form-panel"
+        (ngSubmit)="saveKeyPoint()"
+        #keyPointCreateForm="ngForm">
 
-        <label>
-          Opis
-          <textarea name="keyPointDescription" data-testid="keypoint-description" rows="3" [(ngModel)]="keyPointForm.description" required></textarea>
-        </label>
 
-        <label>
-          Slika URL
-          <input type="text" name="imageUrl" data-testid="keypoint-image-url" [(ngModel)]="keyPointForm.imageUrl" placeholder="https://..." required />
-        </label>
+        <div class="panel-header">
 
-        <div class="coordinates">
-          <span>Lat: {{ selectedLatitude !== null ? (selectedLatitude | number:'1.6-6') : 'izaberi na mapi' }}</span>
-          <span>Lon: {{ selectedLongitude !== null ? (selectedLongitude | number:'1.6-6') : 'izaberi na mapi' }}</span>
+          <div>
+            <span class="section-eyebrow">
+              Ključne tačke
+            </span>
+
+            <h3>
+              {{
+                editingKeyPoint
+                  ? 'Izmeni ključnu tačku'
+                  : 'Dodaj ključnu tačku'
+              }}
+            </h3>
+          </div>
+
         </div>
 
-        <button class="primary-btn" type="submit" data-testid="add-keypoint-button" [disabled]="keyPointCreateForm.invalid || isSavingKeyPoint">
-          {{ isSavingKeyPoint ? 'Cuvanje...' : (editingKeyPoint ? 'Sacuvaj izmenu' : 'Dodaj tacku') }}
+
+        <div class="form-group">
+
+          <label for="keyPointName">
+            Naziv
+          </label>
+
+          <input
+            id="keyPointName"
+            type="text"
+            name="keyPointName"
+            data-testid="keypoint-name"
+            [(ngModel)]="keyPointForm.name"
+            required>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="keyPointDescription">
+            Opis
+          </label>
+
+          <textarea
+            id="keyPointDescription"
+            name="keyPointDescription"
+            data-testid="keypoint-description"
+            rows="3"
+            [(ngModel)]="keyPointForm.description"
+            required>
+          </textarea>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="imageUrl">
+            URL slike
+          </label>
+
+          <input
+            id="imageUrl"
+            type="text"
+            name="imageUrl"
+            data-testid="keypoint-image-url"
+            [(ngModel)]="keyPointForm.imageUrl"
+            placeholder="https://..."
+            required>
+
+        </div>
+
+
+        <div class="coordinates-card">
+
+          <div>
+
+            <span>
+              Latitude
+            </span>
+
+            <strong>
+              {{
+                selectedLatitude !== null
+                  ? (selectedLatitude | number:'1.6-6')
+                  : 'Izaberi na mapi'
+              }}
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Longitude
+            </span>
+
+            <strong>
+              {{
+                selectedLongitude !== null
+                  ? (selectedLongitude | number:'1.6-6')
+                  : 'Izaberi na mapi'
+              }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="primary-btn"
+          type="submit"
+          data-testid="add-keypoint-button"
+          [disabled]="keyPointCreateForm.invalid || isSavingKeyPoint">
+
+          {{
+            isSavingKeyPoint
+              ? 'Čuvanje...'
+              : (
+                  editingKeyPoint
+                    ? 'Sačuvaj izmenu'
+                    : 'Dodaj tačku'
+                )
+          }}
+
         </button>
-        <button class="secondary-btn" type="button" *ngIf="editingKeyPoint" (click)="cancelEditKeyPoint()">
+
+
+        <button
+          class="secondary-btn"
+          type="button"
+          *ngIf="editingKeyPoint"
+          (click)="cancelEditKeyPoint()">
+
           Odustani od izmene
+
         </button>
+
       </form>
 
-      <div class="map-panel">
-        <div id="authorTourMap" class="map-container"></div>
-      </div>
+
+      <section class="map-panel">
+
+        <div class="map-header">
+
+          <div>
+            <span class="section-eyebrow">
+              Mapa
+            </span>
+
+            <h3>
+              Pozicija ključne tačke
+            </h3>
+          </div>
+
+          <span>
+            Klikni na mapu
+          </span>
+
+        </div>
+
+        <div
+          id="authorTourMap"
+          class="map-container">
+        </div>
+
+      </section>
+
     </div>
 
-    <section class="publish-layout">
-      <form class="panel" (ngSubmit)="addDuration()" #durationCreateForm="ngForm">
-        <h3>Vreme obilaska</h3>
 
-        <label>
-          Prevoz
-          <select name="transportType" [(ngModel)]="durationForm.transportType" required>
-            <option *ngFor="let transport of transportTypes" [value]="transport.value">{{ transport.label }}</option>
+    <div class="management-layout">
+
+      <form
+        class="panel"
+        (ngSubmit)="addDuration()"
+        #durationCreateForm="ngForm">
+
+        <div class="panel-header">
+
+          <div>
+            <span class="section-eyebrow">
+              Trajanje
+            </span>
+
+            <h3>
+              Vreme obilaska
+            </h3>
+          </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="transportType">
+            Prevoz
+          </label>
+
+          <select
+            id="transportType"
+            name="transportType"
+            [(ngModel)]="durationForm.transportType"
+            required>
+
+            <option
+              *ngFor="let transport of transportTypes"
+              [value]="transport.value">
+
+              {{ transport.label }}
+
+            </option>
+
           </select>
-        </label>
 
-        <label>
-          Trajanje u minutima
-          <input type="number" name="durationMinutes" data-testid="duration-minutes" [(ngModel)]="durationForm.durationMinutes" min="1" required />
-        </label>
+        </div>
 
-        <button class="primary-btn" type="submit" data-testid="add-duration-button" [disabled]="durationCreateForm.invalid || isSavingDuration">
+
+        <div class="form-group">
+
+          <label for="durationMinutes">
+            Trajanje u minutima
+          </label>
+
+          <input
+            id="durationMinutes"
+            type="number"
+            name="durationMinutes"
+            data-testid="duration-minutes"
+            [(ngModel)]="durationForm.durationMinutes"
+            min="1"
+            required>
+
+        </div>
+
+
+        <button
+          class="primary-btn"
+          type="submit"
+          data-testid="add-duration-button"
+          [disabled]="durationCreateForm.invalid || isSavingDuration">
+
           {{ isSavingDuration ? 'Dodavanje...' : 'Dodaj vreme' }}
+
         </button>
+
       </form>
 
-      <section class="panel">
-        <h3>Objavljivanje</h3>
-        <ul class="publish-checks">
-          <li [class.ready]="selectedTour.name && selectedTour.description && selectedTour.difficulty && selectedTour.tags">
-            Osnovni podaci su uneti
-          </li>
-          <li [class.ready]="keyPoints.length >= 2">
-            Bar dve kljucne tacke
-          </li>
-          <li [class.ready]="getDurations().length >= 1">
-            Bar jedno vreme obilaska
-          </li>
-        </ul>
 
-        <button class="primary-btn" type="button" data-testid="publish-tour-button" (click)="publishSelectedTour()" [disabled]="isPublishing || selectedTour.status !== 'DRAFT'">
+      <section class="panel publish-panel">
+
+        <div class="panel-header">
+
+          <div>
+            <span class="section-eyebrow">
+              Status
+            </span>
+
+            <h3>
+              Objavljivanje
+            </h3>
+          </div>
+
+          <span
+            class="current-status"
+            [class.published]="selectedTour.status === 'PUBLISHED'"
+            [class.archived]="selectedTour.status === 'ARCHIVED'">
+
+            {{ selectedTour.status }}
+
+          </span>
+
+        </div>
+
+
+        <div class="publish-checks">
+
+          <div
+            class="publish-check"
+            [class.ready]="
+              selectedTour.name &&
+              selectedTour.description &&
+              selectedTour.difficulty &&
+              selectedTour.tags
+            ">
+
+            <span class="check-icon">
+              {{
+                selectedTour.name &&
+                selectedTour.description &&
+                selectedTour.difficulty &&
+                selectedTour.tags
+                  ? '✓'
+                  : '!'
+              }}
+            </span>
+
+            <span>
+              Osnovni podaci su uneti
+            </span>
+
+          </div>
+
+
+          <div
+            class="publish-check"
+            [class.ready]="keyPoints.length >= 2">
+
+            <span class="check-icon">
+              {{ keyPoints.length >= 2 ? '✓' : '!' }}
+            </span>
+
+            <span>
+              Bar dve ključne tačke
+            </span>
+
+          </div>
+
+
+          <div
+            class="publish-check"
+            [class.ready]="getDurations().length >= 1">
+
+            <span class="check-icon">
+              {{ getDurations().length >= 1 ? '✓' : '!' }}
+            </span>
+
+            <span>
+              Bar jedno vreme obilaska
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="primary-btn"
+          type="button"
+          data-testid="publish-tour-button"
+          (click)="publishSelectedTour()"
+          [disabled]="
+            isPublishing ||
+            selectedTour.status !== 'DRAFT'
+          ">
+
           {{ isPublishing ? 'Objavljivanje...' : 'Objavi turu' }}
-        </button>
-        <button class="secondary-btn" type="button" *ngIf="selectedTour.status === 'PUBLISHED'" (click)="archiveSelectedTour()" [disabled]="isChangingStatus">
-          {{ isChangingStatus ? 'Arhiviranje...' : 'Arhiviraj turu' }}
-        </button>
-        <button class="secondary-btn" type="button" *ngIf="selectedTour.status === 'ARCHIVED'" (click)="reactivateSelectedTour()" [disabled]="isChangingStatus">
-          {{ isChangingStatus ? 'Aktiviranje...' : 'Ponovo aktiviraj' }}
+
         </button>
 
-        <p class="empty" *ngIf="selectedTour.status !== 'DRAFT'">Objaviti se mogu samo draft ture.</p>
-        <p class="empty" *ngIf="getPublishValidationError()">{{ getPublishValidationError() }}</p>
+
+        <button
+          class="secondary-btn"
+          type="button"
+          *ngIf="selectedTour.status === 'PUBLISHED'"
+          (click)="archiveSelectedTour()"
+          [disabled]="isChangingStatus">
+
+          {{
+            isChangingStatus
+              ? 'Arhiviranje...'
+              : 'Arhiviraj turu'
+          }}
+
+        </button>
+
+
+        <button
+          class="secondary-btn"
+          type="button"
+          *ngIf="selectedTour.status === 'ARCHIVED'"
+          (click)="reactivateSelectedTour()"
+          [disabled]="isChangingStatus">
+
+          {{
+            isChangingStatus
+              ? 'Aktiviranje...'
+              : 'Ponovo aktiviraj'
+          }}
+
+        </button>
+
+
+        <p
+          class="validation-text"
+          *ngIf="selectedTour.status !== 'DRAFT'">
+
+          Objaviti se mogu samo draft ture.
+
+        </p>
+
+        <p
+          class="validation-text"
+          *ngIf="getPublishValidationError()">
+
+          {{ getPublishValidationError() }}
+
+        </p>
+
       </section>
+
+    </div>
+
+
+    <section
+      class="duration-section"
+      *ngIf="getDurations().length > 0">
+
+      <div class="section-title-row">
+
+        <div>
+          <span class="section-eyebrow">
+            Vremena obilaska
+          </span>
+
+          <h3>
+            Dodata trajanja
+          </h3>
+        </div>
+
+      </div>
+
+
+      <div class="duration-list">
+
+        <div
+          class="duration-chip"
+          *ngFor="let duration of getDurations()">
+
+          <span>
+            {{ duration.transportType }}
+          </span>
+
+          <strong>
+            {{ duration.durationMinutes }} min
+          </strong>
+
+        </div>
+
+      </div>
+
     </section>
 
-    <div class="duration-list" *ngIf="getDurations().length > 0">
-      <span *ngFor="let duration of getDurations()">
-        {{ duration.transportType }}: {{ duration.durationMinutes }} min
-      </span>
-    </div>
 
-    <div class="keypoint-list" *ngIf="keyPoints.length > 0">
-      <article class="keypoint-card" *ngFor="let keyPoint of keyPoints">
-        <img [src]="keyPoint.imageUrl" [alt]="keyPoint.name" />
+    <section
+      class="keypoint-list-section"
+      *ngIf="keyPoints.length > 0">
+
+      <div class="section-title-row">
+
         <div>
-          <strong>{{ keyPoint.sequence }}. {{ keyPoint.name }}</strong>
-          <p>{{ keyPoint.description }}</p>
-          <small>{{ keyPoint.latitude | number:'1.5-5' }}, {{ keyPoint.longitude | number:'1.5-5' }}</small>
-          <div class="card-actions">
-            <button type="button" class="secondary-btn" (click)="startEditKeyPoint(keyPoint)">Izmeni</button>
-            <button type="button" class="danger-btn" (click)="deleteKeyPoint(keyPoint)">Obrisi</button>
-          </div>
+          <span class="section-eyebrow">
+            Ruta
+          </span>
+
+          <h3>
+            Ključne tačke
+          </h3>
         </div>
-      </article>
-    </div>
+
+        <span class="tour-count">
+          {{ keyPoints.length }}
+        </span>
+
+      </div>
+
+
+      <div class="keypoint-list">
+
+        <article
+          class="keypoint-card"
+          *ngFor="let keyPoint of keyPoints">
+
+          <img
+            [src]="keyPoint.imageUrl"
+            [alt]="keyPoint.name">
+
+
+          <div class="keypoint-content">
+
+            <div class="keypoint-heading">
+
+              <span class="sequence">
+                {{ keyPoint.sequence }}
+              </span>
+
+              <strong>
+                {{ keyPoint.name }}
+              </strong>
+
+            </div>
+
+
+            <p>
+              {{ keyPoint.description }}
+            </p>
+
+
+            <small>
+              {{
+                keyPoint.latitude
+                  | number:'1.5-5'
+              }},
+              {{
+                keyPoint.longitude
+                  | number:'1.5-5'
+              }}
+            </small>
+
+
+            <div class="card-actions">
+
+              <button
+                type="button"
+                class="secondary-btn"
+                (click)="startEditKeyPoint(keyPoint)">
+
+                Izmeni
+
+              </button>
+
+
+              <button
+                type="button"
+                class="danger-btn"
+                (click)="deleteKeyPoint(keyPoint)">
+
+                Obriši
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
   </section>
+
 </div>

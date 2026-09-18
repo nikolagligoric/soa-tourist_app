@@ -1,42 +1,152 @@
 <div class="purchases-page">
-    <div class="page-header">
-        <p class="eyebrow">Moje kupovine</p>
-        <h1>Moje kupljene ture</h1>
-        <p>Ostavite recenzije za ture koje ste kupili.</p>
+
+  <header class="page-header">
+    <span class="eyebrow">Moje kupovine</span>
+
+    <h1>Moje kupljene ture</h1>
+
+    <p>
+      Pregledaj ture koje si kupio i pokreni ih kada želiš.
+    </p>
+  </header>
+
+
+  <div
+    class="status-message loading-message"
+    *ngIf="isLoading">
+    Učitavanje kupljenih tura...
+  </div>
+
+  <div
+    class="status-message error-message"
+    *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+
+  <div
+    class="empty-state"
+    *ngIf="!isLoading && purchasedTours.length === 0">
+
+    <div class="empty-icon">
+      ✓
     </div>
 
-    <p class="loading-message" *ngIf="isLoading">Učitavanje kupljenih tura...</p>
-    <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <h2>Nema kupljenih tura</h2>
 
-    <div class="empty-state" *ngIf="!isLoading && purchasedTours.length === 0">
-        Još uvek niste kupili ture.
-    </div>
+    <p>
+      Još uvek nisi kupio nijednu turu.
+    </p>
 
-    <div class="purchase-grid">
-        <article class="purchase-card" *ngFor="let tour of purchasedTours">
-            <div class="card-top">
-                <span class="status-badge">Kupljeno</span>
-                <span class="price">{{ getTourPrice(tour) }} RSD</span>
-            </div>
+  </div>
 
-            <h2>{{ getTourName(tour) }}</h2>
 
-            <div class="meta">
-                <span>Tour ID: {{ tour.tourId || tour.id }}</span>
-                <span *ngIf="tour.purchaseDate || tour.createdAt">
-                    Datum: {{ tour.purchaseDate || tour.createdAt | date:'short' }}
-                </span>
-            </div>
+  <section
+    class="purchase-grid"
+    *ngIf="purchasedTours.length > 0">
 
-            <div class="actions">
-                <button class="secondary-btn" (click)="viewDetails(tour)">
-                    Detalji
-                </button>
+    <article
+      class="purchase-card"
+      *ngFor="let tour of purchasedTours">
 
-                <button class="primary-btn" data-testid="start-tour-button" (click)="startTour(tour)">
-                    Započni turu
-                </button>
-            </div>
-        </article>
-    </div>
+      <div class="card-top">
+
+        <span class="status-badge">
+          Kupljeno
+        </span>
+
+        <div class="price">
+          <span class="price-value">
+            {{ getTourPrice(tour) }}
+          </span>
+
+          <span class="price-currency">
+            RSD
+          </span>
+        </div>
+
+      </div>
+
+
+      <div class="purchase-main">
+
+        <span class="tour-label">
+          Tura
+        </span>
+
+        <h2>
+          {{ getTourName(tour) }}
+        </h2>
+
+      </div>
+
+
+      <div class="purchase-meta">
+
+        <div class="meta-item">
+
+          <div class="meta-icon">
+            #
+          </div>
+
+          <div>
+            <span>ID ture</span>
+
+            <strong>
+              {{ tour.tourId || tour.id }}
+            </strong>
+          </div>
+
+        </div>
+
+
+        <div
+          class="meta-item"
+          *ngIf="tour.purchaseDate || tour.createdAt">
+
+          <div class="meta-icon">
+            ◷
+          </div>
+
+          <div>
+            <span>Datum kupovine</span>
+
+            <strong>
+              {{ tour.purchaseDate || tour.createdAt | date:'short' }}
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card-actions">
+
+        <button
+          type="button"
+          class="secondary-btn"
+          (click)="viewDetails(tour)">
+
+          Detalji
+
+        </button>
+
+
+        <button
+          type="button"
+          class="primary-btn"
+          data-testid="start-tour-button"
+          (click)="startTour(tour)">
+
+          Započni turu
+
+        </button>
+
+      </div>
+
+    </article>
+
+  </section>
+
 </div>

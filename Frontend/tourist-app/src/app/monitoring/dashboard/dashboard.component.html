@@ -1,0 +1,667 @@
+<div class="dashboard-page">
+
+  <header class="dashboard-toolbar">
+
+    <div>
+
+      <span class="page-eyebrow">
+        Monitoring
+      </span>
+
+      <h2>
+        Pregled sistema
+      </h2>
+
+      <p>
+        Trenutno stanje servisa, aktivnosti logova i dostupnosti sistema.
+      </p>
+
+    </div>
+
+    <div class="period-filter">
+
+      <label for="period">
+        Period
+      </label>
+
+      <select
+        id="period"
+        [(ngModel)]="selectedHours"
+        (change)="onPeriodChange()">
+
+        <option
+          *ngFor="let option of periodOptions"
+          [ngValue]="option.hours">
+
+          {{ option.label }}
+
+        </option>
+
+      </select>
+
+    </div>
+
+  </header>
+
+  <div
+    class="state-card"
+    *ngIf="isLoading">
+
+    <div class="loading-spinner"></div>
+
+    <div>
+
+      <strong>
+        Učitavanje monitoring podataka...
+      </strong>
+
+      <p>
+        Preuzimanje trenutnog stanja servisa i sistemskih statistika.
+      </p>
+
+    </div>
+
+  </div>
+
+  <div
+    class="state-card error-state"
+    *ngIf="errorMessage">
+
+    <div>
+
+      <strong>
+        Monitoring podaci nisu dostupni
+      </strong>
+
+      <p>
+        {{ errorMessage }}
+      </p>
+
+    </div>
+
+  </div>
+
+  <div *ngIf="healthSummary">
+
+    <section class="dashboard-section summary-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            Trenutno stanje
+          </span>
+
+          <h3>
+            Sažetak sistema
+          </h3>
+
+          <p>
+            Najvažniji indikatori monitorisanog okruženja.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="summary-grid">
+
+        <article class="metric-card">
+
+          <div class="metric-icon metric-icon-primary">
+            S
+          </div>
+
+          <div class="metric-content">
+
+            <span class="metric-label">
+              Servisi
+            </span>
+
+            <strong class="metric-value">
+              {{ healthSummary.totalServices }}
+            </strong>
+
+            <span class="metric-description">
+              monitorisanih servisa
+            </span>
+
+          </div>
+
+        </article>
+
+        <article class="metric-card">
+
+          <div
+            class="metric-icon"
+            [class.metric-icon-success]="
+              healthSummary.totalActiveInstances ===
+              healthSummary.totalConfiguredInstances
+            "
+            [class.metric-icon-warning]="
+              healthSummary.totalActiveInstances !==
+              healthSummary.totalConfiguredInstances
+            ">
+
+            ✓
+
+          </div>
+
+          <div class="metric-content">
+
+            <span class="metric-label">
+              Aktivne instance
+            </span>
+
+            <strong class="metric-value">
+              {{ healthSummary.totalActiveInstances }}
+              /
+              {{ healthSummary.totalConfiguredInstances }}
+            </strong>
+
+            <span class="metric-description">
+              trenutno dostupno
+            </span>
+
+          </div>
+
+        </article>
+
+        <article
+          class="metric-card"
+          *ngIf="logSummary">
+
+          <div class="metric-icon metric-icon-neutral">
+            L
+          </div>
+
+          <div class="metric-content">
+
+            <span class="metric-label">
+              Ukupno logova
+            </span>
+
+            <strong class="metric-value">
+              {{ logSummary.totalLogs | number }}
+            </strong>
+
+            <span class="metric-description">
+              za izabrani period
+            </span>
+
+          </div>
+
+        </article>
+
+        <article
+          class="metric-card"
+          *ngIf="logSummary">
+
+          <div class="metric-icon metric-icon-danger">
+            !
+          </div>
+
+          <div class="metric-content">
+
+            <span class="metric-label">
+              Greške
+            </span>
+
+            <strong class="metric-value">
+              {{ logSummary.errorLogs | number }}
+            </strong>
+
+            <span class="metric-description">
+              ERROR događaja
+            </span>
+
+          </div>
+
+        </article>
+
+        <article
+          class="metric-card"
+          *ngIf="logSummary">
+
+          <div class="metric-icon metric-icon-warning">
+            !
+          </div>
+
+          <div class="metric-content">
+
+            <span class="metric-label">
+              Upozorenja
+            </span>
+
+            <strong class="metric-value">
+              {{ logSummary.warningLogs | number }}
+            </strong>
+
+            <span class="metric-description">
+              WARNING događaja
+            </span>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+    <section class="dashboard-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            Zdravlje sistema
+          </span>
+
+          <h3>
+            Stanje servisa
+          </h3>
+
+          <p>
+            Trenutni status i broj aktivnih instanci za svaki servis.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="services-grid">
+
+        <article
+          class="service-card"
+          *ngFor="let service of healthSummary.services"
+          [routerLink]="[
+            '/monitoring/services',
+            service.serviceName
+          ]">
+
+          <div class="service-card-header">
+
+            <div>
+
+              <span class="service-label">
+                SERVIS
+              </span>
+
+              <h4>
+                {{ service.serviceName }}
+              </h4>
+
+            </div>
+
+            <span
+              class="status-badge"
+              [ngClass]="{
+                'status-up': service.status === 'UP',
+                'status-down': service.status === 'DOWN'
+              }">
+
+              <span class="status-dot"></span>
+
+              {{ service.status }}
+
+            </span>
+
+          </div>
+
+          <div class="service-meta">
+
+            <div class="service-meta-item">
+
+              <span>
+                Aktivne instance
+              </span>
+
+              <strong>
+                {{ service.activeInstances }}
+                /
+                {{ service.totalInstances }}
+              </strong>
+
+            </div>
+
+            <div class="service-meta-item">
+
+              <span>
+                Minimalno potrebno
+              </span>
+
+              <strong>
+                {{ service.minimumActiveInstances }}
+              </strong>
+
+            </div>
+
+          </div>
+
+          <div class="service-card-footer">
+
+            <span>
+              Detalji servisa
+            </span>
+
+            <span>
+              →
+            </span>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+    <section class="dashboard-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            Analitika
+          </span>
+
+          <h3>
+            Aktivnost logova
+          </h3>
+
+          <p>
+            Promene obima logova, grešaka i upozorenja kroz izabrani period.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="analytics-grid">
+
+        <article
+          class="chart-card chart-card-main"
+          *ngIf="logTrend">
+
+          <div class="chart-card-header">
+
+            <h4>
+              Logovi i greške kroz vreme
+            </h4>
+
+            <p>
+              Aktivnost logova tokom izabranog perioda.
+            </p>
+
+          </div>
+
+          <div class="chart-body">
+
+            <canvas
+              baseChart
+              [data]="lineChartData"
+              [options]="lineChartOptions"
+              [type]="'line'">
+            </canvas>
+
+          </div>
+
+        </article>
+
+        <article
+          class="chart-card"
+          *ngIf="logsByService">
+
+          <div class="chart-card-header">
+
+            <h4>
+              Greške i upozorenja
+            </h4>
+
+            <p>
+              Događaji grupisani po servisima.
+            </p>
+
+          </div>
+
+          <div class="chart-body">
+
+            <canvas
+              baseChart
+              [data]="barChartData"
+              [options]="barChartOptions"
+              [type]="'bar'">
+            </canvas>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+    <section class="dashboard-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            Performanse
+          </span>
+
+          <h3>
+            Performanse sistema
+          </h3>
+
+          <p>
+            Vreme odziva i dostupnost monitorisanih servisa.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="performance-grid">
+
+        <article
+          class="chart-card"
+          *ngIf="responseTimeByService">
+
+          <div class="chart-card-header">
+
+            <h4>
+              Prosečno vreme odziva
+            </h4>
+
+            <p>
+              Prosečno vreme provere zdravlja servisa u milisekundama.
+            </p>
+
+          </div>
+
+          <div class="chart-body">
+
+            <canvas
+              baseChart
+              [data]="responseTimeChartData"
+              [options]="responseTimeChartOptions"
+              [type]="'bar'">
+            </canvas>
+
+          </div>
+
+        </article>
+
+        <article
+          class="chart-card"
+          *ngIf="availabilityByService">
+
+          <div class="chart-card-header">
+
+            <h4>
+              Dostupnost servisa
+            </h4>
+
+            <p>
+              Procenat dostupnosti servisa u izabranom periodu.
+            </p>
+
+          </div>
+
+          <div class="chart-body">
+
+            <canvas
+              baseChart
+              [data]="availabilityChartData"
+              [options]="availabilityChartOptions"
+              [type]="'bar'">
+            </canvas>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+    <section
+      class="dashboard-section logs-section"
+      *ngIf="logsByService">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            Centralizovani logovi
+          </span>
+
+          <h3>
+            Logovi po servisima
+          </h3>
+
+          <p>
+            Broj zabeleženih događaja za izabrani period.
+          </p>
+
+        </div>
+
+        <a
+          routerLink="/monitoring/logs"
+          class="section-link">
+
+          Svi logovi
+          <span>→</span>
+
+        </a>
+
+      </div>
+
+      <div class="table-card">
+
+        <div class="table-wrapper">
+
+          <table class="monitoring-table">
+
+            <thead>
+
+              <tr>
+                <th>Servis</th>
+                <th>Ukupno</th>
+                <th>Greške</th>
+                <th>Upozorenja</th>
+                <th></th>
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              <tr
+                *ngFor="let service of logsByService.services">
+
+                <td>
+
+                  <div class="service-name-cell">
+
+                    <div class="service-avatar">
+                      {{ service.serviceName.charAt(0) }}
+                    </div>
+
+                    <strong>
+                      {{ service.serviceName }}
+                    </strong>
+
+                  </div>
+
+                </td>
+
+                <td>
+                  {{ service.totalLogs | number }}
+                </td>
+
+                <td>
+
+                  <span
+                    class="log-count"
+                    [class.log-count-danger]="
+                      service.errorLogs > 0
+                    ">
+
+                    {{ service.errorLogs }}
+
+                  </span>
+
+                </td>
+
+                <td>
+
+                  <span
+                    class="log-count"
+                    [class.log-count-warning]="
+                      service.warningLogs > 0
+                    ">
+
+                    {{ service.warningLogs }}
+
+                  </span>
+
+                </td>
+
+                <td class="table-action">
+
+                  <a
+                    [routerLink]="[
+                      '/monitoring/services',
+                      service.serviceName
+                    ]">
+
+                    Detalji
+                    <span>→</span>
+
+                  </a>
+
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</div>

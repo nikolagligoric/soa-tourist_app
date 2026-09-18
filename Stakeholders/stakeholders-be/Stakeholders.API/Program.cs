@@ -96,6 +96,10 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
+var instanceId =
+    builder.Configuration["INSTANCE_ID"]
+    ?? "unknown";
+
 app.Use(async (context, next) =>
 {
     const string headerName = "X-Correlation-ID";
@@ -170,6 +174,7 @@ app.Use(async (context, next) =>
         {
             timestamp = requestStartedAt.ToString("O"),
             serviceName = "Stakeholders",
+            instanceId,
             level,
             correlationId = context.Items["CorrelationId"]?.ToString(),
             method = context.Request.Method,
