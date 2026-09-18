@@ -1,89 +1,379 @@
 <div class="blog-page">
-  <section class="create-panel">
-    <div class="section-heading">
-      <h1>Blogovi</h1>
-      <p>Kreiraj objavu sa markdown opisom, slikama, komentarima i lajkovima.</p>
-    </div>
 
-    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
-    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+  <header class="page-header">
+    <span class="eyebrow">Zajednica</span>
 
-    <form class="blog-form" (ngSubmit)="createBlog()">
-      <div class="form-group">
-        <label for="blogTitle">Naslov</label>
-        <input id="blogTitle" type="text" name="title" [(ngModel)]="title" placeholder="Tema bloga" required>
+    <h1>Blogovi</h1>
+
+    <p>
+      Objavi svoje iskustvo i pogledaj najnovije objave korisnika koje pratiš.
+    </p>
+  </header>
+
+
+  <div
+    class="alert alert-success"
+    *ngIf="successMessage">
+    {{ successMessage }}
+  </div>
+
+  <div
+    class="alert alert-danger"
+    *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+
+  <div class="blog-layout">
+
+    <aside class="create-panel">
+
+      <div class="panel-heading">
+
+        <span class="section-eyebrow">
+          Nova objava
+        </span>
+
+        <h2>
+          Kreiraj blog
+        </h2>
+
+        <p>
+          Dodaj naslov, opis i slike uz svoju objavu.
+        </p>
+
       </div>
 
-      <div class="form-group">
-        <label for="blogDescription">Opis u markdown formatu</label>
-        <textarea id="blogDescription" name="description" rows="8" [(ngModel)]="description" placeholder="# Naslov&#10;**Vazan deo teksta** i obican opis..." required></textarea>
-      </div>
 
-      <div class="markdown-preview" *ngIf="description.trim()">
-        <span class="preview-label">Pregled opisa</span>
-        <div class="markdown-body" [innerHTML]="renderMarkdown(description)"></div>
-      </div>
+      <form
+        class="blog-form"
+        (ngSubmit)="createBlog()">
 
-      <div class="form-group">
-        <label for="blogImages">Slike (opciono)</label>
-        <input id="blogImages" type="file" multiple accept="image/png,image/jpeg,image/jpg,image/webp" (change)="onImagesSelected($event)">
-        <div class="selected-images" *ngIf="selectedImageNames.length > 0">
-          <span *ngFor="let imageName of selectedImageNames">{{ imageName }}</span>
+        <div class="form-group">
+
+          <label for="blogTitle">
+            Naslov
+          </label>
+
+          <input
+            id="blogTitle"
+            type="text"
+            name="title"
+            [(ngModel)]="title"
+            placeholder="Tema bloga"
+            required>
+
         </div>
-      </div>
 
-      <button class="primary-btn" type="submit" [disabled]="isCreating">
-        {{ isCreating ? 'Kreiranje...' : 'Objavi blog' }}
-      </button>
-    </form>
-  </section>
 
-  <section class="feed-panel">
-    <h2>Najnovije objave</h2>
+        <div class="form-group">
 
-    <div *ngIf="isLoading" class="empty-state">Ucitavanje blogova...</div>
-    <div *ngIf="!isLoading && blogs.length === 0" class="empty-state">Nema objava korisnika koje pratis.</div>
+          <label for="blogDescription">
+            Opis u markdown formatu
+          </label>
 
-    <article class="blog-card" *ngFor="let blog of blogs">
-      <div class="blog-header">
-        <div>
-          <h3>{{ blog.title }}</h3>
-          <p class="blog-meta">Autor: {{ blog.authorUsername }} | Kreirano: {{ formatDate(blog.createdAt) }}</p>
+          <textarea
+            id="blogDescription"
+            name="description"
+            rows="8"
+            [(ngModel)]="description"
+            placeholder="# Naslov&#10;**Važan deo teksta** i običan opis..."
+            required>
+          </textarea>
+
         </div>
-        <button class="like-btn" type="button" [class.active]="blog.hasLiked" (click)="toggleLike(blog)">
-          {{ blog.hasLiked ? 'Ukloni lajk' : 'Lajkuj' }} · {{ blog.likes || 0 }}
-        </button>
-      </div>
 
-      <div class="image-grid" *ngIf="blog.imageUrls && blog.imageUrls.length > 0">
-        <img *ngFor="let imageUrl of blog.imageUrls" [src]="getImageUrl(imageUrl)" [alt]="blog.title">
-      </div>
 
-      <div class="markdown-body blog-description" [innerHTML]="renderMarkdown(blog.description)"></div>
+        <div
+          class="markdown-preview"
+          *ngIf="description.trim()">
 
-      <div class="blog-actions">
-        <button class="secondary-btn" type="button" (click)="toggleComments(blog)">
-          {{ blog.showComments ? 'Sakrij komentare' : 'Prikazi komentare' }}
-        </button>
-      </div>
+          <span class="preview-label">
+            Pregled opisa
+          </span>
 
-      <div class="comments-section" *ngIf="blog.showComments">
-        <form class="comment-form" (ngSubmit)="addComment(blog)">
-          <textarea name="comment-{{ blog.id }}" rows="3" [(ngModel)]="blog.newCommentText" placeholder="Ostavi komentar..."></textarea>
-          <button class="primary-btn small-btn" type="submit">Komentarisi</button>
-        </form>
-
-        <div *ngIf="!blog.comments || blog.comments.length === 0" class="empty-state small">Nema komentara.</div>
-
-        <div class="comment-item" *ngFor="let comment of blog.comments">
-          <div class="comment-header">
-            <strong>{{ comment.authorUsername }}</strong>
-            <span>Kreirano: {{ formatDate(comment.createdAt) }}</span>
+          <div
+            class="markdown-body"
+            [innerHTML]="renderMarkdown(description)">
           </div>
-          <p>{{ comment.text }}</p>
-          <span class="comment-edited">Poslednja izmena: {{ formatDate(comment.lastModifiedAt) }}</span>
+
         </div>
+
+
+        <div class="form-group">
+
+          <label for="blogImages">
+            Slike
+          </label>
+
+          <input
+            id="blogImages"
+            type="file"
+            multiple
+            accept="image/png,image/jpeg,image/jpg,image/webp"
+            (change)="onImagesSelected($event)">
+
+          <span class="field-hint">
+            Opciono
+          </span>
+
+        </div>
+
+
+        <div
+          class="selected-images"
+          *ngIf="selectedImageNames.length > 0">
+
+          <span
+            *ngFor="let imageName of selectedImageNames">
+            {{ imageName }}
+          </span>
+
+        </div>
+
+
+        <button
+          class="primary-btn publish-btn"
+          type="submit"
+          [disabled]="isCreating">
+
+          {{ isCreating ? 'Kreiranje...' : 'Objavi blog' }}
+
+        </button>
+
+      </form>
+
+    </aside>
+
+
+    <main class="feed-panel">
+
+      <div class="feed-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            Feed
+          </span>
+
+          <h2>
+            Najnovije objave
+          </h2>
+
+        </div>
+
+        <span
+          class="post-count"
+          *ngIf="blogs.length > 0">
+
+          {{ blogs.length }}
+
+        </span>
+
       </div>
-    </article>
-  </section>
+
+
+      <div
+        *ngIf="isLoading"
+        class="empty-state">
+
+        Učitavanje blogova...
+
+      </div>
+
+
+      <div
+        *ngIf="!isLoading && blogs.length === 0"
+        class="empty-state">
+
+        Nema objava korisnika koje pratiš.
+
+      </div>
+
+
+      <article
+        class="blog-card"
+        *ngFor="let blog of blogs">
+
+        <div class="blog-header">
+
+          <div class="author-block">
+
+            <div class="author-avatar">
+              {{ (blog.authorUsername || 'K').charAt(0).toUpperCase() }}
+            </div>
+
+            <div class="author-info">
+
+              <h3>
+                {{ blog.title }}
+              </h3>
+
+              <div class="blog-meta">
+
+                <span>
+                  {{ blog.authorUsername }}
+                </span>
+
+                <span class="meta-dot">•</span>
+
+                <span>
+                  {{ formatDate(blog.createdAt) }}
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="like-btn"
+            type="button"
+            [class.active]="blog.hasLiked"
+            (click)="toggleLike(blog)">
+
+            <span>
+              {{ blog.hasLiked ? '♥' : '♡' }}
+            </span>
+
+            <span>
+              {{ blog.likes || 0 }}
+            </span>
+
+          </button>
+
+        </div>
+
+
+        <div
+          class="image-grid"
+          *ngIf="blog.imageUrls && blog.imageUrls.length > 0">
+
+          <img
+            *ngFor="let imageUrl of blog.imageUrls"
+            [src]="getImageUrl(imageUrl)"
+            [alt]="blog.title">
+
+        </div>
+
+
+        <div
+          class="markdown-body blog-description"
+          [innerHTML]="renderMarkdown(blog.description)">
+        </div>
+
+
+        <div class="blog-actions">
+
+          <button
+            class="comments-toggle"
+            type="button"
+            (click)="toggleComments(blog)">
+
+            <span>
+              {{ blog.showComments ? 'Sakrij komentare' : 'Prikaži komentare' }}
+            </span>
+
+            <span>
+              {{ blog.showComments ? '↑' : '↓' }}
+            </span>
+
+          </button>
+
+        </div>
+
+
+        <div
+          class="comments-section"
+          *ngIf="blog.showComments">
+
+
+          <form
+            class="comment-form"
+            (ngSubmit)="addComment(blog)">
+
+            <textarea
+              name="comment-{{ blog.id }}"
+              rows="3"
+              [(ngModel)]="blog.newCommentText"
+              placeholder="Ostavi komentar...">
+            </textarea>
+
+            <div class="comment-form-actions">
+
+              <button
+                class="primary-btn small-btn"
+                type="submit">
+
+                Komentariši
+
+              </button>
+
+            </div>
+
+          </form>
+
+
+          <div
+            *ngIf="!blog.comments || blog.comments.length === 0"
+            class="empty-state small">
+
+            Nema komentara.
+
+          </div>
+
+
+          <div class="comment-list">
+
+            <article
+              class="comment-item"
+              *ngFor="let comment of blog.comments">
+
+              <div class="comment-header">
+
+                <div class="comment-author">
+
+                  <div class="comment-avatar">
+                    {{ (comment.authorUsername || 'K').charAt(0).toUpperCase() }}
+                  </div>
+
+                  <div>
+                    <strong>
+                      {{ comment.authorUsername }}
+                    </strong>
+
+                    <span>
+                      {{ formatDate(comment.createdAt) }}
+                    </span>
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <p>
+                {{ comment.text }}
+              </p>
+
+
+              <span class="comment-edited">
+                Poslednja izmena:
+                {{ formatDate(comment.lastModifiedAt) }}
+              </span>
+
+            </article>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    </main>
+
+  </div>
+
 </div>

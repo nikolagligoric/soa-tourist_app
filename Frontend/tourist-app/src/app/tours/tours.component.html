@@ -1,148 +1,227 @@
 <div class="tours-page">
 
-  <div class="page-header">
+  <header class="page-header">
+    <span class="eyebrow">Istraži ture</span>
 
-    <p class="eyebrow">
-
-      Istraži ture
-
-    </p>
-
-    <h1>
-
-      Dostupne ture
-
-    </h1>
+    <h1>Dostupne ture</h1>
 
     <p>
-
-      Pregledaj objavljene ture i dodaj ih u korpu.
-
+      Pregledaj objavljene ture i pronađi sledeću avanturu.
     </p>
+  </header>
+
+  <div
+    class="status-message loading-message"
+    *ngIf="isLoading">
+
+    <div class="status-icon loading-icon"></div>
+
+    <div>
+      <strong>Učitavanje tura</strong>
+      <span>Molimo sačekajte trenutak.</span>
+    </div>
 
   </div>
 
 
-  <p
-    class="loading-message"
-    *ngIf="isLoading">
-
-    Učitavanje tura ...
-
-  </p>
-
-
-  <p
-    class="error-message"
+  <div
+    class="status-message error-message"
     *ngIf="errorMessage">
 
-    {{ errorMessage }}
+    <div class="message-symbol">!</div>
 
-  </p>
+    <div>
+      <strong>Došlo je do greške</strong>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+  </div>
 
 
-  <p
-    class="success-message"
+  <div
+    class="status-message success-message"
     *ngIf="successMessage">
 
-    {{ successMessage }}
+    <div class="message-symbol">✓</div>
 
-  </p>
+    <div>
+      <strong>Uspešno</strong>
+      <span>{{ successMessage }}</span>
+    </div>
+
+  </div>
 
 
   <div
     class="empty-state"
     *ngIf="!isLoading && tours.length === 0">
 
-    Greška pri učitavanju tura.
+    <div class="empty-icon">○</div>
+
+    <h3>Nema dostupnih tura</h3>
+
+    <p>
+      Trenutno nema objavljenih tura za prikaz.
+    </p>
 
   </div>
 
-
-  <div class="tour-grid">
+  <section class="tour-grid">
 
     <article
       class="tour-card"
+      *ngFor="let tour of tours"
       [attr.data-tour-id]="tour.id"
-      [attr.data-tour-name]="tour.name"
-      *ngFor="let tour of tours">
+      [attr.data-tour-name]="tour.name">
 
+      <div class="card-header">
 
-      <div class="card-top">
-
-        <span class="difficulty-badge">
+        <span
+          class="difficulty-badge"
+          *ngIf="tour.difficulty">
 
           {{ tour.difficulty }}
 
         </span>
 
-        <span class="price">
-
-          {{ tour.price || 0 }} RSD
-
-        </span>
-
-      </div>
-
-
-      <h2>
-
-        {{ tour.name }}
-
-      </h2>
-
-
-      <p class="description">
-
-        {{ tour.description || 'Opis nije dostupan.' }}
-
-      </p>
-
-      <div class="first-keypoint" *ngIf="tour.firstKeyPoint">
-        <img *ngIf="tour.firstKeyPoint.imageUrl" [src]="tour.firstKeyPoint.imageUrl" [alt]="tour.firstKeyPoint.name" />
-        <div>
-          <span>Prva kljucna tacka</span>
-          <strong>{{ tour.firstKeyPoint.name }}</strong>
-          <p>{{ tour.firstKeyPoint.description }}</p>
+        <div
+          class="difficulty-placeholder"
+          *ngIf="!tour.difficulty">
         </div>
-      </div>
 
 
-      <div class="meta">
+        <div class="price">
+          <span class="price-value">
+            {{ tour.price || 0 }}
+          </span>
 
-        <span>
-
-          📍 {{ tour.distanceInKm || 0 }} km
-
-        </span>
-
-        <span>
-
-          🏷️ {{ tour.tags || 'Nema tagova' }}
-
-        </span>
-
-        <span>
-
-          👤 {{ tour.authorUsername }}
-
-        </span>
+          <span class="price-currency">
+            RSD
+          </span>
+        </div>
 
       </div>
 
+      <div class="tour-main">
 
-      <div class="actions">
+        <h2>
+          {{ tour.name }}
+        </h2>
+
+        <p class="description">
+          {{ tour.description || 'Opis nije dostupan.' }}
+        </p>
+
+      </div>
+
+      <div
+        class="keypoint-card"
+        *ngIf="tour.firstKeyPoint">
+
+        <div
+          class="keypoint-image-wrapper"
+          *ngIf="tour.firstKeyPoint.imageUrl">
+
+          <img
+            [src]="tour.firstKeyPoint.imageUrl"
+            [alt]="tour.firstKeyPoint.name"
+            class="keypoint-image" />
+
+        </div>
+
+
+        <div class="keypoint-content">
+
+          <span class="keypoint-label">
+            Prva ključna tačka
+          </span>
+
+          <strong>
+            {{ tour.firstKeyPoint.name }}
+          </strong>
+
+          <p>
+            {{ tour.firstKeyPoint.description }}
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="tour-meta">
+
+        <div class="meta-item">
+
+          <div class="meta-icon">
+            ↗
+          </div>
+
+          <div class="meta-content">
+            <span class="meta-label">
+              Udaljenost
+            </span>
+
+            <strong>
+              {{ tour.distanceInKm || 0 }} km
+            </strong>
+          </div>
+
+        </div>
+
+
+        <div class="meta-item">
+
+          <div class="meta-icon">
+            #
+          </div>
+
+          <div class="meta-content">
+            <span class="meta-label">
+              Tagovi
+            </span>
+
+            <strong>
+              {{ tour.tags || 'Nema tagova' }}
+            </strong>
+          </div>
+
+        </div>
+
+
+        <div class="meta-item">
+
+          <div class="meta-icon">
+            @
+          </div>
+
+          <div class="meta-content">
+            <span class="meta-label">
+              Autor
+            </span>
+
+            <strong>
+              {{ tour.authorUsername || 'Nije dostupno' }}
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="card-actions">
 
         <button
+          type="button"
           class="secondary-btn"
           (click)="viewDetails(tour.id)">
 
-          Details
+          Detalji
 
         </button>
 
 
         <button
+          type="button"
           class="primary-btn"
           data-testid="add-to-cart-button"
           (click)="addToCart(tour.id)">
@@ -155,6 +234,6 @@
 
     </article>
 
-  </div>
+  </section>
 
 </div>

@@ -1,30 +1,154 @@
 <div class="location-page">
-  <section class="location-header">
+
+  <header class="page-header">
+
     <div>
-      <h1>Trenutna lokacija</h1>
-      <p>Klikni na mapu da izaberes poziciju koju simulator cuva kao tvoju trenutnu lokaciju.</p>
+      <span class="eyebrow">
+        Lokacija
+      </span>
+
+      <h1>
+        Trenutna lokacija
+      </h1>
+
+      <p>
+        Klikni na mapu da izabereš poziciju koju simulator čuva kao tvoju trenutnu lokaciju.
+      </p>
     </div>
-    <button class="save-btn" type="button" data-testid="save-current-location-button" (click)="saveLocation()" [disabled]="isSaving || selectedLatitude === null || selectedLongitude === null">
-      {{ isSaving ? 'Cuvanje...' : 'Sacuvaj lokaciju' }}
+
+    <button
+      class="save-btn"
+      type="button"
+      data-testid="save-current-location-button"
+      (click)="saveLocation()"
+      [disabled]="isSaving || selectedLatitude === null || selectedLongitude === null">
+
+      {{ isSaving ? 'Čuvanje...' : 'Sačuvaj lokaciju' }}
+
     </button>
-  </section>
 
-  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
-  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-  <div *ngIf="isLoading" class="alert alert-info">Ucitavanje trenutne lokacije...</div>
+  </header>
 
-  <section class="map-card">
-    <div id="currentLocationMap" data-testid="current-location-map" class="map-container"></div>
-  </section>
 
-  <section class="coordinates-card">
-    <div>
-      <span class="label">Latitude</span>
-      <strong>{{ selectedLatitude !== null ? (selectedLatitude | number:'1.6-6') : 'Nije izabrano' }}</strong>
-    </div>
-    <div>
-      <span class="label">Longitude</span>
-      <strong>{{ selectedLongitude !== null ? (selectedLongitude | number:'1.6-6') : 'Nije izabrano' }}</strong>
-    </div>
-  </section>
+  <div
+    *ngIf="successMessage"
+    class="alert alert-success">
+
+    {{ successMessage }}
+
+  </div>
+
+  <div
+    *ngIf="errorMessage"
+    class="alert alert-danger">
+
+    {{ errorMessage }}
+
+  </div>
+
+  <div
+    *ngIf="isLoading"
+    class="alert alert-info">
+
+    Učitavanje trenutne lokacije...
+
+  </div>
+
+
+  <div class="location-layout">
+
+    <section class="map-card">
+
+      <div class="map-header">
+
+        <div>
+          <span class="section-eyebrow">
+            Mapa
+          </span>
+
+          <h2>
+            Izaberi poziciju
+          </h2>
+        </div>
+
+        <span class="map-hint">
+          Klikni bilo gde na mapu
+        </span>
+
+      </div>
+
+      <div
+        id="currentLocationMap"
+        data-testid="current-location-map"
+        class="map-container">
+      </div>
+
+    </section>
+
+
+    <aside class="coordinates-card">
+
+      <span class="section-eyebrow">
+        Koordinate
+      </span>
+
+      <h2>
+        Izabrana lokacija
+      </h2>
+
+
+      <div class="coordinate-item">
+
+        <div class="coordinate-icon">
+          LAT
+        </div>
+
+        <div>
+          <span class="coordinate-label">
+            Latitude
+          </span>
+
+          <strong>
+            {{
+              selectedLatitude !== null
+                ? (selectedLatitude | number:'1.6-6')
+                : 'Nije izabrano'
+            }}
+          </strong>
+        </div>
+
+      </div>
+
+
+      <div class="coordinate-item">
+
+        <div class="coordinate-icon">
+          LNG
+        </div>
+
+        <div>
+          <span class="coordinate-label">
+            Longitude
+          </span>
+
+          <strong>
+            {{
+              selectedLongitude !== null
+                ? (selectedLongitude | number:'1.6-6')
+                : 'Nije izabrano'
+            }}
+          </strong>
+        </div>
+
+      </div>
+
+
+      <div class="location-note">
+        Izabrana pozicija se koristi kao trenutna lokacija turista u simulatoru.
+      </div>
+
+    </aside>
+
+  </div>
+
 </div>

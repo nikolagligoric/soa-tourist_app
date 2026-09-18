@@ -1,157 +1,586 @@
 <div class="details-page">
-    <button class="back-btn" (click)="goBack()">← Nazad na ture</button>
 
-    <p class="loading-message" *ngIf="isLoading">Učitavanje tura...</p>
-    <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
-    <p class="success-message" *ngIf="successMessage">{{ successMessage }}</p>
+  <button
+    class="back-btn"
+    type="button"
+    (click)="goBack()">
+    <span>←</span>
+    Nazad na ture
+  </button>
 
-    <section class="details-card" *ngIf="tour">
-        <div class="details-header">
-            <div>
-                <p class="eyebrow">Detalji ture</p>
-                <h1>{{ tour.name }}</h1>
-                <p class="subtitle">
-                    {{ tour.description || 'Opis nije dostupan.' }}
-                </p>
-            </div>
+  <div
+    class="status-message loading-message"
+    *ngIf="isLoading">
+    Učitavanje ture...
+  </div>
 
-            <div class="price-box">
-                <span>Cena</span>
-                <strong>{{ tour.price || 0 }} RSD</strong>
-            </div>
+  <div
+    class="status-message error-message"
+    *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div
+    class="status-message success-message"
+    *ngIf="successMessage">
+    {{ successMessage }}
+  </div>
+
+  <ng-container *ngIf="tour">
+
+    <section class="tour-hero">
+
+      <div class="hero-main">
+
+        <span class="eyebrow">
+          Detalji ture
+        </span>
+
+        <h1>
+          {{ tour.name }}
+        </h1>
+
+        <p class="subtitle">
+          {{ tour.description || 'Opis nije dostupan.' }}
+        </p>
+
+        <div class="hero-tags">
+          <span class="difficulty-badge">
+            {{ tour.difficulty }}
+          </span>
+
+          <span class="status-badge">
+            {{ tour.status }}
+          </span>
         </div>
 
-        <div class="info-grid">
-            <div class="info-item">
-                <span>Težina</span>
-                <strong>{{ tour.difficulty }}</strong>
-            </div>
+      </div>
 
-            <div class="info-item">
-                <span>Status</span>
-                <strong>{{ tour.status }}</strong>
-            </div>
+      <div class="price-card">
 
-            <div class="info-item">
-                <span>Distanca</span>
-                <strong>{{ tour.distanceInKm || 0 }} km</strong>
-            </div>
+        <span class="price-label">
+          Cena ture
+        </span>
 
-            <div class="info-item">
-                <span>Autor</span>
-                <strong>{{ tour.authorUsername }}</strong>
-            </div>
+        <div class="price-value">
+          {{ tour.price || 0 }}
+          <span>RSD</span>
         </div>
 
-        <div class="tags-section">
-            <h3>Tagovi</h3>
-            <p>{{ tour.tags || 'No tags' }}</p>
-        </div>
+      </div>
 
-        <div class="section" *ngIf="tour.durations && tour.durations.length > 0">
-            <h3>Trajanje ture</h3>
-
-            <div class="duration-list">
-                <div class="duration-item" *ngFor="let duration of tour.durations">
-                    <span>{{ duration.transportType || duration.transport || 'Transport' }}</span>
-                    <strong>
-                        {{ duration.durationInMinutes || duration.minutes || duration.timeInMinutes }} min
-                    </strong>
-                </div>
-            </div>
-        </div>
-
-        <div class="section">
-            <h3>Kontrolne tačke</h3>
-
-            <div class="empty-box" *ngIf="!tour.keyPoints || tour.keyPoints.length === 0">
-                Kontrolne tačke za ovu turu nisu dostupne.
-            </div>
-
-            <div class="keypoint-list" *ngIf="tour.keyPoints && tour.keyPoints.length > 0">
-                <div class="keypoint-card" *ngFor="let point of tour.keyPoints; let i = index">
-                    <div class="keypoint-number">{{ i + 1 }}</div>
-
-                    <div>
-                        <h4>{{ point.name || point.title || 'Kontrolna tačka' }}</h4>
-                        <p>{{ point.description || 'Opis nije dostupan' }}</p>
-                        <small>
-                            Lat: {{ point.latitude || point.lat }},
-                            Lng: {{ point.longitude || point.lng }}
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="section">
-            <h3>Recenzije</h3>
-
-            <form class="review-form" (ngSubmit)="createReview()" #reviewCreateForm="ngForm">
-                <div class="review-form-grid">
-                    <label>
-                        Ocena
-                        <select name="rating" [(ngModel)]="reviewForm.rating" required>
-                            <option [ngValue]="1">1</option>
-                            <option [ngValue]="2">2</option>
-                            <option [ngValue]="3">3</option>
-                            <option [ngValue]="4">4</option>
-                            <option [ngValue]="5">5</option>
-                        </select>
-                    </label>
-
-                    <label>
-                        Datum posete
-                        <input type="date" name="visitDate" [(ngModel)]="reviewForm.visitDate" required />
-                    </label>
-                </div>
-
-                <label>
-                    Komentar
-                    <textarea name="comment" rows="3" [(ngModel)]="reviewForm.comment" required></textarea>
-                </label>
-
-                <label>
-                    Slike
-                    <textarea name="imageUrlsText" rows="3" [(ngModel)]="reviewForm.imageUrlsText" placeholder="Jedan URL slike po redu"></textarea>
-                </label>
-
-                <button class="primary-btn" type="submit" [disabled]="reviewCreateForm.invalid || isSavingReview">
-                    {{ isSavingReview ? 'Cuvanje...' : 'Ostavi recenziju' }}
-                </button>
-            </form>
-
-            <div class="empty-box" *ngIf="!tour.reviews || tour.reviews.length === 0">
-                Za ovu turu još uvek nema recenzija.
-            </div>
-
-            <div class="review-list" *ngIf="tour.reviews && tour.reviews.length > 0">
-                <div class="review-card" *ngFor="let review of tour.reviews">
-                    <strong>⭐ {{ review.rating || review.grade }}/5</strong>
-                    <p>{{ review.comment || 'Nema komentara.' }}</p>
-                    <small>Turista: {{ review.touristUsername || review.username || 'Nepoznat turista' }}</small>
-                    <small>
-                        Poseta: {{ review.visitDate || 'Nije navedeno' }} |
-                        Komentar: {{ review.commentDate || 'Nije navedeno' }}
-                    </small>
-
-                    <div class="review-images" *ngIf="review.imageUrls && review.imageUrls.length > 0">
-                        <img *ngFor="let imageUrl of review.imageUrls" [src]="imageUrl" [alt]="review.comment || 'Slika recenzije'" />
-                    </div>
-
-                    <button class="secondary-btn delete-review-btn" type="button" *ngIf="review.id" (click)="deleteReview(review.id)">
-                        Obrisi moju recenziju
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="details-actions">
-            <button class="secondary-btn" (click)="addToCart()">Dodaj u korpu</button>
-        
-            <button class="primary-btn" (click)="startTour()">
-                Počni turu
-            </button>
-        </div>
     </section>
+
+
+    <section class="info-grid">
+
+      <div class="info-card">
+
+        <div class="info-icon">
+          ◈
+        </div>
+
+        <div>
+          <span class="info-label">
+            Težina
+          </span>
+
+          <strong>
+            {{ tour.difficulty }}
+          </strong>
+        </div>
+
+      </div>
+
+
+      <div class="info-card">
+
+        <div class="info-icon">
+          ●
+        </div>
+
+        <div>
+          <span class="info-label">
+            Status
+          </span>
+
+          <strong>
+            {{ tour.status }}
+          </strong>
+        </div>
+
+      </div>
+
+
+      <div class="info-card">
+
+        <div class="info-icon">
+          ↗
+        </div>
+
+        <div>
+          <span class="info-label">
+            Distanca
+          </span>
+
+          <strong>
+            {{ tour.distanceInKm || 0 }} km
+          </strong>
+        </div>
+
+      </div>
+
+
+      <div class="info-card">
+
+        <div class="info-icon">
+          @
+        </div>
+
+        <div>
+          <span class="info-label">
+            Autor
+          </span>
+
+          <strong>
+            {{ tour.authorUsername }}
+          </strong>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <div class="content-layout">
+
+      <main class="main-column">
+
+        <section class="content-card">
+
+          <div class="section-header">
+            <div>
+              <span class="section-eyebrow">
+                Informacije
+              </span>
+
+              <h2>
+                Tagovi
+              </h2>
+            </div>
+          </div>
+
+          <div class="tags-content">
+            {{ tour.tags || 'Nema tagova' }}
+          </div>
+
+        </section>
+
+
+        <section
+          class="content-card"
+          *ngIf="tour.durations && tour.durations.length > 0">
+
+          <div class="section-header">
+            <div>
+              <span class="section-eyebrow">
+                Vreme
+              </span>
+
+              <h2>
+                Trajanje ture
+              </h2>
+            </div>
+          </div>
+
+          <div class="duration-list">
+
+            <div
+              class="duration-item"
+              *ngFor="let duration of tour.durations">
+
+              <div class="duration-icon">
+                ◷
+              </div>
+
+              <div class="duration-content">
+
+                <span>
+                  {{ duration.transportType || duration.transport || 'Transport' }}
+                </span>
+
+                <strong>
+                  {{ duration.durationInMinutes || duration.minutes || duration.timeInMinutes }} min
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <section class="content-card">
+
+          <div class="section-header">
+            <div>
+              <span class="section-eyebrow">
+                Ruta
+              </span>
+
+              <h2>
+                Kontrolne tačke
+              </h2>
+            </div>
+
+            <span
+              class="section-count"
+              *ngIf="tour.keyPoints">
+              {{ tour.keyPoints.length }}
+            </span>
+          </div>
+
+
+          <div
+            class="empty-box"
+            *ngIf="!tour.keyPoints || tour.keyPoints.length === 0">
+
+            Kontrolne tačke za ovu turu nisu dostupne.
+
+          </div>
+
+
+          <div
+            class="keypoint-list"
+            *ngIf="tour.keyPoints && tour.keyPoints.length > 0">
+
+            <div
+              class="keypoint-card"
+              *ngFor="let point of tour.keyPoints; let i = index">
+
+              <div class="keypoint-number">
+                {{ i + 1 }}
+              </div>
+
+              <div class="keypoint-content">
+
+                <h3>
+                  {{ point.name || point.title || 'Kontrolna tačka' }}
+                </h3>
+
+                <p>
+                  {{ point.description || 'Opis nije dostupan' }}
+                </p>
+
+                <div class="coordinates">
+
+                  <span>
+                    Lat
+                    <strong>
+                      {{ point.latitude || point.lat }}
+                    </strong>
+                  </span>
+
+                  <span>
+                    Lng
+                    <strong>
+                      {{ point.longitude || point.lng }}
+                    </strong>
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <section class="content-card reviews-section">
+
+          <div class="section-header">
+            <div>
+              <span class="section-eyebrow">
+                Zajednica
+              </span>
+
+              <h2>
+                Recenzije
+              </h2>
+            </div>
+
+            <span
+              class="section-count"
+              *ngIf="tour.reviews">
+              {{ tour.reviews.length }}
+            </span>
+          </div>
+
+
+          <form
+            class="review-form"
+            (ngSubmit)="createReview()"
+            #reviewCreateForm="ngForm">
+
+            <div class="review-form-header">
+
+              <div>
+                <h3>
+                  Ostavi recenziju
+                </h3>
+
+                <p>
+                  Podeli svoje iskustvo sa ove ture.
+                </p>
+              </div>
+
+            </div>
+
+
+            <div class="review-form-grid">
+
+              <label class="form-field">
+
+                <span>
+                  Ocena
+                </span>
+
+                <select
+                  name="rating"
+                  [(ngModel)]="reviewForm.rating"
+                  required>
+
+                  <option [ngValue]="1">1</option>
+                  <option [ngValue]="2">2</option>
+                  <option [ngValue]="3">3</option>
+                  <option [ngValue]="4">4</option>
+                  <option [ngValue]="5">5</option>
+
+                </select>
+
+              </label>
+
+
+              <label class="form-field">
+
+                <span>
+                  Datum posete
+                </span>
+
+                <input
+                  type="date"
+                  name="visitDate"
+                  [(ngModel)]="reviewForm.visitDate"
+                  required />
+
+              </label>
+
+            </div>
+
+
+            <label class="form-field">
+
+              <span>
+                Komentar
+              </span>
+
+              <textarea
+                name="comment"
+                rows="4"
+                [(ngModel)]="reviewForm.comment"
+                placeholder="Napiši svoj utisak..."
+                required>
+              </textarea>
+
+            </label>
+
+
+            <label class="form-field">
+
+              <span>
+                Slike
+              </span>
+
+              <textarea
+                name="imageUrlsText"
+                rows="3"
+                [(ngModel)]="reviewForm.imageUrlsText"
+                placeholder="Jedan URL slike po redu">
+              </textarea>
+
+            </label>
+
+
+            <div class="review-form-actions">
+
+              <button
+                class="primary-btn"
+                type="submit"
+                [disabled]="reviewCreateForm.invalid || isSavingReview">
+
+                {{ isSavingReview ? 'Čuvanje...' : 'Ostavi recenziju' }}
+
+              </button>
+
+            </div>
+
+          </form>
+
+
+          <div
+            class="empty-box"
+            *ngIf="!tour.reviews || tour.reviews.length === 0">
+
+            Za ovu turu još uvek nema recenzija.
+
+          </div>
+
+
+          <div
+            class="review-list"
+            *ngIf="tour.reviews && tour.reviews.length > 0">
+
+            <article
+              class="review-card"
+              *ngFor="let review of tour.reviews">
+
+              <div class="review-header">
+
+                <div class="review-user">
+
+                  <div class="review-avatar">
+                    {{
+                      (review.touristUsername ||
+                      review.username ||
+                      'N').charAt(0).toUpperCase()
+                    }}
+                  </div>
+
+                  <div>
+
+                    <strong>
+                      {{
+                        review.touristUsername ||
+                        review.username ||
+                        'Nepoznat turista'
+                      }}
+                    </strong>
+
+                    <span>
+                      Poseta:
+                      {{ review.visitDate || 'Nije navedeno' }}
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+                <div class="rating-badge">
+                  ★ {{ review.rating || review.grade }}/5
+                </div>
+
+              </div>
+
+
+              <p class="review-comment">
+                {{ review.comment || 'Nema komentara.' }}
+              </p>
+
+
+              <span class="comment-date">
+                Komentar:
+                {{ review.commentDate || 'Nije navedeno' }}
+              </span>
+
+
+              <div
+                class="review-images"
+                *ngIf="review.imageUrls && review.imageUrls.length > 0">
+
+                <img
+                  *ngFor="let imageUrl of review.imageUrls"
+                  [src]="imageUrl"
+                  [alt]="review.comment || 'Slika recenzije'" />
+
+              </div>
+
+
+              <button
+                class="delete-review-btn"
+                type="button"
+                *ngIf="review.id"
+                (click)="deleteReview(review.id)">
+
+                Obriši moju recenziju
+
+              </button>
+
+            </article>
+
+          </div>
+
+        </section>
+
+      </main>
+
+
+      <aside class="action-card">
+
+        <span class="action-label">
+          TourApp
+        </span>
+
+        <h2>
+          {{ tour.name }}
+        </h2>
+
+        <p>
+          Izaberi jednu od dostupnih opcija za ovu turu.
+        </p>
+
+
+        <div class="action-price">
+
+          <span>
+            Cena
+          </span>
+
+          <strong>
+            {{ tour.price || 0 }} RSD
+          </strong>
+
+        </div>
+
+
+        <button
+          class="primary-btn start-btn"
+          type="button"
+          (click)="startTour()">
+
+          Počni turu
+
+        </button>
+
+
+        <button
+          class="secondary-btn cart-btn"
+          type="button"
+          (click)="addToCart()">
+
+          Dodaj u korpu
+
+        </button>
+
+      </aside>
+
+    </div>
+
+  </ng-container>
+
 </div>

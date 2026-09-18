@@ -1,31 +1,392 @@
-<div class="home-container">
-  <div class="main-content">
-    <div class="welcome-section">
-      <h1>Dobrodošli nazad, {{ currentUser?.username }}</h1>
+<div class="home-page">
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+
+    <div>
+      <span class="page-eyebrow">
+        Početna
+      </span>
+
+      <h1>
+        Dobrodošao nazad,
+        {{ currentUser?.username }}
+        <span class="wave">👋</span>
+      </h1>
+
+      <p>
+        Istraži TourApp i nastavi sa svojim putovanjima.
+      </p>
     </div>
-    <div class="dashboard-grid">
-      <div class="dashboard-card admin-card" *ngIf="currentUser?.role === 'Administrator' || currentUser?.role === 'Admin'">
-        <h3>🔧 Administratorski panel</h3>
-        <p>Upravljajte nalozima, pregledajte bezbednost i vršite blokade korisnika.</p>
-        <button class="action-btn danger-btn" routerLink="/admin/users">Upravljaj korisnicima</button>
+
+  </header>
+
+
+  <!-- =========================
+       ADMIN
+  ========================== -->
+
+  <div
+    class="admin-dashboard"
+    *ngIf="
+      currentUser?.role === 'Administrator' ||
+      currentUser?.role === 'Admin'
+    ">
+
+    <div class="section-heading">
+
+      <div>
+        <h2>Administracija</h2>
+        <p>Upravljanje aplikacijom i monitoring sistema.</p>
       </div>
-      <div class="dashboard-card tourist-card" *ngIf="currentUser?.role !== 'Administrator' && currentUser?.role !== 'Admin'">
-        <h3>👋 Zdravo!</h3>
-        <p>Koristi pretragu u gornjem meniju da pronađeš vodiče, saputnike ili nove rute.</p>
-      </div>
+
     </div>
-  </div>
-  <div class="sidebar-recommendations" *ngIf="currentUser?.role !== 'Admin' && currentUser?.role !== 'Administrator'">
-    <h3>Predlozi za tebe</h3>
-    <div *ngIf="recommendedUsers && recommendedUsers.length === 0" class="no-rec-msg">Nema novih predloga.</div>
-    <ul class="rec-list" *ngIf="recommendedUsers && recommendedUsers.length > 0">
-      <li *ngFor="let username of recommendedUsers" class="rec-item">
-        <div class="rec-user-info" [routerLink]="['/profile', username]">
-          <span class="rec-avatar">👤</span>
-          <span class="rec-username">{{ username }}</span>
+
+
+    <div class="admin-grid">
+
+      <button
+        class="feature-card"
+        routerLink="/admin/users">
+
+        <div class="feature-icon">
+          ♙
         </div>
-        <button class="rec-follow-btn" (click)="followFromHome(username)">Zaprati</button>
-      </li>
-    </ul>
+
+        <div class="feature-content">
+          <h3>Korisnici</h3>
+
+          <p>
+            Pregledaj i upravljaj korisnicima aplikacije.
+          </p>
+
+          <span class="feature-link">
+            Upravljaj korisnicima
+            <span>→</span>
+          </span>
+        </div>
+
+      </button>
+
+
+      <button
+        class="feature-card"
+        routerLink="/monitoring">
+
+        <div class="feature-icon">
+          ◫
+        </div>
+
+        <div class="feature-content">
+          <h3>Monitoring sistema</h3>
+
+          <p>
+            Prati stanje mikroservisnog sistema i logove.
+          </p>
+
+          <span class="feature-link">
+            Otvori monitoring
+            <span>→</span>
+          </span>
+        </div>
+
+      </button>
+
+    </div>
+
   </div>
+
+
+  <!-- =========================
+       TOURIST / GUIDE
+  ========================== -->
+
+  <div
+    class="home-layout"
+    *ngIf="
+      currentUser?.role !== 'Administrator' &&
+      currentUser?.role !== 'Admin'
+    ">
+
+    <main class="main-column">
+
+
+      <!-- TOURIST ACTIONS -->
+
+      <section *ngIf="currentUser?.role === 'Tourist'">
+
+        <div class="section-heading">
+
+          <div>
+            <h2>Brzi pristup</h2>
+            <p>Najčešće korišćene opcije na jednom mestu.</p>
+          </div>
+
+        </div>
+
+
+        <div class="quick-actions">
+
+          <a
+            class="quick-card"
+            routerLink="/tours">
+
+            <div class="quick-icon">
+              ⌖
+            </div>
+
+            <div class="quick-info">
+              <h3>Ture</h3>
+
+              <p>
+                Pregledaj dostupne ture.
+              </p>
+            </div>
+
+            <span class="quick-arrow">
+              →
+            </span>
+
+          </a>
+
+
+          <a
+            class="quick-card"
+            routerLink="/purchases">
+
+            <div class="quick-icon">
+              ▤
+            </div>
+
+            <div class="quick-info">
+              <h3>Moje kupovine</h3>
+
+              <p>
+                Pregledaj svoje kupovine.
+              </p>
+            </div>
+
+            <span class="quick-arrow">
+              →
+            </span>
+
+          </a>
+
+
+          <a
+            class="quick-card"
+            routerLink="/blogs">
+
+            <div class="quick-icon">
+              ✎
+            </div>
+
+            <div class="quick-info">
+              <h3>Blogovi</h3>
+
+              <p>
+                Pogledaj sadržaj zajednice.
+              </p>
+            </div>
+
+            <span class="quick-arrow">
+              →
+            </span>
+
+          </a>
+
+        </div>
+
+      </section>
+
+
+      <!-- GUIDE ACTIONS -->
+
+      <section *ngIf="currentUser?.role === 'Guide'">
+
+        <div class="section-heading">
+
+          <div>
+            <h2>Brzi pristup</h2>
+            <p>Najvažnije opcije za tvoj nalog.</p>
+          </div>
+
+        </div>
+
+
+        <div class="quick-actions guide-actions">
+
+          <a
+            class="quick-card"
+            routerLink="/author/tours">
+
+            <div class="quick-icon">
+              ⌖
+            </div>
+
+            <div class="quick-info">
+              <h3>Moje ture</h3>
+
+              <p>
+                Pregledaj svoje ture.
+              </p>
+            </div>
+
+            <span class="quick-arrow">
+              →
+            </span>
+
+          </a>
+
+
+          <a
+            class="quick-card"
+            routerLink="/blogs">
+
+            <div class="quick-icon">
+              ✎
+            </div>
+
+            <div class="quick-info">
+              <h3>Blogovi</h3>
+
+              <p>
+                Pogledaj sadržaj zajednice.
+              </p>
+            </div>
+
+            <span class="quick-arrow">
+              →
+            </span>
+
+          </a>
+
+        </div>
+
+      </section>
+
+
+      <!-- WELCOME CARD -->
+
+      <section class="welcome-card">
+
+        <div class="welcome-card-decoration"></div>
+
+        <div class="welcome-icon">
+          ✦
+        </div>
+
+        <div class="welcome-content">
+          <span class="welcome-label">
+            TourApp
+          </span>
+
+          <h2>
+            Spreman za sledeću avanturu?
+          </h2>
+
+          <p *ngIf="currentUser?.role === 'Tourist'">
+            Pregledaj dostupne ture, blogove i ostale
+            mogućnosti koje TourApp nudi.
+          </p>
+
+          <p *ngIf="currentUser?.role === 'Guide'">
+            Upravljaj svojim turama i poveži se sa
+            TourApp zajednicom.
+          </p>
+
+        </div>
+
+      </section>
+
+    </main>
+
+
+    <!-- RIGHT COLUMN -->
+
+    <aside class="recommendations-card">
+
+      <div class="card-header">
+
+        <div>
+          <span class="card-label">
+            Zajednica
+          </span>
+
+          <h2>
+            Predlozi za tebe
+          </h2>
+        </div>
+
+      </div>
+
+
+      <div
+        *ngIf="
+          recommendedUsers &&
+          recommendedUsers.length === 0
+        "
+        class="empty-state">
+
+        <div class="empty-icon">
+          ✓
+        </div>
+
+        <p>
+          Trenutno nema novih predloga.
+        </p>
+
+      </div>
+
+
+      <div
+        class="recommendation-list"
+        *ngIf="
+          recommendedUsers &&
+          recommendedUsers.length > 0
+        ">
+
+        <div
+          *ngFor="let username of recommendedUsers"
+          class="recommendation-item">
+
+          <div
+            class="recommendation-user"
+            [routerLink]="['/profile', username]">
+
+            <div class="recommendation-avatar">
+              {{ username.charAt(0).toUpperCase() }}
+            </div>
+
+            <div class="recommendation-info">
+
+              <span class="recommendation-name">
+                {{ username }}
+              </span>
+
+              <span class="recommendation-subtitle">
+                TourApp korisnik
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="follow-button"
+            (click)="followFromHome(username)">
+
+            + Zaprati
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </aside>
+
+  </div>
+
 </div>

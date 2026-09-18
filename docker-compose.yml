@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   stakeholders:
     build:
@@ -10,6 +8,7 @@ services:
     ports:
       - "8080:8080"
     environment:
+      INSTANCE_ID: Stakeholders-1
       ASPNETCORE_URLS: https://+:8080
       ASPNETCORE_Kestrel__Certificates__Default__Password: password
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/stakeholders.pfx
@@ -49,6 +48,7 @@ services:
     ports:
       - "8081:8080"
     environment:
+      INSTANCE_ID: Blog-1
       ASPNETCORE_URLS: https://+:8080
       ASPNETCORE_Kestrel__Certificates__Default__Password: password
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/blog.pfx
@@ -82,6 +82,7 @@ services:
     ports:
       - "8082:8082"
     environment:
+      INSTANCE_ID: Followers-1
       NEO4J_URI: neo4j://neo4j-followers:7687
       NEO4J_USERNAME: neo4j
       NEO4J_PASSWORD: password
@@ -120,6 +121,7 @@ services:
       - "8083:8083"
       - "9091:9091"
     environment:
+      INSTANCE_ID: Tours-1
       SPRING_DATASOURCE_URL: jdbc:postgresql://tours-database:5432/tours_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
@@ -148,6 +150,7 @@ services:
     ports:
       - "8000:8080"
     environment:
+      INSTANCE_ID: Gateway-1
       ASPNETCORE_URLS: http://+:8080
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
     depends_on:
@@ -205,6 +208,7 @@ services:
       - "8084:8080"
       - "9090:8085"
     environment:
+      INSTANCE_ID: Purchase-1
       ASPNETCORE_URLS: http://+:8080
       ConnectionStrings__DefaultConnection: "Host=purchase-database;Port=5432;Database=purchase_db;Username=postgres;Password=postgres"
       Services__Tours: "http://tours:8083"
@@ -227,6 +231,89 @@ services:
       - monitoring-database-data:/var/lib/postgresql/data
     ports:
       - "5437:5432"
+
+
+  monitoring-api:
+    build:
+      context: ./MonitoringService
+      dockerfile: Monitoring.API/Dockerfile
+      target: final
+
+    restart: on-failure
+
+    ports:
+      - "5185:8080"
+
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+
+      ConnectionStrings__DefaultConnection: "Host=monitoring-database;Port=5432;Database=monitoring_db;Username=postgres;Password=postgres"
+
+      Loki__BaseUrl: "http://loki:3100"
+
+      MonitoredServices__0__Name: Stakeholders
+      MonitoredServices__0__BaseUrl: "https://stakeholders:8080"
+      MonitoredServices__0__HealthEndpoint: "/health"
+      MonitoredServices__0__ResponseTimeThresholdMs: 1000
+      MonitoredServices__0__MinimumActiveInstances: 1
+      MonitoredServices__0__Instances__0__InstanceId: Stakeholders-1
+      MonitoredServices__0__Instances__0__BaseUrl: "https://stakeholders:8080"
+      MonitoredServices__0__Instances__0__HealthEndpoint: "/health"
+
+      MonitoredServices__1__Name: Purchase
+      MonitoredServices__1__BaseUrl: "http://purchase:8080"
+      MonitoredServices__1__HealthEndpoint: "/health"
+      MonitoredServices__1__ResponseTimeThresholdMs: 1000
+      MonitoredServices__1__MinimumActiveInstances: 1
+      MonitoredServices__1__Instances__0__InstanceId: Purchase-1
+      MonitoredServices__1__Instances__0__BaseUrl: "http://purchase:8080"
+      MonitoredServices__1__Instances__0__HealthEndpoint: "/health"
+
+      MonitoredServices__2__Name: Blog
+      MonitoredServices__2__BaseUrl: "https://blog:8080"
+      MonitoredServices__2__HealthEndpoint: "/health"
+      MonitoredServices__2__ResponseTimeThresholdMs: 1000
+      MonitoredServices__2__MinimumActiveInstances: 1
+      MonitoredServices__2__Instances__0__InstanceId: Blog-1
+      MonitoredServices__2__Instances__0__BaseUrl: "https://blog:8080"
+      MonitoredServices__2__Instances__0__HealthEndpoint: "/health"
+
+      MonitoredServices__3__Name: Tours
+      MonitoredServices__3__BaseUrl: "http://tours:8083"
+      MonitoredServices__3__HealthEndpoint: "/actuator/health"
+      MonitoredServices__3__ResponseTimeThresholdMs: 1000
+      MonitoredServices__3__MinimumActiveInstances: 1
+      MonitoredServices__3__Instances__0__InstanceId: Tours-1
+      MonitoredServices__3__Instances__0__BaseUrl: "http://tours:8083"
+      MonitoredServices__3__Instances__0__HealthEndpoint: "/actuator/health"
+
+      MonitoredServices__4__Name: Followers
+      MonitoredServices__4__BaseUrl: "http://followers:8082"
+      MonitoredServices__4__HealthEndpoint: "/ping"
+      MonitoredServices__4__ResponseTimeThresholdMs: 1000
+      MonitoredServices__4__MinimumActiveInstances: 1
+      MonitoredServices__4__Instances__0__InstanceId: Followers-1
+      MonitoredServices__4__Instances__0__BaseUrl: "http://followers:8082"
+      MonitoredServices__4__Instances__0__HealthEndpoint: "/ping"
+
+      MonitoredServices__5__Name: Gateway
+      MonitoredServices__5__BaseUrl: "http://gateway:8080"
+      MonitoredServices__5__HealthEndpoint: "/health"
+      MonitoredServices__5__ResponseTimeThresholdMs: 1000
+      MonitoredServices__5__MinimumActiveInstances: 1
+      MonitoredServices__5__Instances__0__InstanceId: Gateway-1
+      MonitoredServices__5__Instances__0__BaseUrl: "http://gateway:8080"
+      MonitoredServices__5__Instances__0__HealthEndpoint: "/health"
+
+    depends_on:
+      - monitoring-database
+      - loki
+      - stakeholders
+      - purchase
+      - blog
+      - tours
+      - followers
+      - gateway
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest

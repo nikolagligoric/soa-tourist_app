@@ -14,6 +14,12 @@ import { ActiveTourComponent } from './active-tour/active-tour.component';
 import { BlogComponent } from './blog/blog.component';
 import { CurrentLocationComponent } from './current-location/current-location.component';
 import { AuthorToursComponent } from './author-tours/author-tours.component';
+import { DashboardComponent } from './monitoring/dashboard/dashboard.component';
+import { LogsComponent } from './monitoring/logs/logs.component';
+import { AlertsComponent } from './monitoring/alerts/alerts.component';
+import { ServiceDetailsComponent } from './monitoring/service-details/service-details.component';
+import { AdminGuard } from './guards/admin.guard';
+import { MonitoringLayoutComponent } from './monitoring/layout/monitoring-layout.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -24,6 +30,37 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'profile/:username', component: UserProfileComponent },
   { path: 'home', component: HomeComponent },
+  {
+  path: 'monitoring',
+
+    component: MonitoringLayoutComponent,
+
+    canActivate: [AdminGuard],
+
+    children: [
+
+      {
+        path: '',
+        component: DashboardComponent
+      },
+
+      {
+        path: 'logs',
+        component: LogsComponent
+      },
+
+      {
+        path: 'alerts',
+        component: AlertsComponent
+      },
+
+      {
+        path: 'services/:serviceName',
+        component: ServiceDetailsComponent
+      }
+
+    ]
+  },
   { path: 'tours', component: ToursComponent },
   { path: 'cart', component: CartComponent },
   { path: 'purchases', component: PurchasesComponent },
@@ -31,8 +68,7 @@ const routes: Routes = [
   { path: 'active-tour', component: ActiveTourComponent }, 
   { path: 'blogs', component: BlogComponent },
   { path: 'current-location', component: CurrentLocationComponent },
-  { path: 'author/tours', component: AuthorToursComponent },
-  { path: 'home', component: HomeComponent }
+  { path: 'author/tours', component: AuthorToursComponent }
 ];
 
 @NgModule({

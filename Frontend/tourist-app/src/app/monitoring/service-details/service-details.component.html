@@ -1,0 +1,1311 @@
+<div class="service-details-page">
+
+  <a
+    routerLink="/monitoring"
+    class="back-link">
+
+    ← Nazad na pregled
+
+  </a>
+
+
+  <header class="service-header">
+
+    <div>
+
+      <span class="service-eyebrow">
+        Detalji servisa
+      </span>
+
+      <div class="service-title-row">
+
+        <h2>
+          {{ serviceName }}
+        </h2>
+
+        <span
+          class="status-badge status-large"
+          *ngIf="serviceHealth"
+          [ngClass]="{
+            'status-up':
+              serviceHealth.status === 'UP',
+
+            'status-down':
+              serviceHealth.status === 'DOWN'
+          }">
+
+          <span class="status-dot"></span>
+
+          {{ serviceHealth.status }}
+
+        </span>
+
+      </div>
+
+      <p>
+        Zdravlje servisa, dostupnost, performanse odziva i istorija instanci.
+      </p>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="primary-button"
+      (click)="viewServiceLogs()">
+
+      Prikaži logove servisa
+
+      <span>
+        →
+      </span>
+
+    </button>
+
+  </header>
+
+
+  <div
+    class="state-card"
+    *ngIf="isLoading">
+
+    <div class="loading-spinner"></div>
+
+    <div>
+
+      <strong>
+        Učitavanje detalja servisa...
+      </strong>
+
+      <p>
+        Preuzimanje podataka o zdravlju i dostupnosti servisa.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div
+    class="state-card error-state"
+    *ngIf="errorMessage">
+
+    <div>
+
+      <strong>
+        Nije moguće učitati detalje servisa
+      </strong>
+
+      <p>
+        {{ errorMessage }}
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div *ngIf="!isLoading && serviceHealth">
+
+    <section class="details-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            Trenutno stanje
+          </span>
+
+          <h3>
+            Status servisa
+          </h3>
+
+          <p>
+            Najnovije health informacije za servis {{ serviceName }}.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="summary-grid">
+
+        <article class="summary-card">
+
+          <span class="summary-label">
+            Status servisa
+          </span>
+
+          <div class="summary-value">
+
+            <span
+              class="status-badge status-large"
+              [ngClass]="{
+                'status-up':
+                  serviceHealth.status === 'UP',
+
+                'status-down':
+                  serviceHealth.status === 'DOWN'
+              }">
+
+              <span class="status-dot"></span>
+
+              {{ serviceHealth.status }}
+
+            </span>
+
+          </div>
+
+          <span class="summary-description">
+            trenutno zdravstveno stanje
+          </span>
+
+        </article>
+
+
+        <article class="summary-card">
+
+          <span class="summary-label">
+            Dostupnost
+          </span>
+
+          <strong class="summary-number">
+
+            {{
+              uptimeStats?.uptimePercentage !== null &&
+              uptimeStats?.uptimePercentage !== undefined
+                ? (
+                    uptimeStats!.uptimePercentage
+                    | number:'1.2-2'
+                  ) + '%'
+                : '-'
+            }}
+
+          </strong>
+
+          <span class="summary-description">
+            izmerena dostupnost
+          </span>
+
+        </article>
+
+
+        <article class="summary-card">
+
+          <span class="summary-label">
+            Vreme odziva
+          </span>
+
+          <strong class="summary-number">
+
+            {{
+              serviceHealth.responseTimeMs !== null
+                ? (
+                    serviceHealth.responseTimeMs
+                    | number:'1.0-2'
+                  ) + ' ms'
+                : '-'
+            }}
+
+          </strong>
+
+          <span class="summary-description">
+            poslednja health provera
+          </span>
+
+        </article>
+
+
+        <article class="summary-card">
+
+          <span class="summary-label">
+            Instance
+          </span>
+
+          <strong class="summary-number">
+            {{ instances.length }}
+          </strong>
+
+          <span class="summary-description">
+            konfigurisane instance
+          </span>
+
+        </article>
+
+      </div>
+
+
+      <div class="check-info-card">
+
+        <div>
+
+          <span>
+            Poslednja provera
+          </span>
+
+          <strong>
+            {{
+              serviceHealth.lastCheckedAt
+                | date:'dd.MM.yyyy HH:mm:ss'
+            }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Poslednja uspešna provera
+          </span>
+
+          <strong>
+
+            {{
+              serviceHealth.lastSuccessfulCheckAt
+                ? (
+                    serviceHealth.lastSuccessfulCheckAt
+                    | date:'dd.MM.yyyy HH:mm:ss'
+                  )
+                : '-'
+            }}
+
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="details-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            Infrastruktura
+          </span>
+
+          <h3>
+            Instance
+          </h3>
+
+          <p>
+            Izaberi instancu za pregled njenog health history-ja i perioda nedostupnosti.
+          </p>
+
+        </div>
+
+        <span class="section-count">
+          {{ instances.length }}
+          {{ instances.length === 1 ? 'instanca' : 'instanci' }}
+        </span>
+
+      </div>
+
+
+      <div
+        class="table-card"
+        *ngIf="instances.length > 0">
+
+        <div class="table-wrapper">
+
+          <table class="details-table">
+
+            <thead>
+
+              <tr>
+                <th>Instanca</th>
+                <th>Status</th>
+                <th>Vreme odziva</th>
+                <th>Poslednja provera</th>
+                <th>Poslednja uspešna provera</th>
+                <th></th>
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              <tr
+                *ngFor="let instance of instances"
+                class="clickable-instance-row"
+                (click)="openInstanceDetails(instance)">
+
+                <td>
+
+                  <div class="instance-cell">
+
+                    <div class="instance-icon">
+                      I
+                    </div>
+
+                    <code>
+                      {{ instance.instanceId }}
+                    </code>
+
+                  </div>
+
+                </td>
+
+
+                <td>
+
+                  <span
+                    class="status-badge"
+                    [ngClass]="{
+                      'status-up':
+                        instance.status === 'UP',
+
+                      'status-down':
+                        instance.status === 'DOWN'
+                    }">
+
+                    <span class="status-dot"></span>
+
+                    {{ instance.status }}
+
+                  </span>
+
+                </td>
+
+
+                <td>
+
+                  <span class="metric-mono">
+
+                    {{
+                      instance.responseTimeMs !== null
+                        ? (
+                            instance.responseTimeMs
+                            | number:'1.0-2'
+                          ) + ' ms'
+                        : '-'
+                    }}
+
+                  </span>
+
+                </td>
+
+
+                <td>
+
+                  {{
+                    instance.lastCheckedAt
+                      | date:'dd.MM.yyyy HH:mm:ss'
+                  }}
+
+                </td>
+
+
+                <td>
+
+                  {{
+                    instance.lastSuccessfulCheckAt
+                      ? (
+                          instance.lastSuccessfulCheckAt
+                          | date:'dd.MM.yyyy HH:mm:ss'
+                        )
+                      : '-'
+                  }}
+
+                </td>
+
+
+                <td class="row-action">
+                  →
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="empty-state"
+        *ngIf="instances.length === 0">
+
+        <h4>
+          Nema instanci
+        </h4>
+
+        <p>
+          Za ovaj servis trenutno nema konfigurisanih instanci.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <section class="details-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            Performanse
+          </span>
+
+          <h3>
+            Performanse odziva
+          </h3>
+
+          <p>
+            Statistika vremena health provera i njihov skoriji trend.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="response-stats-grid"
+        *ngIf="responseTimeStats">
+
+        <div class="response-stat">
+
+          <span>
+            Prosek
+          </span>
+
+          <strong>
+
+            {{
+              responseTimeStats.averageResponseTimeMs !== null
+                ? (
+                    responseTimeStats.averageResponseTimeMs
+                    | number:'1.2-2'
+                  ) + ' ms'
+                : '-'
+            }}
+
+          </strong>
+
+        </div>
+
+
+        <div class="response-stat">
+
+          <span>
+            Minimum
+          </span>
+
+          <strong>
+
+            {{
+              responseTimeStats.minimumResponseTimeMs !== null
+                ? (
+                    responseTimeStats.minimumResponseTimeMs
+                    | number:'1.2-2'
+                  ) + ' ms'
+                : '-'
+            }}
+
+          </strong>
+
+        </div>
+
+
+        <div class="response-stat">
+
+          <span>
+            Maksimum
+          </span>
+
+          <strong>
+
+            {{
+              responseTimeStats.maximumResponseTimeMs !== null
+                ? (
+                    responseTimeStats.maximumResponseTimeMs
+                    | number:'1.2-2'
+                  ) + ' ms'
+                : '-'
+            }}
+
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="chart-card"
+        *ngIf="healthHistory.length > 0">
+
+        <div class="chart-card-header">
+
+          <div>
+
+            <h4>
+              Vreme odziva kroz vreme
+            </h4>
+
+            <p>
+              Uspešne health provere poređane hronološki.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="response-time-chart">
+
+          <canvas
+            baseChart
+            [type]="responseTimeChartType"
+            [data]="responseTimeChartData"
+            [options]="responseTimeChartOptions">
+          </canvas>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="empty-state"
+        *ngIf="healthHistory.length === 0">
+
+        <h4>
+          Nema istorije vremena odziva
+        </h4>
+
+        <p>
+          Merenja vremena odziva još nisu dostupna.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <section class="details-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            Istorija
+          </span>
+
+          <h3>
+            Istorija health provera
+          </h3>
+
+          <p>
+            Najnovije health provere na nivou servisa.
+          </p>
+
+        </div>
+
+        <span
+          class="section-count"
+          *ngIf="healthHistory.length > 0">
+
+          {{ healthHistory.length }}
+
+        </span>
+
+      </div>
+
+
+      <div
+        class="history-scroll-container"
+        *ngIf="healthHistory.length > 0">
+
+        <table class="details-table">
+
+          <thead>
+
+            <tr>
+              <th>Vreme provere</th>
+              <th>Status</th>
+              <th>Vreme odziva</th>
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            <tr *ngFor="let history of healthHistory">
+
+              <td>
+                {{
+                  history.checkedAt
+                    | date:'dd.MM.yyyy HH:mm:ss'
+                }}
+              </td>
+
+
+              <td>
+
+                <span
+                  class="status-badge"
+                  [ngClass]="{
+                    'status-up':
+                      history.status === 'UP',
+
+                    'status-down':
+                      history.status === 'DOWN'
+                  }">
+
+                  <span class="status-dot"></span>
+
+                  {{ history.status }}
+
+                </span>
+
+              </td>
+
+
+              <td>
+
+                <span class="metric-mono">
+
+                  {{
+                    history.responseTimeMs !== null
+                      ? (
+                          history.responseTimeMs
+                          | number:'1.0-2'
+                        ) + ' ms'
+                      : '-'
+                  }}
+
+                </span>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+      <div
+        class="empty-state"
+        *ngIf="healthHistory.length === 0">
+
+        <h4>
+          Nema health istorije
+        </h4>
+
+        <p>
+          Još uvek nema zabeleženih health provera.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <section class="details-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <span class="section-eyebrow">
+            Dostupnost
+          </span>
+
+          <h3>
+            Periodi nedostupnosti
+          </h3>
+
+          <p>
+            Detektovani periodi tokom kojih servis nije bio dostupan.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="table-card"
+        *ngIf="downtimePeriods.length > 0">
+
+        <div class="table-wrapper">
+
+          <table class="details-table">
+
+            <thead>
+
+              <tr>
+                <th>Početak</th>
+                <th>Kraj</th>
+                <th>Trajanje</th>
+                <th>Status</th>
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              <tr *ngFor="let downtime of downtimePeriods">
+
+                <td>
+                  {{
+                    downtime.startedAt
+                      | date:'dd.MM.yyyy HH:mm:ss'
+                  }}
+                </td>
+
+
+                <td>
+
+                  {{
+                    downtime.endedAt
+                      ? (
+                          downtime.endedAt
+                          | date:'dd.MM.yyyy HH:mm:ss'
+                        )
+                      : '-'
+                  }}
+
+                </td>
+
+
+                <td>
+
+                  <span class="metric-mono">
+                    {{
+                      downtime.durationSeconds
+                        | number:'1.0-2'
+                    }} s
+                  </span>
+
+                </td>
+
+
+                <td>
+
+                  <span
+                    class="downtime-badge"
+                    [class.downtime-ongoing]="
+                      downtime.isOngoing
+                    ">
+
+                    <span class="status-dot"></span>
+
+                    {{
+                      downtime.isOngoing
+                        ? 'U TOKU'
+                        : 'ZAVRŠENO'
+                    }}
+
+                  </span>
+
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="healthy-state"
+        *ngIf="downtimePeriods.length === 0">
+
+        <div class="healthy-icon">
+          ✓
+        </div>
+
+        <div>
+
+          <h4>
+            Nema zabeležene nedostupnosti
+          </h4>
+
+          <p>
+            Za ovaj servis nisu detektovani periodi nedostupnosti.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <div
+    class="instance-modal-overlay"
+    *ngIf="selectedInstance"
+    (click)="closeInstanceDetails()">
+
+    <div
+      class="instance-modal"
+      (click)="$event.stopPropagation()">
+
+      <div class="instance-modal-header">
+
+        <div>
+
+          <span class="modal-eyebrow">
+            Detalji instance
+          </span>
+
+          <div class="instance-modal-title">
+
+            <h2>
+              {{ selectedInstance.instanceId }}
+            </h2>
+
+            <span
+              class="status-badge status-large"
+              [ngClass]="{
+                'status-up':
+                  selectedInstance.status === 'UP',
+
+                'status-down':
+                  selectedInstance.status === 'DOWN'
+              }">
+
+              <span class="status-dot"></span>
+
+              {{ selectedInstance.status }}
+
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="close-modal-button"
+          (click)="closeInstanceDetails()">
+
+          ×
+
+        </button>
+
+      </div>
+
+
+      <div class="instance-modal-content">
+
+        <div class="instance-summary-grid">
+
+          <div class="instance-summary-card">
+
+            <span>
+              Servis
+            </span>
+
+            <strong>
+              {{ selectedInstance.serviceName }}
+            </strong>
+
+          </div>
+
+
+          <div class="instance-summary-card">
+
+            <span>
+              Vreme odziva
+            </span>
+
+            <strong>
+
+              {{
+                selectedInstance.responseTimeMs !== null
+                  ? (
+                      selectedInstance.responseTimeMs
+                      | number:'1.0-2'
+                    ) + ' ms'
+                  : '-'
+              }}
+
+            </strong>
+
+          </div>
+
+
+          <div class="instance-summary-card">
+
+            <span>
+              Poslednja provera
+            </span>
+
+            <strong>
+              {{
+                selectedInstance.lastCheckedAt
+                  | date:'dd.MM.yyyy HH:mm:ss'
+              }}
+            </strong>
+
+          </div>
+
+
+          <div class="instance-summary-card">
+
+            <span>
+              Poslednja uspešna provera
+            </span>
+
+            <strong>
+
+              {{
+                selectedInstance.lastSuccessfulCheckAt
+                  ? (
+                      selectedInstance.lastSuccessfulCheckAt
+                      | date:'dd.MM.yyyy HH:mm:ss'
+                    )
+                  : '-'
+              }}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="state-card modal-state"
+          *ngIf="isLoadingInstanceDetails">
+
+          <div class="loading-spinner"></div>
+
+          <div>
+            <strong>
+              Učitavanje detalja instance...
+            </strong>
+          </div>
+
+        </div>
+
+
+        <div
+          class="state-card error-state modal-state"
+          *ngIf="instanceDetailsError">
+
+          <div>
+
+            <strong>
+              Nije moguće učitati detalje instance
+            </strong>
+
+            <p>
+              {{ instanceDetailsError }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div *ngIf="!isLoadingInstanceDetails">
+
+          <section class="modal-section">
+
+            <div class="section-header">
+
+              <div>
+
+                <span class="section-eyebrow">
+                  Istorija
+                </span>
+
+                <h3>
+                  Istorija health provera
+                </h3>
+
+                <p>
+                  Najnovije health provere za ovu instancu.
+                </p>
+
+              </div>
+
+              <span
+                class="section-count"
+                *ngIf="instanceHistory.length > 0">
+
+                {{ instanceHistory.length }}
+
+              </span>
+
+            </div>
+
+
+            <div
+              class="instance-history-scroll"
+              *ngIf="instanceHistory.length > 0">
+
+              <table class="details-table">
+
+                <thead>
+
+                  <tr>
+                    <th>Vreme provere</th>
+                    <th>Status</th>
+                    <th>Vreme odziva</th>
+                  </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                  <tr
+                    *ngFor="let history of instanceHistory">
+
+                    <td>
+                      {{
+                        history.checkedAt
+                          | date:'dd.MM.yyyy HH:mm:ss'
+                      }}
+                    </td>
+
+
+                    <td>
+
+                      <span
+                        class="status-badge"
+                        [ngClass]="{
+                          'status-up':
+                            history.status === 'UP',
+
+                          'status-down':
+                            history.status === 'DOWN'
+                        }">
+
+                        <span class="status-dot"></span>
+
+                        {{ history.status }}
+
+                      </span>
+
+                    </td>
+
+
+                    <td>
+
+                      <span class="metric-mono">
+
+                        {{
+                          history.responseTimeMs !== null
+                            ? (
+                                history.responseTimeMs
+                                | number:'1.0-2'
+                              ) + ' ms'
+                            : '-'
+                        }}
+
+                      </span>
+
+                    </td>
+
+                  </tr>
+
+                </tbody>
+
+              </table>
+
+            </div>
+
+
+            <div
+              class="empty-state compact-empty"
+              *ngIf="instanceHistory.length === 0">
+
+              <h4>
+                Nema health istorije
+              </h4>
+
+              <p>
+                Za ovu instancu nema zabeleženih health provera.
+              </p>
+
+            </div>
+
+          </section>
+
+
+          <section class="modal-section">
+
+            <div class="section-header">
+
+              <div>
+
+                <span class="section-eyebrow">
+                  Dostupnost
+                </span>
+
+                <h3>
+                  Periodi nedostupnosti
+                </h3>
+
+                <p>
+                  Zabeleženi prekidi rada ove instance.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div
+              class="table-card"
+              *ngIf="instanceDowntimePeriods.length > 0">
+
+              <div class="table-wrapper">
+
+                <table class="details-table">
+
+                  <thead>
+
+                    <tr>
+                      <th>Početak</th>
+                      <th>Kraj</th>
+                      <th>Trajanje</th>
+                      <th>Status</th>
+                    </tr>
+
+                  </thead>
+
+
+                  <tbody>
+
+                    <tr
+                      *ngFor="
+                        let downtime
+                        of instanceDowntimePeriods
+                      ">
+
+                      <td>
+                        {{
+                          downtime.startedAt
+                            | date:'dd.MM.yyyy HH:mm:ss'
+                        }}
+                      </td>
+
+
+                      <td>
+
+                        {{
+                          downtime.endedAt
+                            ? (
+                                downtime.endedAt
+                                | date:'dd.MM.yyyy HH:mm:ss'
+                              )
+                            : '-'
+                        }}
+
+                      </td>
+
+
+                      <td>
+
+                        <span class="metric-mono">
+
+                          {{
+                            downtime.durationSeconds
+                              | number:'1.0-2'
+                          }} s
+
+                        </span>
+
+                      </td>
+
+
+                      <td>
+
+                        <span
+                          class="downtime-badge"
+                          [class.downtime-ongoing]="
+                            downtime.isOngoing
+                          ">
+
+                          <span class="status-dot"></span>
+
+                          {{
+                            downtime.isOngoing
+                              ? 'U TOKU'
+                              : 'ZAVRŠENO'
+                          }}
+
+                        </span>
+
+                      </td>
+
+                    </tr>
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            </div>
+
+
+            <div
+              class="healthy-state"
+              *ngIf="
+                instanceDowntimePeriods.length === 0
+              ">
+
+              <div class="healthy-icon">
+                ✓
+              </div>
+
+              <div>
+
+                <h4>
+                  Nema zabeležene nedostupnosti
+                </h4>
+
+                <p>
+                  Za ovu instancu nisu detektovani prekidi rada.
+                </p>
+
+              </div>
+
+            </div>
+
+          </section>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

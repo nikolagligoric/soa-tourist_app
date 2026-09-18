@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -43,6 +44,12 @@ func generateCorrelationID() string {
 
 func main() {
 	config.ConnectNeo4j()
+
+	instanceID := os.Getenv("INSTANCE_ID")
+
+	if strings.TrimSpace(instanceID) == "" {
+		instanceID = "unknown"
+	}
 
 	router := gin.New()
 
@@ -91,6 +98,7 @@ func main() {
 		logEntry := map[string]interface{}{
 			"timestamp":     startTime.UTC().Format(time.RFC3339Nano),
 			"serviceName":   "Followers",
+			"instanceId":    instanceID,
 			"level":         level,
 			"correlationId": correlationID,
 			"method":        c.Request.Method,

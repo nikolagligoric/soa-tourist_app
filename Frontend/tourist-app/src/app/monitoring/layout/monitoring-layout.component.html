@@ -1,0 +1,58 @@
+<div class="monitoring-layout">
+
+  <header class="monitoring-header">
+
+    <div>
+
+      <span class="monitoring-eyebrow">
+        Administracija
+      </span>
+
+      <h1>
+        Monitoring sistema
+      </h1>
+
+      <p>
+        Centralni pregled zdravlja servisa, logova i sistemskih alerta.
+      </p>
+
+    </div>
+
+  </header>
+
+  <nav class="monitoring-navigation">
+
+    <a
+      routerLink="/monitoring"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }">
+
+      Pregled
+
+    </a>
+
+    <a
+      routerLink="/monitoring/logs"
+      routerLinkActive="active">
+
+      Logovi
+
+    </a>
+
+    <a
+      routerLink="/monitoring/alerts"
+      routerLinkActive="active">
+
+      Alerti
+
+    </a>
+
+  </nav>
+
+  <main class="monitoring-content">
+
+    <router-outlet></router-outlet>
+
+  </main>
+
+</div>

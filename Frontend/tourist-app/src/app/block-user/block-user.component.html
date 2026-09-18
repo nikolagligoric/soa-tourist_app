@@ -1,17 +1,78 @@
-<div class="management-wrapper">
-  <div class="management-card">
-    
-    <div class="management-header">
-      <h2>🔧 Upravljanje korisnicima (Admin Panel)</h2>
-      <button routerLink="/home" class="back-btn">← Nazad na početnu</button>
+<div class="users-page">
+
+  <header class="page-header">
+
+    <div>
+      <span class="eyebrow">
+        Administracija
+      </span>
+
+      <h1>
+        Upravljanje korisnicima
+      </h1>
+
+      <p>
+        Pregledaj korisnike sistema i upravljaj njihovim pristupom aplikaciji.
+      </p>
     </div>
-    
-    <div *ngIf="successMessage" class="alert alert-success">✅ {{ successMessage }}</div>
-    <div *ngIf="errorMessage" class="alert alert-danger">⚠️ {{ errorMessage }}</div>
+
+    <button
+      type="button"
+      routerLink="/home"
+      class="back-btn">
+
+      ← Početna
+
+    </button>
+
+  </header>
+
+
+  <div
+    *ngIf="successMessage"
+    class="alert alert-success">
+
+    {{ successMessage }}
+
+  </div>
+
+
+  <div
+    *ngIf="errorMessage"
+    class="alert alert-danger">
+
+    {{ errorMessage }}
+
+  </div>
+
+
+  <section class="users-card">
+
+    <div class="card-header">
+
+      <div>
+        <span class="section-eyebrow">
+          Korisnici
+        </span>
+
+        <h2>
+          Registrovani korisnici
+        </h2>
+      </div>
+
+      <span class="user-count">
+        {{ users.length }}
+      </span>
+
+    </div>
+
 
     <div class="table-responsive">
+
       <table class="user-table">
+
         <thead>
+
           <tr>
             <th>ID</th>
             <th>Ime i prezime</th>
@@ -21,31 +82,105 @@
             <th>Status</th>
             <th>Akcija</th>
           </tr>
+
         </thead>
+
+
         <tbody>
-          <tr *ngFor="let user of users" [class.row-blocked]="user.isBlocked">
-            <td><span class="id-badge">{{ user.id }}</span></td>
-            <td class="font-semibold">{{ user.firstName }} {{ user.lastName }}</td>
-            <td>{{ user.userName }}</td>
-            <td class="text-muted">{{ user.email }}</td>
-            <td><span class="role-badge">{{ user.role }}</span></td>
+
+          <tr
+            *ngFor="let user of users"
+            [class.row-blocked]="user.isBlocked">
+
             <td>
-              <span class="status-badge" [ngClass]="user.isBlocked ? 'status-blocked' : 'status-active'">
-                {{ user.isBlocked ? 'Blokiran' : 'Aktivan' }}
+              <span class="id-badge">
+                {{ user.id }}
               </span>
             </td>
+
+
             <td>
-              <button 
-                (click)="onBlock(user.id)" 
-                [disabled]="user.isBlocked"
-                class="table-btn block-btn">
-                Blokiraj
-              </button>
+
+              <div class="user-name">
+
+                <div class="user-avatar">
+                  {{
+                    (user.firstName || user.userName || 'K')
+                      .charAt(0)
+                      .toUpperCase()
+                  }}
+                </div>
+
+                <div>
+                  <strong>
+                    {{ user.firstName }} {{ user.lastName }}
+                  </strong>
+                </div>
+
+              </div>
+
             </td>
+
+
+            <td>
+              <span class="username">
+                {{ user.userName }}
+              </span>
+            </td>
+
+
+            <td>
+              <span class="email">
+                {{ user.email }}
+              </span>
+            </td>
+
+
+            <td>
+
+              <span class="role-badge">
+                {{ user.role }}
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <span
+                class="status-badge"
+                [class.status-blocked]="user.isBlocked"
+                [class.status-active]="!user.isBlocked">
+
+                {{ user.isBlocked ? 'Blokiran' : 'Aktivan' }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <button
+                type="button"
+                class="block-btn"
+                (click)="onBlock(user.id)"
+                [disabled]="user.isBlocked">
+
+                {{ user.isBlocked ? 'Blokiran' : 'Blokiraj' }}
+
+              </button>
+
+            </td>
+
           </tr>
+
         </tbody>
+
       </table>
+
     </div>
 
-  </div>
+  </section>
+
 </div>
